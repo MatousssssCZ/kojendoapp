@@ -496,8 +496,8 @@ body {
 // ╔══════════════════════════════════════════════════════════╗
 // ║  ⚙️  KONFIGURACE — vyplň tyto dvě hodnoty               ║
 // ╚══════════════════════════════════════════════════════════╝
-const SUPABASE_URL      = 'ZDE_VLOZ_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'ZDE_VLOZ_SUPABASE_ANON_KEY';
+const SUPABASE_URL      = 'https://kwwbltwrkfaqvntoqskt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt3d2JsdHdya2ZhcXZudG9xc2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTU5NjUsImV4cCI6MjA4OTg3MTk2NX0.DaKoPRUB1_WUhwdqumb5OPtDDwJ8wi6HEJYQCYdEA1M';
 // ══════════════════════════════════════════════════════════
 
 // ── Theme ────────────────────────────────────────────────────
@@ -833,7 +833,7 @@ async function confirmDelete() {
 async function init() {
   document.getElementById('headerDate').textContent = czDay();
 
-  if (SUPABASE_URL.includes('ZDE_VLOZ') || SUPABASE_ANON_KEY.includes('ZDE_VLOZ')) {
+  if (SUPABASE_URL.includes('https://kwwbltwrkfaqvntoqskt.supabase.co') || SUPABASE_ANON_KEY.includes('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt3d2JsdHdya2ZhcXZudG9xc2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTU5NjUsImV4cCI6MjA4OTg3MTk2NX0.DaKoPRUB1_WUhwdqumb5OPtDDwJ8wi6HEJYQCYdEA1M')) {
     document.getElementById('configBanner').classList.add('show');
     document.getElementById('loadingOverlay').classList.add('hidden');
     ['tileBfSub','tileFeedSub','tileStoolSub'].forEach(id =>
