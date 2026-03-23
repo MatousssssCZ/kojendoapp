@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Baby Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { overflow-x: hidden; max-width: 100vw; }
@@ -71,7 +74,7 @@ button { touch-action:manipulation; }
 .summary-label { font-size:8px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--text-faint); margin-top:2px; }
 .summary-sub { font-size:8px; color:var(--text-faint); margin-top:1px; }
 .tiles { display:flex; flex-direction:column; gap:10px; }
-.tile { background:var(--surface); border-radius:20px; padding:16px 18px 14px; box-shadow:var(--shadow-soft); cursor:pointer; text-align:left; width:100%; transition:box-shadow .15s,transform .12s; position:relative; overflow:hidden; border:1px solid var(--border); }
+.tile { background:var(--surface); border-radius:20px; padding:16px 18px 14px; box-shadow:var(--shadow-soft); cursor:pointer; text-align:left; width:100%; transition:box-shadow .15s,transform .12s; position:relative; overflow:hidden; border:1px solid var(--border); contain:layout style; }
 .tile::before { content:''; position:absolute; inset:0; opacity:0; transition:opacity .15s; pointer-events:none; }
 .tile:hover { box-shadow:var(--shadow-card); }
 .tile:active { transform:scale(.985); }
@@ -95,7 +98,8 @@ button { touch-action:manipulation; }
 .theme-bar { position:fixed; bottom:0; left:0; right:0; display:flex; align-items:center; justify-content:center; gap:10px; padding:14px 24px 20px; background:var(--bg); border-top:1px solid var(--border); z-index:10; }
 .theme-bar-label { font-size:12px; color:var(--text-faint); }
 .theme-bar-icon { font-size:15px; line-height:1; }
-.backdrop { display:none; position:fixed; inset:0; background:var(--backdrop); backdrop-filter:blur(4px); z-index:40; }
+.backdrop { display:none; position:fixed; inset:0; background:var(--backdrop); z-index:40; }
+@media(min-width:520px){ .backdrop { backdrop-filter:blur(4px); } }
 .backdrop.open { display:block; animation:fadeIn .2s ease; }
 .modal { display:none; position:fixed; bottom:0; left:0; right:0; z-index:50; background:var(--bg); border-radius:28px 28px 0 0; box-shadow:var(--shadow-modal); max-height:88dvh; flex-direction:column; overflow:hidden; border-top:1px solid var(--border); }
 @media(min-width:520px){ .modal { top:50%; left:50%; right:auto; bottom:auto; transform:translate(-50%,-50%); width:440px; border-radius:28px; max-height:85dvh; border:1px solid var(--border); } }
@@ -196,7 +200,7 @@ button { touch-action:manipulation; }
 .dev-notice-art { font-size:36px; line-height:1; flex-shrink:0; filter:drop-shadow(0 2px 4px rgba(0,0,0,.08)); }
 .dev-notice-text { font-size:12px; color:var(--text-muted); line-height:1.65; }
 .dev-notice-text strong { display:block; font-size:13px; color:var(--text); font-weight:600; margin-bottom:3px; }
-.confirm-overlay { display:none; position:fixed; inset:0; z-index:70; background:var(--backdrop); backdrop-filter:blur(2px); align-items:center; justify-content:center; padding:24px; }
+.confirm-overlay { display:none; position:fixed; inset:0; z-index:70; background:var(--backdrop); align-items:center; justify-content:center; padding:24px; }
 .confirm-overlay.open { display:flex; animation:fadeIn .15s ease; }
 .confirm-box { background:var(--confirm-bg); border-radius:24px; padding:24px; max-width:320px; width:100%; box-shadow:var(--shadow-modal); border:1px solid var(--border); }
 .confirm-msg { font-size:14px; color:var(--text); margin-bottom:20px; line-height:1.5; }
@@ -291,7 +295,7 @@ button { touch-action:manipulation; }
     </button>
   </div>
 
-  <p class="footer" style="margin-top:20px">Mikiho Tracker · <em>s láskou táta</em></p>
+  <p class="footer" style="margin-top:20px">Baby Tracker · <em>s láskou</em></p>
 </main>
 
 <div class="theme-bar">
@@ -583,12 +587,12 @@ function refreshDashboard(){
 // ── Load all ───────────────────────────────────────────
 async function loadAll(){
   const [bf,feed,feedFoods,foods,stool,sleep]=await Promise.all([
-    sbGet('breastfeeding_logs?select=*&order=event_time.desc&limit=300'),
-    sbGet('feeding_logs?select=*&order=event_time.desc&limit=150'),
-    sbGet('feeding_log_foods?select=*'),
-    sbGet('foods?select=*&order=name.asc'),
-    sbGet('stool_logs?select=*&order=event_time.desc&limit=150'),
-    sbGet('sleep_logs?select=*&order=event_time.desc&limit=300'),
+    sbGet('breastfeeding_logs?select=id,side,event_time&order=event_time.desc&limit=400'),
+    sbGet('feeding_logs?select=id,event_time&order=event_time.desc&limit=100'),
+    sbGet('feeding_log_foods?select=*&limit=500'),
+    sbGet('foods?select=id,name&order=name.asc'),
+    sbGet('stool_logs?select=id,event_time&order=event_time.desc&limit=100'),
+    sbGet('sleep_logs?select=id,type,event_time&order=event_time.desc&limit=200'),
   ]);
   const flMap={};
   (feedFoods||[]).forEach(fl=>{if(!flMap[fl.feeding_log_id])flMap[fl.feeding_log_id]=[];flMap[fl.feeding_log_id].push(fl);});
@@ -635,14 +639,17 @@ function renderBfChart(){
   }
 
   // For year view, each "day" is actually a week anchor — count 7 days around it
+  // Pre-compute timestamps once to avoid repeated Date parsing in the loop
+  const bfTimes=cache.bf.map(l=>new Date(l.event_time).getTime());
   const counts=days.map((d,i)=>{
     if(bfPeriod==='year'){
-      // count logs in the 7-day window ending on this anchor
       const end=new Date(d);end.setHours(23,59,59,999);
       const start=new Date(d);start.setDate(start.getDate()-6);start.setHours(0,0,0,0);
-      return cache.bf.filter(l=>{const t=new Date(l.event_time);return t>=start&&t<=end;}).length;
+      const es=end.getTime(),ss=start.getTime();
+      return bfTimes.filter(t=>t>=ss&&t<=es).length;
     }
-    return cache.bf.filter(l=>isSameDay(l.event_time,d)).length;
+    const dy=d.getDate(),dm=d.getMonth(),dyr=d.getFullYear();
+    return cache.bf.filter(l=>{const x=new Date(l.event_time);return x.getDate()===dy&&x.getMonth()===dm&&x.getFullYear()===dyr;}).length;
   });
 
   const maxC=Math.max(...counts,1);
@@ -813,18 +820,29 @@ async function saveEditFeed(id){
 //  SPÁNEK
 // ══════════════════════════════════════════════════════
 function pairSleepLogs(){
-  const sorted=[...cache.sleep].sort((a,b)=>new Date(a.event_time)-new Date(b.event_time));
+  // Sort once, mutate in place for pairing
+  cache.sleep.sort((a,b)=>new Date(a.event_time)-new Date(b.event_time));
   let lastStart=null;
-  sorted.forEach(l=>{
-    if(l.type==='start'){lastStart=l;l.pair_end_time=null;}
-    else if(l.type==='end'){l.pair_start_time=lastStart?lastStart.event_time:null;if(lastStart)lastStart.pair_end_time=l.event_time;lastStart=null;}
+  cache.sleep.forEach(l=>{
+    l.pair_start_time=null;l.pair_end_time=null;
+    if(l.type==='start'){lastStart=l;}
+    else if(l.type==='end'){
+      if(lastStart){l.pair_start_time=lastStart.event_time;lastStart.pair_end_time=l.event_time;}
+      lastStart=null;
+    }
   });
-  const byId=Object.fromEntries(sorted.map(l=>[l.id,l]));
-  cache.sleep=cache.sleep.map(l=>({...l,...(byId[l.id]||{})}));
+  // Reverse so newest is first (cache always newest-first)
+  cache.sleep.reverse();
 }
 function hasOpenSleep(){
-  const sorted=[...cache.sleep].sort((a,b)=>new Date(a.event_time)-new Date(b.event_time));
-  let open=false;sorted.forEach(l=>{if(l.type==='start')open=true;else if(l.type==='end')open=false;});return open;
+  // Walk sorted ascending – cache is newest-first so iterate reversed
+  let open=false;
+  for(let i=cache.sleep.length-1;i>=0;i--){
+    const l=cache.sleep[i];
+    if(l.type==='start')open=true;
+    else if(l.type==='end')open=false;
+  }
+  return open;
 }
 function renderSleepModal(){
   const open=hasOpenSleep();
@@ -958,7 +976,7 @@ async function init(){
   try{await loadAll();refreshDashboard();}
   catch(e){showErr('Chyba připojení k Supabase');['tileBfSub','tileFeedSub','tileStoolSub','tileSleepSub'].forEach(id=>document.getElementById(id).textContent='Chyba načítání');}
   finally{document.getElementById('loadingOverlay').classList.add('hidden');}
-  setInterval(()=>{document.getElementById('headerDate').textContent=czDay();},60000);
+  setInterval(()=>{ if(!document.hidden) document.getElementById('headerDate').textContent=czDay(); },60000);
 }
 init();
 </script>
