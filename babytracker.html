@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Baby Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── LIGHT theme (default) ── */
+:root {
+  --bg:          #f7f3ec;
+  --surface:     #fdfcf9;
+  --surface-2:   #f0ead9;
+  --border:      #e7e5e4;
+  --border-2:    #d6d3d1;
+  --text:        #1c1917;
+  --text-2:      #292524;
+  --text-muted:  #78716c;
+  --text-faint:  #a8a29e;
+  --sage:        #7a9e6e;
+  --sage-bg:     #e8f0e4;
+  --sage-dark:   #5a7a50;
+  --amber:       #c8922a;
+  --amber-bg:    #fef3dc;
+  --stool-border:#d4a26a;
+  --stool-text:  #8a5c28;
+  --stool-bg:    #fdf5e6;
+  --chip-text:   #57534e;
+  --save-bg:     #1c1917;
+  --save-bg-h:   #292524;
+  --confirm-bg:  #ffffff;
+  --hover-row:   #f5f5f4;
+  --shadow-soft: 0 2px 16px rgba(0,0,0,0.07);
+  --shadow-card: 0 4px 28px rgba(0,0,0,0.10);
+  --shadow-modal:0 12px 56px rgba(0,0,0,0.18);
+  --backdrop:    rgba(28,25,23,0.35);
+  --tile-bf-grad:   linear-gradient(135deg, #e8f0e4, transparent 60%);
+  --tile-feed-grad: linear-gradient(135deg, #fef3dc, transparent 60%);
+  --tile-stool-grad:linear-gradient(135deg, #fdf5e6, transparent 60%);
+  --breast-badge-bg:#ffffff;
+  --modal-close-bg: #f5f5f4;
+  --modal-close-h:  #e7e5e4;
+  --input-bg:    #fdfcf9;
+}
+
+/* ── DARK theme ── */
+.dark {
+  --bg:          #0f0e0c;
+  --surface:     #1a1916;
+  --surface-2:   #222018;
+  --border:      #2e2c28;
+  --border-2:    #3a3830;
+  --text:        #e8e4dd;
+  --text-2:      #ccc8c0;
+  --text-muted:  #7a756c;
+  --text-faint:  #52504a;
+  --sage:        #7aad6c;
+  --sage-bg:     #1a2e17;
+  --sage-dark:   #9dcc8e;
+  --amber:       #d9a340;
+  --amber-bg:    #261e0a;
+  --stool-border:#a07040;
+  --stool-text:  #c49050;
+  --stool-bg:    #1e1608;
+  --chip-text:   #a09a92;
+  --save-bg:     #e8e4dd;
+  --save-bg-h:   #ffffff;
+  --confirm-bg:  #1a1916;
+  --hover-row:   #222018;
+  --shadow-soft: 0 2px 16px rgba(0,0,0,0.35);
+  --shadow-card: 0 4px 28px rgba(0,0,0,0.45);
+  --shadow-modal:0 12px 56px rgba(0,0,0,0.65);
+  --backdrop:    rgba(0,0,0,0.65);
+  --tile-bf-grad:   linear-gradient(135deg, #1a2e17, transparent 60%);
+  --tile-feed-grad: linear-gradient(135deg, #261e0a, transparent 60%);
+  --tile-stool-grad:linear-gradient(135deg, #1e1608, transparent 60%);
+  --breast-badge-bg:#0f0e0c;
+  --modal-close-bg: #2e2c28;
+  --modal-close-h:  #3a3830;
+  --input-bg:    #222018;
+}
+
+/* ── Dark mode: save button needs dark text ── */
+.dark .save-btn         { color: #0f0e0c; }
+.dark .history-text strong { color: var(--text); }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.25s, color 0.25s;
+}
+
+.app { max-width: 440px; margin: 0 auto; padding: 40px 20px 80px; }
+
+/* ── Loading ── */
+.loading-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 16px; transition: opacity 0.3s;
+}
+.loading-overlay.hidden { opacity: 0; pointer-events: none; }
+.loading-spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--sage); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.loading-text { font-size: 13px; color: var(--text-faint); }
+
+/* ── Config banner ── */
+.config-banner { display: none; background: #261e0a; border: 1.5px solid var(--amber); border-radius: 14px; padding: 16px 18px; margin-bottom: 24px; font-size: 13px; color: var(--amber); line-height: 1.7; }
+.config-banner.show { display: block; }
+.config-banner code { background: rgba(255,255,255,0.08); border-radius: 4px; padding: 1px 5px; font-family: monospace; font-size: 12px; }
+
+/* ── Header ── */
+.header { margin-bottom: 32px; display: flex; align-items: flex-start; justify-content: space-between; }
+.header-inner { flex: 1; }
+.header-date { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px; }
+.header-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 32px; color: var(--text); line-height: 1.15; }
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  margin-top: 6px;
+  width: 40px; height: 22px;
+  background: var(--border);
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.theme-toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), background 0.2s;
+}
+.dark .theme-toggle { background: var(--sage-bg); }
+.dark .theme-toggle::after { transform: translateX(18px); background: var(--sage); }
+.theme-toggle-label { display: flex; align-items: center; gap: 8px; }
+.theme-icon { font-size: 14px; line-height: 1; }
+
+/* ── Summary strip ── */
+.summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+.summary-item { background: var(--surface); border-radius: 20px; padding: 14px 10px 12px; text-align: center; box-shadow: var(--shadow-soft); border: 1px solid var(--border); }
+.summary-emoji { font-size: 18px; margin-bottom: 4px; }
+.summary-count { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.summary-label { font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin-top: 3px; }
+.summary-sub   { font-size: 10px; color: var(--text-faint); margin-top: 2px; }
+
+/* ── Tiles ── */
+.tiles { display: flex; flex-direction: column; gap: 14px; }
+.tile {
+  background: var(--surface); border-radius: 20px; padding: 22px 22px 20px;
+  box-shadow: var(--shadow-soft); cursor: pointer; text-align: left; width: 100%;
+  transition: box-shadow 0.15s, transform 0.12s; position: relative; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.tile::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.15s; pointer-events: none; }
+.tile:hover { box-shadow: var(--shadow-card); }
+.tile:active { transform: scale(0.985); }
+.tile-bf::before    { background: var(--tile-bf-grad); }
+.tile-feed::before  { background: var(--tile-feed-grad); }
+.tile-stool::before { background: var(--tile-stool-grad); }
+.tile:hover::before { opacity: 1; }
+.tile-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.tile-left { display: flex; align-items: center; gap: 12px; }
+.tile-emoji { font-size: 24px; }
+.tile-title { font-size: 18px; font-weight: 600; color: var(--text); }
+.tile-arrow { font-size: 20px; color: var(--border-2); transition: color 0.15s; }
+.tile:hover .tile-arrow { color: var(--text-faint); }
+.tile-sub { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+.tile-hint { display: none; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--sage-dark); margin-top: 7px; }
+.tile-hint.show { display: inline-flex; }
+.tile-hint::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--sage); }
+
+/* ── Footer / theme switcher row ── */
+.footer-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 48px; }
+.footer { font-size: 12px; color: var(--text-faint); }
+.footer em { font-family: 'DM Serif Display', serif; font-style: italic; }
+
+/* ── Bottom theme bar ── */
+.theme-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 24px 20px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  z-index: 10;
+}
+.theme-bar-label { font-size: 12px; color: var(--text-faint); }
+.theme-bar-icon  { font-size: 15px; line-height: 1; }
+
+/* ── Backdrop ── */
+.backdrop { display: none; position: fixed; inset: 0; background: var(--backdrop); backdrop-filter: blur(4px); z-index: 40; }
+.backdrop.open { display: block; animation: fadeIn 0.2s ease; }
+
+/* ── Modal ── */
+.modal {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+  background: var(--bg); border-radius: 28px 28px 0 0;
+  box-shadow: var(--shadow-modal); max-height: 88dvh;
+  flex-direction: column; overflow: hidden;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 520px) {
+  .modal { top: 50%; left: 50%; right: auto; bottom: auto; transform: translate(-50%,-50%); width: 440px; border-radius: 28px; max-height: 85dvh; border: 1px solid var(--border); }
+}
+.modal.open { display: flex; animation: slideUp 0.32s cubic-bezier(0.32,0.72,0,1); }
+@media (min-width: 520px) { .modal.open { animation: fadeIn 0.22s ease; } }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 24px 16px; flex-shrink: 0; }
+.modal-title { font-size: 20px; font-weight: 600; color: var(--text); letter-spacing: -0.02em; }
+.modal-close { width: 32px; height: 32px; border-radius: 50%; background: var(--modal-close-bg); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-muted); transition: background 0.15s; }
+.modal-close:hover { background: var(--modal-close-h); }
+.modal-body { overflow-y: auto; padding: 0 24px 32px; flex: 1; -webkit-overflow-scrolling: touch; }
+.modal-loading { display: flex; justify-content: center; padding: 32px 0; }
+.mini-spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--sage); border-radius: 50%; animation: spin 0.7s linear infinite; }
+
+/* ── Breast buttons ── */
+.breast-btns { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+.breast-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-radius: 20px; border: 2px solid var(--border); background: var(--surface); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.breast-btn:active { transform: scale(0.98); }
+.breast-btn.primary { border-color: var(--sage); background: var(--sage-bg); }
+.breast-btn.secondary { opacity: 0.45; }
+.breast-btn.secondary:hover { opacity: 0.7; }
+.breast-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.breast-btn-left { display: flex; align-items: center; gap: 12px; }
+.breast-icon { font-size: 18px; }
+.breast-label { font-size: 15px; font-weight: 600; color: var(--text); }
+.breast-badge { font-size: 11px; font-weight: 600; color: var(--sage-dark); background: var(--breast-badge-bg); padding: 4px 10px; border-radius: 100px; border: 1px solid var(--sage); display: none; }
+.breast-badge.show { display: inline-block; }
+
+.last-hint { text-align: center; font-size: 12px; color: var(--text-faint); margin-bottom: 20px; min-height: 18px; }
+
+/* ── Section toggle ── */
+.section-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border: none; background: none; cursor: pointer; color: var(--text-muted); font-size: 13px; font-weight: 500; font-family: inherit; border-top: 1px solid var(--border); transition: color 0.15s; }
+.section-toggle:hover { color: var(--text); }
+.section-toggle .chevron { font-size: 14px; transition: transform 0.2s; }
+.section-toggle.open .chevron { transform: rotate(180deg); }
+
+/* ── History ── */
+.history-list { margin-top: 8px; }
+.history-empty { text-align: center; padding: 20px 0; font-size: 13px; color: var(--text-faint); }
+.history-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; transition: background 0.12s; }
+.history-row:hover { background: var(--hover-row); }
+.history-row:hover .delete-btn { opacity: 1; }
+.history-text { font-size: 13px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.history-text strong { color: var(--text); font-weight: 600; }
+.delete-btn { opacity: 0; background: none; border: none; cursor: pointer; padding: 4px; color: var(--text-faint); font-size: 14px; border-radius: 6px; transition: opacity 0.15s, color 0.15s; flex-shrink: 0; }
+.delete-btn:hover { color: #ef4444; }
+
+/* ── Action button ── */
+.action-btn { width: 100%; padding: 18px; border-radius: 20px; border: 2px solid; background: transparent; cursor: pointer; font-size: 15px; font-weight: 600; font-family: inherit; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; }
+.action-btn:active { transform: scale(0.98); }
+.action-btn.amber { border-color: var(--amber); color: var(--amber); background: var(--amber-bg); }
+.action-btn.stool { border-color: var(--stool-border); color: var(--stool-text); background: var(--stool-bg); }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* ── Save button ── */
+.save-btn { width: 100%; padding: 16px; border-radius: 20px; border: none; background: var(--save-bg); color: white; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background 0.15s, opacity 0.15s; margin-top: 16px; }
+.save-btn:hover { background: var(--save-bg-h); }
+.save-btn:active { transform: scale(0.98); }
+.save-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ── Form ── */
+.form-section { margin-bottom: 16px; }
+.form-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px; }
+.form-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--input-bg); font-size: 14px; color: var(--text); font-family: inherit; outline: none; transition: border-color 0.15s; color-scheme: light dark; }
+.form-input:focus { border-color: var(--sage); }
+
+/* ── Chips ── */
+.chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+.chip { display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 100px; border: 1.5px solid var(--border); background: var(--surface); font-size: 13px; font-weight: 500; color: var(--chip-text); cursor: pointer; transition: all 0.13s; font-family: inherit; }
+.chip:active { transform: scale(0.95); }
+.chip.selected { background: var(--sage); border-color: var(--sage); color: white; }
+.chip-add { border-style: dashed; color: var(--text-faint); }
+.chip-add:hover { border-color: var(--sage); color: var(--sage-dark); }
+
+/* ── Add food ── */
+.add-food-row { display: none; gap: 8px; align-items: center; margin-top: 10px; }
+.add-food-row.open { display: flex; }
+.add-food-input { flex: 1; padding: 9px 13px; border-radius: 100px; border: 1.5px solid var(--sage); font-size: 13px; font-family: inherit; outline: none; background: var(--input-bg); color: var(--text); }
+.add-food-ok { padding: 9px 16px; border-radius: 100px; border: none; background: var(--sage); color: white; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; }
+.add-food-ok:hover { background: var(--sage-dark); }
+
+/* ── Collapsible ── */
+.collapsible { display: none; }
+.collapsible.open { display: block; animation: fadeIn 0.18s ease; }
+
+/* ── Confirm ── */
+.confirm-overlay { display: none; position: fixed; inset: 0; z-index: 70; background: var(--backdrop); backdrop-filter: blur(2px); align-items: center; justify-content: center; padding: 24px; }
+.confirm-overlay.open { display: flex; animation: fadeIn 0.15s ease; }
+.confirm-box { background: var(--confirm-bg); border-radius: 24px; padding: 24px; max-width: 320px; width: 100%; box-shadow: var(--shadow-modal); border: 1px solid var(--border); }
+.confirm-msg { font-size: 14px; color: var(--text); margin-bottom: 20px; line-height: 1.5; }
+.confirm-btns { display: flex; gap: 10px; }
+.confirm-cancel { flex: 1; padding: 12px; border-radius: 14px; border: 1.5px solid var(--border); background: transparent; font-size: 13px; font-weight: 500; font-family: inherit; cursor: pointer; color: var(--text-muted); }
+.confirm-cancel:hover { background: var(--hover-row); }
+.confirm-delete-ok { flex: 1; padding: 12px; border-radius: 14px; border: none; background: #ef4444; color: white; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; }
+.confirm-delete-ok:hover { background: #dc2626; }
+
+/* ── Toast ── */
+.toast { position: fixed; bottom: 64px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: var(--bg); font-size: 13px; font-weight: 500; padding: 12px 22px; border-radius: 100px; box-shadow: var(--shadow-modal); white-space: nowrap; z-index: 99; pointer-events: none; opacity: 0; transition: opacity 0.25s, transform 0.3s cubic-bezier(0.32,0.72,0,1); }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@keyframes slideUp { from { transform: translateY(100%); opacity: 0.5; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes spin    { to { transform: rotate(360deg); } }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Načítám data…</div>
+</div>
+
+<main class="app">
+  <div class="config-banner" id="configBanner">
+    ⚠️ <strong>Chybí konfigurace Supabase.</strong><br>
+    Otevři soubor v textovém editoru a na začátku skriptu nahraď:<br><br>
+    <code>ZDE_VLOZ_SUPABASE_URL</code> → tvoje URL ze Supabase<br>
+    <code>ZDE_VLOZ_SUPABASE_ANON_KEY</code> → tvůj anon klíč<br><br>
+    Najdeš je na supabase.com → projekt → Settings → API.
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <p class="header-date" id="headerDate"></p>
+      <h1 class="header-title">Jak se daří?</h1>
+    </div>
+  </header>
+
+  <!-- Summary – dnešní počty -->
+  <div class="summary">
+    <div class="summary-item">
+      <div class="summary-emoji">🤱</div>
+      <div class="summary-count" id="countBf">—</div>
+      <div class="summary-label">Kojení</div>
+      <div class="summary-sub">dnes</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-emoji">🥕</div>
+      <div class="summary-count" id="countFeed">—</div>
+      <div class="summary-label">Krmení</div>
+      <div class="summary-sub">dnes</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-emoji">💩</div>
+      <div class="summary-count" id="countStool">—</div>
+      <div class="summary-label">Stolice</div>
+      <div class="summary-sub">dnes</div>
+    </div>
+  </div>
+
+  <div class="tiles">
+    <button class="tile tile-bf" onclick="openModal('bf')">
+      <div class="tile-top">
+        <div class="tile-left"><span class="tile-emoji">🤱</span><span class="tile-title">Kojení</span></div>
+        <span class="tile-arrow">›</span>
+      </div>
+      <p class="tile-sub" id="tileBfSub">Načítám…</p>
+      <p class="tile-hint" id="tileBfHint"></p>
+    </button>
+    <button class="tile tile-feed" onclick="openModal('feed')">
+      <div class="tile-top">
+        <div class="tile-left"><span class="tile-emoji">🥕</span><span class="tile-title">Krmení</span></div>
+        <span class="tile-arrow">›</span>
+      </div>
+      <p class="tile-sub" id="tileFeedSub">Načítám…</p>
+    </button>
+    <button class="tile tile-stool" onclick="openModal('stool')">
+      <div class="tile-top">
+        <div class="tile-left"><span class="tile-emoji">💩</span><span class="tile-title">Stolice</span></div>
+        <span class="tile-arrow">›</span>
+      </div>
+      <p class="tile-sub" id="tileStoolSub">Načítám…</p>
+    </button>
+  </div>
+
+  <div style="text-align:center; margin-top:48px;">
+    <p class="footer">Baby Tracker · <em>s láskou</em></p>
+  </div>
+</main>
+
+<!-- ── Bottom theme bar ── -->
+<div class="theme-bar">
+  <span class="theme-bar-icon" id="themeIcon">☀️</span>
+  <span class="theme-bar-label" id="themeLabel">Světlý režim</span>
+  <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Přepnout tmavý režim"></button>
+</div>
+
+<div class="backdrop" id="backdrop" onclick="closeAllModals()"></div>
+
+<!-- MODAL: KOJENÍ -->
+<div class="modal" id="modalBf">
+  <div class="modal-header">
+    <span class="modal-title">Kojení</span>
+    <button class="modal-close" onclick="closeAllModals()">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="breast-btns">
+      <button class="breast-btn" id="btnL" onclick="saveBf('L')">
+        <div class="breast-btn-left"><span class="breast-icon">◀</span><span class="breast-label">Levé prso</span></div>
+        <span class="breast-badge" id="badgeL">Doporučeno</span>
+      </button>
+      <button class="breast-btn" id="btnP" onclick="saveBf('P')">
+        <div class="breast-btn-left"><span class="breast-icon">▶</span><span class="breast-label">Pravé prso</span></div>
+        <span class="breast-badge" id="badgeP">Doporučeno</span>
+      </button>
+    </div>
+    <p class="last-hint" id="bfLastHint"></p>
+    <button class="section-toggle" id="toggleBfHistory" onclick="toggleSection('bfHistory',this)">
+      <span>Historie</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="bfHistory">
+      <div class="history-list" id="bfHistoryList"><div class="modal-loading"><div class="mini-spinner"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: KRMENÍ -->
+<div class="modal" id="modalFeed">
+  <div class="modal-header">
+    <span class="modal-title">Krmení</span>
+    <button class="modal-close" onclick="closeAllModals()">✕</button>
+  </div>
+  <div class="modal-body">
+    <button class="action-btn amber" onclick="toggleFeedForm()"><span>🥕</span> Zaznamenat krmení</button>
+    <div class="collapsible" id="feedForm">
+      <div class="form-section">
+        <label class="form-label">Čas</label>
+        <input type="datetime-local" class="form-input" id="feedTime">
+      </div>
+      <div class="form-section">
+        <label class="form-label">Co bylo k jídlu</label>
+        <div class="chips-wrap" id="chipsWrap"></div>
+        <div class="add-food-row" id="addFoodRow">
+          <input type="text" class="add-food-input" id="addFoodInput" placeholder="Název pokrmu…"
+            onkeydown="if(event.key==='Enter')confirmAddFood();if(event.key==='Escape')cancelAddFood();">
+          <button class="add-food-ok" onclick="confirmAddFood()">OK</button>
+        </div>
+      </div>
+      <button class="save-btn" id="feedSaveBtn" onclick="saveFeed()" disabled>Uložit krmení</button>
+    </div>
+    <button class="section-toggle" id="toggleFeedHistory" onclick="toggleSection('feedHistory',this)" style="margin-top:8px">
+      <span>Historie</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="feedHistory">
+      <div class="history-list" id="feedHistoryList"><div class="modal-loading"><div class="mini-spinner"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: STOLICE -->
+<div class="modal" id="modalStool">
+  <div class="modal-header">
+    <span class="modal-title">Stolice</span>
+    <button class="modal-close" onclick="closeAllModals()">✕</button>
+  </div>
+  <div class="modal-body">
+    <button class="action-btn stool" id="stoolBtn" onclick="saveStool()"><span>💩</span> Zaznamenat nyní</button>
+    <p class="last-hint" id="stoolLastHint"></p>
+    <button class="section-toggle" id="toggleStoolHistory" onclick="toggleSection('stoolHistory',this)">
+      <span>Historie</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="stoolHistory">
+      <div class="history-list" id="stoolHistoryList"><div class="modal-loading"><div class="mini-spinner"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm delete -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <p class="confirm-msg">Opravdu smazat tento záznam?</p>
+    <div class="confirm-btns">
+      <button class="confirm-cancel" onclick="cancelDelete()">Zrušit</button>
+      <button class="confirm-delete-ok" onclick="confirmDelete()">Smazat</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ╔══════════════════════════════════════════════════════════╗
+// ║  ⚙️  KONFIGURACE — vyplň tyto dvě hodnoty               ║
+// ╚══════════════════════════════════════════════════════════╝
+const SUPABASE_URL      = 'ZDE_VLOZ_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'ZDE_VLOZ_SUPABASE_ANON_KEY';
+// ══════════════════════════════════════════════════════════
+
+// ── Theme ────────────────────────────────────────────────────
+function initTheme() {
+  const saved = localStorage.getItem('bt_theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const dark = saved ? saved === 'dark' : prefersDark;
+  setTheme(dark, false);
+}
+function setTheme(dark, save = true) {
+  document.documentElement.classList.toggle('dark', dark);
+  document.getElementById('themeIcon').textContent  = dark ? '🌙' : '☀️';
+  document.getElementById('themeLabel').textContent = dark ? 'Tmavý režim' : 'Světlý režim';
+  if (save) localStorage.setItem('bt_theme', dark ? 'dark' : 'light');
+}
+function toggleTheme() {
+  const isDark = document.documentElement.classList.contains('dark');
+  setTheme(!isDark);
+}
+initTheme();
+
+// ── Supabase REST helper ─────────────────────────────────────
+async function sbReq(method, path, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    method,
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': method === 'POST' ? 'return=representation' : '',
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) throw new Error(await res.text());
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+const sbGet    = p    => sbReq('GET',    p);
+const sbPost   = (p,b) => sbReq('POST',  p, b);
+const sbDelete = p    => sbReq('DELETE', p);
+
+// ── Cache ────────────────────────────────────────────────────
+const cache = { bf: [], feed: [], foods: [], stool: [] };
+
+// ── Date helpers ─────────────────────────────────────────────
+function fmtTime(iso) {
+  return new Date(iso).toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
+}
+function fmtDate(iso) {
+  const d = new Date(iso);
+  return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.`;
+}
+function fmtDateShort(iso) {
+  const d = new Date(iso);
+  return `${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+function nowISO() { return new Date().toISOString(); }
+function localDT() {
+  const d = new Date(), p = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function isToday(iso) {
+  const d = new Date(iso), n = new Date();
+  return d.getDate()===n.getDate() && d.getMonth()===n.getMonth() && d.getFullYear()===n.getFullYear();
+}
+function czDay() {
+  const days   = ['neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota'];
+  const months = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
+  const d = new Date();
+  return `${days[d.getDay()]}, ${d.getDate()}. ${months[d.getMonth()]}`;
+}
+
+// ── Toast ────────────────────────────────────────────────────
+let toastT;
+function showToast(msg, isErr) {
+  const el = document.getElementById('toast');
+  el.textContent = (isErr ? '❌ ' : '') + msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), isErr ? 3500 : 2600);
+}
+const showErr = msg => showToast(msg, true);
+
+// ── Modals ───────────────────────────────────────────────────
+function openModal(type) {
+  closeAllModals(false);
+  document.getElementById('backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (type==='bf')    { renderBfModal();    document.getElementById('modalBf').classList.add('open'); }
+  if (type==='feed')  { renderFeedModal();  document.getElementById('modalFeed').classList.add('open'); }
+  if (type==='stool') { renderStoolModal(); document.getElementById('modalStool').classList.add('open'); }
+}
+function closeAllModals(scroll=true) {
+  ['modalBf','modalFeed','modalStool'].forEach(id => document.getElementById(id).classList.remove('open'));
+  document.getElementById('backdrop').classList.remove('open');
+  if (scroll) document.body.style.overflow = '';
+}
+function toggleSection(id, btn) {
+  document.getElementById(id).classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+// ── Dashboard ────────────────────────────────────────────────
+function refreshDashboard() {
+  document.getElementById('headerDate').textContent = czDay();
+
+  // Only today's counts
+  document.getElementById('countBf').textContent    = cache.bf.filter(l=>isToday(l.event_time)).length;
+  document.getElementById('countFeed').textContent  = cache.feed.filter(l=>isToday(l.event_time)).length;
+  document.getElementById('countStool').textContent = cache.stool.filter(l=>isToday(l.event_time)).length;
+
+  const lastBf = cache.bf[0];
+  if (lastBf) {
+    document.getElementById('tileBfSub').textContent =
+      `Naposledy: ${lastBf.side==='L'?'levé':'pravé'} · ${fmtTime(lastBf.event_time)} · ${fmtDate(lastBf.event_time)}`;
+    const hint = document.getElementById('tileBfHint');
+    hint.textContent = `Doporučeno: ${lastBf.side==='L'?'pravé ▶':'◀ levé'}`;
+    hint.classList.add('show');
+  } else {
+    document.getElementById('tileBfSub').textContent = 'Žádný záznam';
+    document.getElementById('tileBfHint').classList.remove('show');
+  }
+
+  const lastFeed = cache.feed[0];
+  if (lastFeed) {
+    const foodMap = Object.fromEntries(cache.foods.map(f=>[f.id,f.name]));
+    const names = (lastFeed.feeding_log_foods||[])
+      .map(f=>foodMap[f.food_id]||'?')
+      .sort((a,b)=>a.localeCompare(b,'cs')).join('+');
+    document.getElementById('tileFeedSub').textContent =
+      `Naposledy: ${fmtTime(lastFeed.event_time)} · ${names||'—'}`;
+  } else {
+    document.getElementById('tileFeedSub').textContent = 'Žádný záznam';
+  }
+
+  const lastStool = cache.stool[0];
+  document.getElementById('tileStoolSub').textContent = lastStool
+    ? `Naposledy: ${fmtTime(lastStool.event_time)} · ${fmtDate(lastStool.event_time)}`
+    : 'Žádný záznam';
+}
+
+// ── Load all ─────────────────────────────────────────────────
+async function loadAll() {
+  const [bf, feed, feedFoods, foods, stool] = await Promise.all([
+    sbGet('breastfeeding_logs?select=*&order=event_time.desc&limit=150'),
+    sbGet('feeding_logs?select=*&order=event_time.desc&limit=150'),
+    sbGet('feeding_log_foods?select=*'),
+    sbGet('foods?select=*&order=name.asc'),
+    sbGet('stool_logs?select=*&order=event_time.desc&limit=150'),
+  ]);
+  const flMap = {};
+  (feedFoods||[]).forEach(fl => {
+    if (!flMap[fl.feeding_log_id]) flMap[fl.feeding_log_id] = [];
+    flMap[fl.feeding_log_id].push(fl);
+  });
+  cache.bf    = bf    || [];
+  cache.foods = foods || [];
+  cache.stool = stool || [];
+  cache.feed  = (feed||[]).map(log => ({ ...log, feeding_log_foods: flMap[log.id]||[] }));
+}
+
+// ══════════════════════════════════════════════════════════════
+//  KOJENÍ
+// ══════════════════════════════════════════════════════════════
+function renderBfModal() {
+  const last = cache.bf[0];
+  const rec  = last ? (last.side==='L' ? 'P' : 'L') : 'L';
+  ['L','P'].forEach(s => {
+    document.getElementById('btn'+s).className = 'breast-btn ' + (s===rec ? 'primary' : 'secondary');
+    const b = document.getElementById('badge'+s);
+    s===rec ? b.classList.add('show') : b.classList.remove('show');
+  });
+  document.getElementById('bfLastHint').textContent = last
+    ? `Naposledy: ${last.side==='L'?'levé':'pravé'} · ${fmtTime(last.event_time)} · ${fmtDate(last.event_time)}` : '';
+  renderBfHistory();
+}
+function renderBfHistory() {
+  const el = document.getElementById('bfHistoryList');
+  if (!cache.bf.length) { el.innerHTML='<p class="history-empty">Zatím žádné záznamy</p>'; return; }
+  el.innerHTML = cache.bf.map(l=>`
+    <div class="history-row">
+      <span class="history-text"><strong>${l.side}</strong> · ${fmtTime(l.event_time)} · ${fmtDate(l.event_time)}</span>
+      <button class="delete-btn" onclick="askDelete('bf','${l.id}')">🗑</button>
+    </div>`).join('');
+}
+async function saveBf(side) {
+  const bL = document.getElementById('btnL'), bP = document.getElementById('btnP');
+  bL.disabled = bP.disabled = true;
+  try {
+    const row = await sbPost('breastfeeding_logs', { side, event_time: nowISO() });
+    cache.bf.unshift(Array.isArray(row) ? row[0] : row);
+    showToast(`Kojení – ${side==='L'?'levé':'pravé'} prso uloženo`);
+    renderBfModal(); refreshDashboard();
+  } catch(e) { showErr('Nepodařilo se uložit'); }
+  finally    { bL.disabled = bP.disabled = false; }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  KRMENÍ
+// ══════════════════════════════════════════════════════════════
+let selFoods = new Set();
+let feedOpen = false;
+
+function toggleFeedForm() {
+  feedOpen = !feedOpen;
+  document.getElementById('feedForm').classList.toggle('open', feedOpen);
+  if (feedOpen) { document.getElementById('feedTime').value = localDT(); selFoods.clear(); renderChips(); }
+}
+function renderFeedModal() {
+  selFoods.clear(); feedOpen = false;
+  document.getElementById('feedForm').classList.remove('open');
+  renderChips(); renderFeedHistory();
+}
+function renderChips() {
+  const wrap = document.getElementById('chipsWrap');
+  wrap.innerHTML = cache.foods.map(f => {
+    const sel = selFoods.has(f.id);
+    return `<button class="chip${sel?' selected':''}" onclick="toggleChip('${f.id}')">${sel?'✓ ':''}${f.name}</button>`;
+  }).join('') + `<button class="chip chip-add" onclick="startAddFood()">+ Přidat pokrm</button>`;
+  const sb = document.getElementById('feedSaveBtn');
+  if (sb) sb.disabled = selFoods.size === 0;
+}
+function toggleChip(id) { selFoods.has(id) ? selFoods.delete(id) : selFoods.add(id); renderChips(); }
+function startAddFood() {
+  document.getElementById('addFoodRow').classList.add('open');
+  document.getElementById('addFoodInput').value = '';
+  document.getElementById('addFoodInput').focus();
+}
+function cancelAddFood() { document.getElementById('addFoodRow').classList.remove('open'); }
+async function confirmAddFood() {
+  const inp = document.getElementById('addFoodInput');
+  const name = inp.value.trim().toLowerCase();
+  if (!name) return;
+  const exists = cache.foods.find(f => f.name.toLowerCase()===name);
+  if (exists) { selFoods.add(exists.id); cancelAddFood(); renderChips(); return; }
+  try {
+    const row = await sbPost('foods', { name });
+    const food = Array.isArray(row) ? row[0] : row;
+    cache.foods.push(food);
+    cache.foods.sort((a,b)=>a.name.localeCompare(b.name,'cs'));
+    selFoods.add(food.id);
+  } catch(e) { showErr('Nepodařilo se přidat pokrm'); }
+  cancelAddFood(); renderChips();
+}
+async function saveFeed() {
+  if (!selFoods.size) return;
+  const tv = document.getElementById('feedTime').value;
+  const event_time = tv ? new Date(tv).toISOString() : nowISO();
+  const btn = document.getElementById('feedSaveBtn');
+  btn.disabled = true; btn.textContent = 'Ukládám…';
+  try {
+    const logRow = await sbPost('feeding_logs', { event_time });
+    const log    = Array.isArray(logRow) ? logRow[0] : logRow;
+    const links  = [...selFoods].map(food_id => ({ feeding_log_id: log.id, food_id }));
+    const lRows  = await sbPost('feeding_log_foods', links);
+    const saved  = Array.isArray(lRows) ? lRows : (lRows ? [lRows] : []);
+    cache.feed.unshift({ ...log, feeding_log_foods: saved });
+    cache.feed.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));
+    showToast('Krmení uloženo');
+    selFoods.clear(); toggleFeedForm(); renderFeedHistory(); refreshDashboard();
+  } catch(e) { showErr('Nepodařilo se uložit krmení'); }
+  finally    { btn.disabled=false; btn.textContent='Uložit krmení'; }
+}
+function renderFeedHistory() {
+  const el = document.getElementById('feedHistoryList');
+  const foodMap = Object.fromEntries(cache.foods.map(f=>[f.id,f.name]));
+  if (!cache.feed.length) { el.innerHTML='<p class="history-empty">Zatím žádné záznamy</p>'; return; }
+  el.innerHTML = cache.feed.map(log => {
+    const names = (log.feeding_log_foods||[])
+      .map(fl=>foodMap[fl.food_id]||'?')
+      .sort((a,b)=>a.localeCompare(b,'cs')).join('+');
+    return `<div class="history-row">
+      <span class="history-text"><strong>${fmtDateShort(log.event_time)}</strong> · ${fmtTime(log.event_time)} · <span style="color:var(--text-muted)">${names||'—'}</span></span>
+      <button class="delete-btn" onclick="askDelete('feed','${log.id}')">🗑</button>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  STOLICE
+// ══════════════════════════════════════════════════════════════
+function renderStoolModal() {
+  const last = cache.stool[0];
+  document.getElementById('stoolLastHint').textContent = last
+    ? `Naposledy: ${fmtTime(last.event_time)} · ${fmtDate(last.event_time)}` : '';
+  renderStoolHistory();
+}
+async function saveStool() {
+  const btn = document.getElementById('stoolBtn');
+  btn.disabled = true;
+  try {
+    const row = await sbPost('stool_logs', { event_time: nowISO() });
+    cache.stool.unshift(Array.isArray(row) ? row[0] : row);
+    showToast('Stolice zaznamenána');
+    renderStoolModal(); refreshDashboard();
+  } catch(e) { showErr('Nepodařilo se uložit'); }
+  finally    { btn.disabled = false; }
+}
+function renderStoolHistory() {
+  const el = document.getElementById('stoolHistoryList');
+  if (!cache.stool.length) { el.innerHTML='<p class="history-empty">Zatím žádné záznamy</p>'; return; }
+  el.innerHTML = cache.stool.map(l=>`
+    <div class="history-row">
+      <span class="history-text"><strong>${fmtTime(l.event_time)}</strong> · ${fmtDate(l.event_time)}</span>
+      <button class="delete-btn" onclick="askDelete('stool','${l.id}')">🗑</button>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  DELETE
+// ══════════════════════════════════════════════════════════════
+let pending = null;
+function askDelete(type, id) { pending={type,id}; document.getElementById('confirmOverlay').classList.add('open'); }
+function cancelDelete()      { pending=null; document.getElementById('confirmOverlay').classList.remove('open'); }
+async function confirmDelete() {
+  if (!pending) return;
+  const {type,id} = pending; cancelDelete();
+  const tbl = {bf:'breastfeeding_logs', feed:'feeding_logs', stool:'stool_logs'};
+  const key  = {bf:'bf', feed:'feed', stool:'stool'};
+  try {
+    await sbDelete(`${tbl[type]}?id=eq.${id}`);
+    cache[key[type]] = cache[key[type]].filter(l=>l.id!==id);
+    refreshDashboard();
+    if (type==='bf')    renderBfHistory();
+    if (type==='feed')  renderFeedHistory();
+    if (type==='stool') renderStoolHistory();
+  } catch(e) { showErr('Nepodařilo se smazat'); }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════════
+async function init() {
+  document.getElementById('headerDate').textContent = czDay();
+
+  if (SUPABASE_URL.includes('ZDE_VLOZ') || SUPABASE_ANON_KEY.includes('ZDE_VLOZ')) {
+    document.getElementById('configBanner').classList.add('show');
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    ['tileBfSub','tileFeedSub','tileStoolSub'].forEach(id =>
+      document.getElementById(id).textContent = 'Chybí konfigurace');
+    ['countBf','countFeed','countStool'].forEach(id =>
+      document.getElementById(id).textContent = '—');
+    return;
+  }
+
+  try {
+    await loadAll();
+    refreshDashboard();
+  } catch(e) {
+    showErr('Chyba připojení k Supabase');
+    ['tileBfSub','tileFeedSub','tileStoolSub'].forEach(id =>
+      document.getElementById(id).textContent = 'Chyba načítání');
+  } finally {
+    document.getElementById('loadingOverlay').classList.add('hidden');
+  }
+
+  setInterval(() => { document.getElementById('headerDate').textContent = czDay(); }, 60000);
+}
+
+init();
+</script>
+</body>
+</html>
