@@ -323,6 +323,14 @@ body {
 </div>
 
 <main class="app">
+  <div class="config-banner" id="configBanner">
+    ⚠️ <strong>Chybí konfigurace Supabase.</strong><br>
+    Otevři soubor v textovém editoru a na začátku skriptu nahraď:<br><br>
+    <code>ZDE_VLOZ_SUPABASE_URL</code> → tvoje URL ze Supabase<br>
+    <code>ZDE_VLOZ_SUPABASE_ANON_KEY</code> → tvůj anon klíč<br><br>
+    Najdeš je na supabase.com → projekt → Settings → API.
+  </div>
+
   <header class="header">
     <div class="header-inner">
       <p class="header-date" id="headerDate"></p>
@@ -825,7 +833,7 @@ async function confirmDelete() {
 async function init() {
   document.getElementById('headerDate').textContent = czDay();
 
-  if (SUPABASE_URL.includes('https://kwwbltwrkfaqvntoqskt.supabase.co') || SUPABASE_ANON_KEY.includes('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt3d2JsdHdya2ZhcXZudG9xc2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTU5NjUsImV4cCI6MjA4OTg3MTk2NX0.DaKoPRUB1_WUhwdqumb5OPtDDwJ8wi6HEJYQCYdEA1M')) {
+  if (SUPABASE_URL.includes('ZDE_VLOZ') || SUPABASE_ANON_KEY.includes('ZDE_VLOZ')) {
     document.getElementById('configBanner').classList.add('show');
     document.getElementById('loadingOverlay').classList.add('hidden');
     ['tileBfSub','tileFeedSub','tileStoolSub'].forEach(id =>
