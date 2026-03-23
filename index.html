@@ -127,6 +127,9 @@ button { touch-action:manipulation; }
 .bf-bar-outer { width:100%; border-radius:6px; overflow:hidden; position:relative; height:52px; background:var(--bar-bg); }
 .bf-bar-inner { background:var(--bar-color); border-radius:6px; transition:height .5s cubic-bezier(.34,1.2,.64,1); width:100%; position:absolute; bottom:0; }
 .bf-bar-day { font-size:9px; color:var(--text-faint); font-weight:500; }
+.bf-seg { display:flex; gap:3px; margin-bottom:10px; background:var(--border); border-radius:10px; padding:3px; }
+.bf-seg-btn { flex:1; padding:5px 0; border:none; background:transparent; border-radius:8px; font-size:11px; font-weight:600; font-family:inherit; color:var(--text-faint); cursor:pointer; transition:background .15s,color .15s; touch-action:manipulation; }
+.bf-seg-btn.active { background:var(--surface); color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,.12); }
 .section-toggle { width:100%; display:flex; align-items:center; justify-content:space-between; padding:12px 0; border:none; background:none; cursor:pointer; color:var(--text-muted); font-size:13px; font-weight:500; font-family:inherit; border-top:1px solid var(--border); transition:color .15s; }
 .section-toggle:hover { color:var(--text); }
 .section-toggle .chevron { font-size:14px; transition:transform .2s; }
@@ -317,7 +320,11 @@ button { touch-action:manipulation; }
     </div>
     <p class="last-hint" id="bfLastHint"></p>
     <div class="bf-chart-wrap">
-      <p class="bf-chart-title">Posledních 7 dní</p>
+      <div class="bf-seg" id="bfSeg">
+        <button class="bf-seg-btn active" onclick="setBfPeriod('week',this)">Týden</button>
+        <button class="bf-seg-btn" onclick="setBfPeriod('month',this)">Měsíc</button>
+        <button class="bf-seg-btn" onclick="setBfPeriod('year',this)">Rok</button>
+      </div>
       <div class="bf-chart" id="bfChart"></div>
     </div>
     <button class="section-toggle" id="toggleBfHistory" onclick="toggleSection('bfHistory',this)" style="margin-top:4px">
@@ -604,18 +611,70 @@ function renderBfModal(){
   renderBfChart();renderBfHistory();
 }
 
+let bfPeriod='week';
+function setBfPeriod(period,btn){
+  bfPeriod=period;
+  document.querySelectorAll('.bf-seg-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBfChart();
+}
 function renderBfChart(){
   const el=document.getElementById('bfChart');
-  const days=[],dayLabels=['Ne','Po','Út','St','Čt','Pá','So'];
-  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d);}
-  const counts=days.map(d=>cache.bf.filter(l=>isSameDay(l.event_time,d)).length);
+  const dayLabels=['Ne','Po','Út','St','Čt','Pá','So'];
+  const today=new Date();
+  let days=[];
+
+  if(bfPeriod==='week'){
+    for(let i=6;i>=0;i--){const d=new Date();d.setDate(today.getDate()-i);days.push(d);}
+  } else if(bfPeriod==='month'){
+    for(let i=29;i>=0;i--){const d=new Date();d.setDate(today.getDate()-i);days.push(d);}
+  } else {
+    // year: last 12 months, each month aggregated — but we want per day
+    // Show last 365 days grouped by week (52 bars)
+    for(let i=51;i>=0;i--){const d=new Date();d.setDate(today.getDate()-i*7);days.push(d);}
+  }
+
+  // For year view, each "day" is actually a week anchor — count 7 days around it
+  const counts=days.map((d,i)=>{
+    if(bfPeriod==='year'){
+      // count logs in the 7-day window ending on this anchor
+      const end=new Date(d);end.setHours(23,59,59,999);
+      const start=new Date(d);start.setDate(start.getDate()-6);start.setHours(0,0,0,0);
+      return cache.bf.filter(l=>{const t=new Date(l.event_time);return t>=start&&t<=end;}).length;
+    }
+    return cache.bf.filter(l=>isSameDay(l.event_time,d)).length;
+  });
+
   const maxC=Math.max(...counts,1);
+  const isToday=(d)=>isSameDay(d,today);
+
+  // Label logic per period
+  function barLabel(d,i){
+    if(bfPeriod==='week') return dayLabels[d.getDay()];
+    if(bfPeriod==='month'){
+      // show date every ~5 days
+      if(i===0||i===days.length-1||(days.length-1-i)%7===0) return `${d.getDate()}.`;
+      return '';
+    }
+    // year: show month name every ~4 weeks
+    const months=['Led','Úno','Bře','Dub','Kvě','Čvn','Čvc','Srp','Zář','Říj','Lis','Pro'];
+    if(i===0||d.getDate()<=7) return months[d.getMonth()];
+    return '';
+  }
+
+  // Gap between bars
+  const gap = bfPeriod==='week'?5:bfPeriod==='month'?3:2;
+  el.style.gap=gap+'px';
+
   el.innerHTML=days.map((d,i)=>{
-    const c=counts[i],pct=Math.round((c/maxC)*100),today=i===6;
+    const c=counts[i],pct=Math.round((c/maxC)*100);
+    const highlight=bfPeriod==='week'?isToday(d):(i===days.length-1);
+    const label=barLabel(d,i);
+    const showVal=bfPeriod==='week'||(c>0&&bfPeriod!=='year');
     return `<div class="bf-bar-col">
-      <div class="bf-bar-val">${c||''}</div>
-      <div class="bf-bar-outer"><div class="bf-bar-inner" style="height:${pct}%;opacity:${today?1:.55}"></div></div>
-      <div class="bf-bar-day" style="${today?'font-weight:700;color:var(--text)':''}">${dayLabels[d.getDay()]}</div>
+      <div class="bf-bar-val">${showVal&&c?c:''}</div>
+      <div class="bf-bar-outer"><div class="bf-bar-inner" style="height:${pct}%;opacity:${highlight?1:.5}"></div></div>
+      <div class="bf-bar-day" style="${highlight?'font-weight:700;color:var(--text)':''}">${label}</div>
     </div>`;
   }).join('');
 }
