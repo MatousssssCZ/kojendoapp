@@ -1094,14 +1094,40 @@ async function init(){
   catch(e){showErr('Chyba připojení k Supabase');['tileBfSub','tileFeedSub','tileStoolSub','tileSleepSub'].forEach(id=>document.getElementById(id).textContent='Chyba načítání');}
   finally{document.getElementById('loadingOverlay').classList.add('hidden');}
   setInterval(()=>{
-  if(document.hidden) return;
-  document.getElementById('headerDate').textContent=czDay();
-  // Refresh BF elapsed time
-  const lastBf=cache.bf[0];
-  if(lastBf){
-    document.getElementById('tileBfSub').textContent=`${lastBf.side==='L'?'Levé':'Pravé'} · ${fmtTime(lastBf.event_time)} · ${fmtDate(lastBf.event_time)} · před ${fmtElapsed(lastBf.event_time)}`;
-  }
-},60000);
+    if(document.hidden) return;
+    document.getElementById('headerDate').textContent=czDay();
+    const lastBf=cache.bf[0];
+    if(lastBf){
+      document.getElementById('tileBfSub').textContent=`${lastBf.side==='L'?'Levé':'Pravé'} · ${fmtTime(lastBf.event_time)} · ${fmtDate(lastBf.event_time)} · před ${fmtElapsed(lastBf.event_time)}`;
+    }
+  },60000);
+
+  // Při návratu do popředí (z plochy, přepnutí apky, odemknutí telefonu)
+  // – pokud byla apka skryta déle než 30 s, načti čerstvá data
+  let lastHidden=0;
+  document.addEventListener('visibilitychange', async () => {
+    if (!document.hidden) {
+      if (Date.now() - lastHidden > 30000) {
+        try {
+          await loadAll();
+          refreshDashboard();
+          if(document.getElementById('modalBf').classList.contains('open'))    renderBfModal();
+          if(document.getElementById('modalFeed').classList.contains('open'))  renderFeedModal();
+          if(document.getElementById('modalSleep').classList.contains('open')) renderSleepModal();
+          if(document.getElementById('modalStool').classList.contains('open')) renderStoolModal();
+        } catch(e) { /* tiché selhání, data jsou stále v cache */ }
+      }
+    } else {
+      lastHidden = Date.now();
+    }
+  });
+
+  // iOS Safari bfcache — stránka obnovená z cache při otevření z plochy
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+      loadAll().then(() => refreshDashboard()).catch(() => {});
+    }
+  });
 }
 init();
 </script>
