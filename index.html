@@ -203,6 +203,21 @@ button { touch-action:manipulation; }
 .add-food-ok:hover { background:var(--sage-dark); }
 .collapsible { display:none; }
 .collapsible.open { display:block; animation:fadeIn .18s ease; }
+
+/* Food management */
+.food-mgmt-row { display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; transition:background .12s; }
+.food-mgmt-row:hover { background:var(--hover-row); }
+.food-mgmt-row:hover .food-mgmt-btns { opacity:1; }
+.food-mgmt-name { flex:1; font-size:13px; color:var(--text); font-weight:500; }
+.food-mgmt-btns { display:flex; gap:4px; opacity:0; transition:opacity .15s; flex-shrink:0; }
+.food-mgmt-btn { padding:4px 8px; border-radius:7px; border:none; background:transparent; font-size:12px; cursor:pointer; color:var(--text-faint); touch-action:manipulation; }
+.food-mgmt-btn:hover { color:var(--text); background:var(--border); }
+.food-mgmt-btn.del:hover { color:#ef4444; background:transparent; }
+.food-edit-row { display:none; align-items:center; gap:6px; padding:4px 10px 8px; }
+.food-edit-row.open { display:flex; animation:fadeIn .15s ease; }
+.food-edit-input { flex:1; padding:6px 10px; border-radius:8px; border:1.5px solid var(--sage); font-size:13px; font-family:inherit; outline:none; background:var(--input-bg); color:var(--text); }
+.food-edit-ok { padding:6px 12px; border-radius:8px; border:none; background:var(--sage); color:white; font-size:12px; font-weight:600; font-family:inherit; cursor:pointer; touch-action:manipulation; }
+.food-edit-ok:hover { background:var(--sage-dark); }
 .dev-notice { display:flex; align-items:flex-start; gap:14px; background:var(--surface); border:1.5px dashed var(--border-2); border-radius:16px; padding:16px 18px; margin-top:4px; }
 .dev-notice-art { font-size:36px; line-height:1; flex-shrink:0; filter:drop-shadow(0 2px 4px rgba(0,0,0,.08)); }
 .dev-notice-text { font-size:12px; color:var(--text-muted); line-height:1.65; }
@@ -371,7 +386,13 @@ button { touch-action:manipulation; }
       </div>
       <button class="save-btn" id="feedSaveBtn" onclick="saveFeed()" disabled>Uložit krmení</button>
     </div>
-    <button class="section-toggle" id="toggleFeedHistory" onclick="toggleSection('feedHistory',this)" style="margin-top:8px">
+    <button class="section-toggle" id="toggleFoodsEdit" onclick="toggleSection('foodsEdit',this)" style="margin-top:8px">
+      <span>Správa pokrmů</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="foodsEdit">
+      <div id="foodsMgmtList" style="margin-top:6px;margin-bottom:4px"></div>
+    </div>
+    <button class="section-toggle" id="toggleFeedHistory" onclick="toggleSection('feedHistory',this)">
       <span>Historie</span><span class="chevron">⌄</span>
     </button>
     <div class="collapsible" id="feedHistory">
@@ -752,13 +773,89 @@ function toggleFeedForm(){
   feedOpen=!feedOpen;document.getElementById('feedForm').classList.toggle('open',feedOpen);
   if(feedOpen){document.getElementById('feedTime').value=localDT();selFoods.clear();renderChips();}
 }
-function renderFeedModal(){selFoods.clear();feedOpen=false;document.getElementById('feedForm').classList.remove('open');renderChips();renderFeedHistory();}
+function renderFeedModal(){selFoods.clear();feedOpen=false;document.getElementById('feedForm').classList.remove('open');renderChips();renderFoodsMgmt();renderFeedHistory();}
 function renderChips(){
   const wrap=document.getElementById('chipsWrap');
   wrap.innerHTML=cache.foods.map(f=>{const sel=selFoods.has(f.id);return `<button class="chip${sel?' selected':''}" onclick="toggleChip('${f.id}')">${sel?'✓ ':''}${f.name}</button>`;}).join('')+`<button class="chip chip-add" onclick="startAddFood()">+ Přidat pokrm</button>`;
   const sb=document.getElementById('feedSaveBtn');if(sb)sb.disabled=selFoods.size===0;
 }
 function toggleChip(id){selFoods.has(id)?selFoods.delete(id):selFoods.add(id);renderChips();}
+
+function renderFoodsMgmt(){
+  const el=document.getElementById('foodsMgmtList');
+  if(!el)return;
+  if(!cache.foods.length){el.innerHTML='<p class="history-empty">Žádné pokrmy</p>';return;}
+  el.innerHTML=cache.foods.map(f=>`
+    <div id="fmr-${f.id}">
+      <div class="food-mgmt-row">
+        <span class="food-mgmt-name">${f.name}</span>
+        <div class="food-mgmt-btns">
+          <button class="food-mgmt-btn" onclick="startEditFood('${f.id}')">✏️</button>
+          <button class="food-mgmt-btn del" onclick="askDeleteFood('${f.id}','${f.name}')">🗑</button>
+        </div>
+      </div>
+      <div class="food-edit-row" id="fer-${f.id}">
+        <input class="food-edit-input" id="fei-${f.id}" value="${f.name}"
+          onkeydown="if(event.key==='Enter')saveEditFood('${f.id}');if(event.key==='Escape')cancelEditFood('${f.id}');">
+        <button class="food-edit-ok" onclick="saveEditFood('${f.id}')">OK</button>
+      </div>
+    </div>`).join('');
+}
+
+function startEditFood(id){
+  // Close any open edit rows first
+  document.querySelectorAll('.food-edit-row.open').forEach(el=>el.classList.remove('open'));
+  const row=document.getElementById('fer-'+id);
+  if(row){row.classList.add('open');const inp=document.getElementById('fei-'+id);if(inp){inp.focus();inp.select();}}
+}
+function cancelEditFood(id){
+  const row=document.getElementById('fer-'+id);if(row)row.classList.remove('open');
+  // Reset input to original value
+  const food=cache.foods.find(f=>f.id===id);
+  const inp=document.getElementById('fei-'+id);
+  if(food&&inp)inp.value=food.name;
+}
+async function saveEditFood(id){
+  const inp=document.getElementById('fei-'+id);
+  if(!inp)return;
+  const name=inp.value.trim().toLowerCase();
+  if(!name){showErr('Název nesmí být prázdný');return;}
+  // Check duplicate (skip self)
+  const dup=cache.foods.find(f=>f.name.toLowerCase()===name&&f.id!==id);
+  if(dup){showErr('Pokrm s tímto názvem již existuje');return;}
+  try{
+    await sbPatch(`foods?id=eq.${id}`,{name});
+    const idx=cache.foods.findIndex(f=>f.id===id);
+    if(idx>-1)cache.foods[idx]={...cache.foods[idx],name};
+    cache.foods.sort((a,b)=>a.name.localeCompare(b.name,'cs'));
+    showToast('Pokrm upraven');
+    renderFoodsMgmt();renderChips();
+  }catch(e){showErr('Nepodařilo se uložit');}
+}
+
+let pendingFoodDelete=null;
+function askDeleteFood(id,name){
+  pendingFoodDelete={id,name};
+  // Reuse confirm overlay with custom message
+  document.querySelector('.confirm-msg').textContent=`Smazat pokrm „${name}"? Záznamy krmení s tímto pokrmem zůstanou zachovány.`;
+  document.getElementById('confirmOverlay').classList.add('open');
+  // Override confirm button temporarily
+  document.querySelector('.confirm-delete-ok').onclick=confirmDeleteFood;
+}
+async function confirmDeleteFood(){
+  document.querySelector('.confirm-delete-ok').onclick=confirmDelete;
+  document.querySelector('.confirm-msg').textContent='Opravdu smazat tento záznam?';
+  if(!pendingFoodDelete)return;
+  const{id}=pendingFoodDelete;pendingFoodDelete=null;
+  document.getElementById('confirmOverlay').classList.remove('open');
+  try{
+    await sbDelete(`foods?id=eq.${id}`);
+    cache.foods=cache.foods.filter(f=>f.id!==id);
+    selFoods.delete(id);
+    showToast('Pokrm smazán');
+    renderFoodsMgmt();renderChips();
+  }catch(e){showErr('Nepodařilo se smazat — pokrm je možná použit v záznamech');}
+}
 function startAddFood(){document.getElementById('addFoodRow').classList.add('open');document.getElementById('addFoodInput').value='';document.getElementById('addFoodInput').focus();}
 function cancelAddFood(){document.getElementById('addFoodRow').classList.remove('open');}
 async function confirmAddFood(){
@@ -957,7 +1054,12 @@ async function saveEditStool(id){
 // ══════════════════════════════════════════════════════
 let pending=null;
 function askDelete(type,id){pending={type,id};document.getElementById('confirmOverlay').classList.add('open');}
-function cancelDelete(){pending=null;document.getElementById('confirmOverlay').classList.remove('open');}
+function cancelDelete(){
+  pending=null;pendingFoodDelete=null;
+  document.getElementById('confirmOverlay').classList.remove('open');
+  document.querySelector('.confirm-msg').textContent='Opravdu smazat tento záznam?';
+  document.querySelector('.confirm-delete-ok').onclick=confirmDelete;
+}
 async function confirmDelete(){
   if(!pending)return;
   const{type,id}=pending;cancelDelete();
