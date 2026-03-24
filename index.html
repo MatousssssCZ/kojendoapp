@@ -205,19 +205,19 @@ button { touch-action:manipulation; }
 .collapsible.open { display:block; animation:fadeIn .18s ease; }
 
 /* Food management */
-.food-mgmt-row { display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; transition:background .12s; }
+.food-mgmt-row { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; transition:background .12s; }
 .food-mgmt-row:hover { background:var(--hover-row); }
-.food-mgmt-row:hover .food-mgmt-btns { opacity:1; }
 .food-mgmt-name { flex:1; font-size:13px; color:var(--text); font-weight:500; }
-.food-mgmt-btns { display:flex; gap:4px; opacity:0; transition:opacity .15s; flex-shrink:0; }
-.food-mgmt-btn { padding:4px 8px; border-radius:7px; border:none; background:transparent; font-size:12px; cursor:pointer; color:var(--text-faint); touch-action:manipulation; }
-.food-mgmt-btn:hover { color:var(--text); background:var(--border); }
-.food-mgmt-btn.del:hover { color:#ef4444; background:transparent; }
-.food-edit-row { display:none; align-items:center; gap:6px; padding:4px 10px 8px; }
+.food-mgmt-btns { display:flex; gap:6px; flex-shrink:0; }
+.food-mgmt-btn { width:32px; height:32px; border-radius:8px; border:1.5px solid var(--border); background:var(--surface); font-size:14px; cursor:pointer; color:var(--text-muted); touch-action:manipulation; display:flex; align-items:center; justify-content:center; transition:background .13s,border-color .13s; }
+.food-mgmt-btn:active { transform:scale(.93); }
+.food-mgmt-btn.edit:hover { border-color:var(--sage); background:var(--sage-bg); }
+.food-mgmt-btn.del:hover { border-color:#ef4444; color:#ef4444; background:#fff0f0; }
+.food-edit-row { display:none; align-items:center; gap:8px; padding:2px 12px 10px; }
 .food-edit-row.open { display:flex; animation:fadeIn .15s ease; }
-.food-edit-input { flex:1; padding:6px 10px; border-radius:8px; border:1.5px solid var(--sage); font-size:13px; font-family:inherit; outline:none; background:var(--input-bg); color:var(--text); }
-.food-edit-ok { padding:6px 12px; border-radius:8px; border:none; background:var(--sage); color:white; font-size:12px; font-weight:600; font-family:inherit; cursor:pointer; touch-action:manipulation; }
-.food-edit-ok:hover { background:var(--sage-dark); }
+.food-edit-input { flex:1; padding:8px 12px; border-radius:10px; border:1.5px solid var(--sage); font-size:13px; font-family:inherit; outline:none; background:var(--input-bg); color:var(--text); }
+.food-edit-ok { padding:8px 14px; border-radius:10px; border:none; background:var(--sage); color:white; font-size:13px; font-weight:600; font-family:inherit; cursor:pointer; touch-action:manipulation; }
+.food-edit-cancel { padding:8px 12px; border-radius:10px; border:1.5px solid var(--border); background:transparent; font-size:12px; color:var(--text-muted); font-family:inherit; cursor:pointer; touch-action:manipulation; }
 .dev-notice { display:flex; align-items:flex-start; gap:14px; background:var(--surface); border:1.5px dashed var(--border-2); border-radius:16px; padding:16px 18px; margin-top:4px; }
 .dev-notice-art { font-size:36px; line-height:1; flex-shrink:0; filter:drop-shadow(0 2px 4px rgba(0,0,0,.08)); }
 .dev-notice-text { font-size:12px; color:var(--text-muted); line-height:1.65; }
@@ -790,14 +790,15 @@ function renderFoodsMgmt(){
       <div class="food-mgmt-row">
         <span class="food-mgmt-name">${f.name}</span>
         <div class="food-mgmt-btns">
-          <button class="food-mgmt-btn" onclick="startEditFood('${f.id}')">✏️</button>
-          <button class="food-mgmt-btn del" onclick="askDeleteFood('${f.id}','${f.name}')">🗑</button>
+          <button class="food-mgmt-btn edit" onclick="startEditFood('${f.id}')" title="Přejmenovat">✏️</button>
+          <button class="food-mgmt-btn del" onclick="askDeleteFood('${f.id}','${f.name}')" title="Smazat">🗑</button>
         </div>
       </div>
       <div class="food-edit-row" id="fer-${f.id}">
         <input class="food-edit-input" id="fei-${f.id}" value="${f.name}"
           onkeydown="if(event.key==='Enter')saveEditFood('${f.id}');if(event.key==='Escape')cancelEditFood('${f.id}');">
-        <button class="food-edit-ok" onclick="saveEditFood('${f.id}')">OK</button>
+        <button class="food-edit-ok" onclick="saveEditFood('${f.id}')">Uložit</button>
+        <button class="food-edit-cancel" onclick="cancelEditFood('${f.id}')">✕</button>
       </div>
     </div>`).join('');
 }
