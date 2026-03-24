@@ -520,6 +520,13 @@ function fmtDuration(ms){
   const m=Math.round(ms/60000),h=Math.floor(m/60),min=m%60;
   return h===0?`${min} min`:min===0?`${h} h`:`${h} h ${min} min`;
 }
+function fmtElapsed(iso){
+  const ms=Date.now()-new Date(iso).getTime();
+  if(ms<0)return '';
+  const totalMin=Math.floor(ms/60000);
+  const h=Math.floor(totalMin/60),m=totalMin%60;
+  return `${p2(h)}:${p2(m)}`;
+}
 
 // ── Toast ──────────────────────────────────────────────
 let toastT;
@@ -571,7 +578,7 @@ function refreshDashboard(){
 
   const lastBf=cache.bf[0];
   if(lastBf){
-    document.getElementById('tileBfSub').textContent=`Naposledy: ${lastBf.side==='L'?'levé':'pravé'} · ${fmtTime(lastBf.event_time)} · ${fmtDate(lastBf.event_time)}`;
+    document.getElementById('tileBfSub').textContent=`${lastBf.side==='L'?'Levé':'Pravé'} · ${fmtTime(lastBf.event_time)} · ${fmtDate(lastBf.event_time)} · před ${fmtElapsed(lastBf.event_time)}`;
     const hint=document.getElementById('tileBfHint');hint.textContent=`Doporučeno: ${lastBf.side==='L'?'pravé ▶':'◀ levé'}`;hint.classList.add('show');
   } else {document.getElementById('tileBfSub').textContent='Žádný záznam';document.getElementById('tileBfHint').classList.remove('show');}
 
@@ -983,7 +990,15 @@ async function init(){
   try{await loadAll();refreshDashboard();}
   catch(e){showErr('Chyba připojení k Supabase');['tileBfSub','tileFeedSub','tileStoolSub','tileSleepSub'].forEach(id=>document.getElementById(id).textContent='Chyba načítání');}
   finally{document.getElementById('loadingOverlay').classList.add('hidden');}
-  setInterval(()=>{ if(!document.hidden) document.getElementById('headerDate').textContent=czDay(); },60000);
+  setInterval(()=>{
+  if(document.hidden) return;
+  document.getElementById('headerDate').textContent=czDay();
+  // Refresh BF elapsed time
+  const lastBf=cache.bf[0];
+  if(lastBf){
+    document.getElementById('tileBfSub').textContent=`${lastBf.side==='L'?'Levé':'Pravé'} · ${fmtTime(lastBf.event_time)} · ${fmtDate(lastBf.event_time)} · před ${fmtElapsed(lastBf.event_time)}`;
+  }
+},60000);
 }
 init();
 </script>
