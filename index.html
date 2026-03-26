@@ -74,7 +74,7 @@ button { touch-action:manipulation; }
 .theme-toggle::after { content:''; position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%; background:var(--text-faint); transition:transform .22s cubic-bezier(.34,1.56,.64,1),background .2s; }
 .dark .theme-toggle { background:var(--sage-bg); }
 .dark .theme-toggle::after { transform:translateX(18px); background:var(--sage); }
-.summary { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-bottom:16px; }
+.summary { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-bottom:16px; }
 .summary-item { background:var(--surface); border-radius:14px; padding:9px 6px 8px; text-align:center; box-shadow:var(--shadow-soft); border:1px solid var(--border); }
 .summary-emoji { font-size:14px; margin-bottom:2px; }
 .summary-count { font-size:17px; font-weight:700; color:var(--text); line-height:1; }
@@ -280,7 +280,12 @@ button { touch-action:manipulation; }
       <div class="summary-label">Spánek</div>
       <div class="summary-sub">dnes</div>
     </div>
-
+    <div class="summary-item">
+      <div class="summary-emoji">💩</div>
+      <div class="summary-count" id="countStool">—</div>
+      <div class="summary-label">Stolice</div>
+      <div class="summary-sub">dnes</div>
+    </div>
   </div>
 
   <div class="tiles">
@@ -306,7 +311,13 @@ button { touch-action:manipulation; }
       </div>
       <p class="tile-sub" id="tileSleepSub">Načítám…</p>
     </button>
-
+    <button class="tile tile-stool" onclick="openModal('stool')">
+      <div class="tile-top">
+        <div class="tile-left"><span class="tile-emoji">💩</span><span class="tile-title">Stolice</span></div>
+        <span class="tile-arrow">›</span>
+      </div>
+      <p class="tile-sub" id="tileStoolSub">Načítám…</p>
+    </button>
   </div>
 
   <p class="footer" style="margin-top:20px">Kojendo app · <em>s láskou táta</em></p>
