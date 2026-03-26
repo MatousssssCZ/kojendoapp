@@ -155,6 +155,9 @@ button { touch-action:manipulation; }
 .history-text strong { color:var(--text); font-weight:600; }
 .edit-hint { font-size:10px; color:var(--text-faint); flex-shrink:0; margin-left:8px; opacity:0; transition:opacity .15s; }
 .history-row:hover .edit-hint, .history-item.editing .edit-hint { opacity:1; }
+.bf-gap-row { display:flex; align-items:center; gap:8px; padding:3px 12px; }
+.bf-gap-line { flex:1; height:1px; background:var(--border); }
+.bf-gap-label { font-size:11px; color:var(--text-faint); white-space:nowrap; }
 .edit-panel { display:none; padding:2px 12px 12px; animation:fadeIn .15s ease; }
 .edit-panel.open { display:block; }
 .edit-time { padding:7px 10px; border-radius:10px; border:1.5px solid var(--border); background:var(--input-bg); font-size:12px; color:var(--text); font-family:inherit; outline:none; transition:border-color .15s; color-scheme:light dark; }
@@ -724,7 +727,16 @@ function renderBfChart(){
 function renderBfHistory(){
   const el=document.getElementById('bfHistoryList');
   if(!cache.bf.length){el.innerHTML='<p class="history-empty">Zatím žádné záznamy</p>';return;}
-  el.innerHTML=cache.bf.map(l=>`
+  function fmtGap(msA,msB){
+    const ms=msB-msA;
+    if(ms<=0)return null;
+    const totalMin=Math.floor(ms/60000),h=Math.floor(totalMin/60),m=totalMin%60;
+    return h===0?`${m} min`:m===0?`${h} h`:`${h} h ${m} min`;
+  }
+  const html=cache.bf.map((l,i)=>{
+    const next=cache.bf[i+1];
+    const gap=next?fmtGap(new Date(next.event_time).getTime(),new Date(l.event_time).getTime()):null;
+    return `
     <div class="history-item" id="bfi-${l.id}">
       <div class="history-row" onclick="toggleEdit('bfep-${l.id}','bfi-${l.id}')">
         <span class="history-text"><strong>${l.side}</strong> · ${fmtTime(l.event_time)} · ${fmtDate(l.event_time)}</span>
@@ -742,7 +754,10 @@ function renderBfHistory(){
           <button class="edit-delete" onclick="event.stopPropagation();askDelete('bf','${l.id}')">🗑</button>
         </div>
       </div>
-    </div>`).join('');
+    </div>
+    ${gap?`<div class="bf-gap-row"><div class="bf-gap-line"></div><span class="bf-gap-label">↕ ${gap}</span><div class="bf-gap-line"></div></div>`:''}`;
+  }).join('');
+  el.innerHTML=html;
 }
 function bfEditSide(id,side){['L','P'].forEach(s=>{const b=document.getElementById('bfes-'+s+'-'+id);if(b)b.classList.toggle('selected',s===side);});}
 async function saveBf(side){
