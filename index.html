@@ -477,6 +477,13 @@ button { touch-action:manipulation; }
 <script>
 'use strict';
 
+// Bezpečné nastavení textu — nekrachne při chybějícím elementu
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+
 // ╔══════════════════════════════════════════════════════════╗
 // ║  ⚙️  KONFIGURACE                                        ║
 // ╚══════════════════════════════════════════════════════════╝
@@ -586,7 +593,7 @@ function refreshDashboard(){
   document.getElementById('headerDate').textContent=czDay();
   document.getElementById('countBf').textContent=cache.bf.filter(l=>isToday(l.event_time)).length;
   document.getElementById('countFeed').textContent=cache.feed.filter(l=>isToday(l.event_time)).length;
-  document.getElementById('countStool').textContent=cache.stool.filter(l=>isToday(l.event_time)).length;
+  setText('countStool', cache.stool.filter(l=>isToday(l.event_time)).length);
 
   // Sleep: total hours today
   const todaySleepEnds=cache.sleep.filter(l=>l.type==='end'&&isToday(l.event_time)&&l.pair_start_time);
@@ -613,7 +620,7 @@ function refreshDashboard(){
   } else {document.getElementById('tileSleepSub').textContent='Žádný záznam';}
 
   const lastStool=cache.stool[0];
-  document.getElementById('tileStoolSub').textContent=lastStool?`Naposledy: ${fmtTime(lastStool.event_time)} · ${fmtDate(lastStool.event_time)}`:'Žádný záznam';
+  setText('tileStoolSub', lastStool?`Naposledy: ${fmtTime(lastStool.event_time)} · ${fmtDate(lastStool.event_time)}`:'Žádný záznam');
 }
 
 // ── Load all ───────────────────────────────────────────
@@ -1150,12 +1157,12 @@ async function init(){
   if(SUPABASE_URL.includes('ZDE_VLOZ')||SUPABASE_ANON_KEY.includes('ZDE_VLOZ')){
     document.getElementById('configBanner').classList.add('show');
     document.getElementById('loadingOverlay').classList.add('hidden');
-    ['tileBfSub','tileFeedSub','tileStoolSub','tileSleepSub'].forEach(id=>document.getElementById(id).textContent='Chybí konfigurace');
-    ['countBf','countFeed','countStool','countSleep'].forEach(id=>document.getElementById(id).textContent='—');
+    ['tileBfSub','tileFeedSub','tileSleepSub'].forEach(id=>document.getElementById(id).textContent='Chybí konfigurace');
+    ['countBf','countFeed','countSleep'].forEach(id=>document.getElementById(id).textContent='—');
     return;
   }
   try{await loadAll();refreshDashboard();}
-  catch(e){showErr('Chyba připojení k Supabase');['tileBfSub','tileFeedSub','tileStoolSub','tileSleepSub'].forEach(id=>document.getElementById(id).textContent='Chyba načítání');}
+  catch(e){showErr('Chyba připojení k Supabase');['tileBfSub','tileFeedSub','tileSleepSub'].forEach(id=>document.getElementById(id).textContent='Chyba načítání');}
   finally{document.getElementById('loadingOverlay').classList.add('hidden');}
   setInterval(()=>{
     if(document.hidden) return;
