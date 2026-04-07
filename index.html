@@ -229,13 +229,13 @@ button { touch-action:manipulation; }
 .food-color-swatch.selected { border-color:var(--text); }
 .food-pill { display:inline-flex; align-items:center; padding:3px 9px; border-radius:100px; font-size:11px; font-weight:600; white-space:nowrap; }
 .food-pill-plain { color:var(--text-muted); }
-.feed-filter-wrap { display:flex; flex-wrap:wrap; gap:6px; padding:10px 0 4px; }
-.feed-filter-chip { display:inline-flex; align-items:center; padding:5px 12px; border-radius:100px; border:1.5px solid var(--border); background:var(--surface); font-size:12px; font-weight:500; color:var(--text-muted); cursor:pointer; transition:all .13s; font-family:inherit; touch-action:manipulation; }
+.feed-filter-wrap { display:flex; gap:6px; padding:10px 14px 10px; overflow-x:auto; border-bottom:1px solid var(--border); -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.feed-filter-wrap::-webkit-scrollbar { display:none; }
+.feed-filter-chip { display:inline-flex; align-items:center; padding:5px 13px; border-radius:100px; border:1.5px solid var(--border); background:var(--surface); font-size:12px; font-weight:500; color:var(--text-muted); cursor:pointer; transition:border-color .13s,background .13s; font-family:inherit; touch-action:manipulation; white-space:nowrap; flex-shrink:0; }
 .feed-filter-chip:active { transform:scale(.95); }
-.feed-filter-chip.active { border-color:var(--sage); background:var(--sage-bg); color:var(--sage-dark); font-weight:600; }
-.feed-filter-clear { font-size:11px; color:var(--text-faint); background:none; border:none; cursor:pointer; font-family:inherit; padding:5px 4px; touch-action:manipulation; }
-.feed-filter-clear:hover { color:var(--text-muted); }
-.feed-filter-info { font-size:11px; color:var(--text-faint); padding:2px 0 6px; }
+.feed-filter-chip.active { border-width:2px; font-weight:600; }
+.feed-filter-clear { display:inline-flex; align-items:center; padding:5px 10px; border-radius:100px; border:1.5px solid var(--border); background:transparent; font-size:12px; color:var(--text-faint); cursor:pointer; font-family:inherit; touch-action:manipulation; white-space:nowrap; flex-shrink:0; }
+.feed-filter-info { font-size:11px; color:var(--text-faint); padding:4px 14px 2px; }
 .food-color-dot { width:8px; height:8px; border-radius:50%; display:inline-block; flex-shrink:0; }
 .dev-notice { display:flex; align-items:flex-start; gap:14px; background:var(--surface); border:1.5px dashed var(--border-2); border-radius:16px; padding:16px 18px; margin-top:4px; }
 .dev-notice-art { font-size:36px; line-height:1; flex-shrink:0; filter:drop-shadow(0 2px 4px rgba(0,0,0,.08)); }
@@ -952,11 +952,16 @@ function renderFeedFilterChips() {
   const chips = cache.foods.map(f => {
     const col = foodColorById(f.color);
     const isActive = feedFilter.has(f.id);
-    const style = col && !isActive ? `style="background:${col.bg};color:${col.txt};border-color:${col.bg}"` : '';
-    const activeStyle = col && isActive ? `style="background:${col.bg};color:${col.txt};border-color:${col.txt}"` : '';
-    return `<button class="feed-filter-chip${isActive?' active':''}" ${isActive ? activeStyle : style} onclick="toggleFeedFilter('${f.id}')">${f.name}</button>`;
+    // Neaktivní: barva pokrmu jako jemný background, nebo neutrální
+    // Aktivní: plná barva s výrazným borderem (jako v náhledu)
+    let style = '';
+    if (col && isActive)  style = `style="background:${col.bg};color:${col.txt};border-color:${col.txt}"`;
+    else if (col && !isActive) style = `style="background:${col.bg};color:${col.txt};border-color:${col.bg}"`;
+    return `<button class="feed-filter-chip${isActive?' active':''}" ${style} onclick="toggleFeedFilter('${f.id}')">${f.name}</button>`;
   }).join('');
-  const clear = feedFilter.size > 0 ? `<button class="feed-filter-clear" onclick="clearFeedFilter()">✕ Zrušit filtr</button>` : '';
+  const clear = feedFilter.size > 0
+    ? `<button class="feed-filter-clear" onclick="clearFeedFilter()">✕</button>`
+    : '';
   wrap.innerHTML = chips + clear;
 }
 
