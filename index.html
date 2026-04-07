@@ -74,7 +74,7 @@ button { touch-action:manipulation; }
 .theme-toggle::after { content:''; position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%; background:var(--text-faint); transition:transform .22s cubic-bezier(.34,1.56,.64,1),background .2s; }
 .dark .theme-toggle { background:var(--sage-bg); }
 .dark .theme-toggle::after { transform:translateX(18px); background:var(--sage); }
-.summary { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-bottom:16px; }
+.summary { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-bottom:16px; }
 .summary-item { background:var(--surface); border-radius:14px; padding:9px 6px 8px; text-align:center; box-shadow:var(--shadow-soft); border:1px solid var(--border); }
 .summary-emoji { font-size:14px; margin-bottom:2px; }
 .summary-count { font-size:17px; font-weight:700; color:var(--text); line-height:1; }
@@ -221,6 +221,15 @@ button { touch-action:manipulation; }
 .food-edit-input { flex:1; padding:8px 12px; border-radius:10px; border:1.5px solid var(--sage); font-size:13px; font-family:inherit; outline:none; background:var(--input-bg); color:var(--text); }
 .food-edit-ok { padding:8px 14px; border-radius:10px; border:none; background:var(--sage); color:white; font-size:13px; font-weight:600; font-family:inherit; cursor:pointer; touch-action:manipulation; }
 .food-edit-cancel { padding:8px 12px; border-radius:10px; border:1.5px solid var(--border); background:transparent; font-size:12px; color:var(--text-muted); font-family:inherit; cursor:pointer; touch-action:manipulation; }
+
+/* ── Barvy pokrmů ── */
+.food-color-row { display:flex; gap:6px; flex-wrap:wrap; padding:4px 12px 10px; }
+.food-color-swatch { width:24px; height:24px; border-radius:50%; border:2.5px solid transparent; cursor:pointer; touch-action:manipulation; transition:transform .12s,border-color .12s; flex-shrink:0; }
+.food-color-swatch:active { transform:scale(.88); }
+.food-color-swatch.selected { border-color:var(--text); }
+.food-pill { display:inline-flex; align-items:center; padding:3px 9px; border-radius:100px; font-size:11px; font-weight:600; white-space:nowrap; }
+.food-pill-plain { color:var(--text-muted); }
+.food-color-dot { width:8px; height:8px; border-radius:50%; display:inline-block; flex-shrink:0; }
 .dev-notice { display:flex; align-items:flex-start; gap:14px; background:var(--surface); border:1.5px dashed var(--border-2); border-radius:16px; padding:16px 18px; margin-top:4px; }
 .dev-notice-art { font-size:36px; line-height:1; flex-shrink:0; filter:drop-shadow(0 2px 4px rgba(0,0,0,.08)); }
 .dev-notice-text { font-size:12px; color:var(--text-muted); line-height:1.65; }
@@ -280,12 +289,6 @@ button { touch-action:manipulation; }
       <div class="summary-label">Spánek</div>
       <div class="summary-sub">dnes</div>
     </div>
-    <div class="summary-item">
-      <div class="summary-emoji">💩</div>
-      <div class="summary-count" id="countStool">—</div>
-      <div class="summary-label">Stolice</div>
-      <div class="summary-sub">dnes</div>
-    </div>
   </div>
 
   <div class="tiles">
@@ -311,15 +314,6 @@ button { touch-action:manipulation; }
       </div>
       <p class="tile-sub" id="tileSleepSub">Načítám…</p>
     </button>
-    <button class="tile tile-stool" onclick="openModal('stool')">
-      <div class="tile-top">
-        <div class="tile-left"><span class="tile-emoji">💩</span><span class="tile-title">Stolice</span></div>
-        <span class="tile-arrow">›</span>
-      </div>
-      <p class="tile-sub" id="tileStoolSub">Načítám…</p>
-    </button>
-  </div>
-
   <p class="footer" style="margin-top:20px">Kojendo app · <em>s láskou táta</em></p>
 </main>
 
@@ -628,7 +622,7 @@ async function loadAll(){
     sbGet('breastfeeding_logs?select=id,side,event_time&order=event_time.desc&limit=400'),
     sbGet('feeding_logs?select=id,event_time&order=event_time.desc&limit=100'),
     sbGet('feeding_log_foods?select=*&limit=500'),
-    sbGet('foods?select=id,name&order=name.asc'),
+    sbGet('foods?select=id,name,color&order=name.asc'),
     sbGet('stool_logs?select=id,event_time&order=event_time.desc&limit=100'),
     sbGet('sleep_logs?select=id,type,event_time&order=event_time.desc&limit=200'),
   ]);
@@ -796,14 +790,37 @@ function renderChips(){
 }
 function toggleChip(id){selFoods.has(id)?selFoods.delete(id):selFoods.add(id);renderChips();}
 
+// 12 barev pokrmů — bg a text pro světlý/tmavý kontrast
+const FOOD_COLORS=[
+  {id:'red',    bg:'#fecaca',txt:'#7f1d1d'},
+  {id:'orange', bg:'#fed7aa',txt:'#7c2d12'},
+  {id:'yellow', bg:'#fef08a',txt:'#713f12'},
+  {id:'lime',   bg:'#d9f99d',txt:'#365314'},
+  {id:'green',  bg:'#bbf7d0',txt:'#14532d'},
+  {id:'teal',   bg:'#99f6e4',txt:'#134e4a'},
+  {id:'sky',    bg:'#bae6fd',txt:'#0c4a6e'},
+  {id:'blue',   bg:'#bfdbfe',txt:'#1e3a8a'},
+  {id:'violet', bg:'#ddd6fe',txt:'#4c1d95'},
+  {id:'pink',   bg:'#fbcfe8',txt:'#831843'},
+  {id:'rose',   bg:'#fecdd3',txt:'#881337'},
+  {id:'stone',  bg:'#e7e5e4',txt:'#292524'},
+];
+function foodColorById(id){return FOOD_COLORS.find(c=>c.id===id)||null;}
+
 function renderFoodsMgmt(){
   const el=document.getElementById('foodsMgmtList');
   if(!el)return;
   if(!cache.foods.length){el.innerHTML='<p class="history-empty">Žádné pokrmy</p>';return;}
-  el.innerHTML=cache.foods.map(f=>`
+  el.innerHTML=cache.foods.map(f=>{
+    const col=foodColorById(f.color);
+    const swatches=FOOD_COLORS.map(c=>`<div class="food-color-swatch${f.color===c.id?' selected':''}" style="background:${c.bg};border-color:${f.color===c.id?'#000':'transparent'}" onclick="setFoodColor('${f.id}','${c.id}')" title="${c.id}"></div>`).join('');
+    const pill=col
+      ?`<span class="food-pill" style="background:${col.bg};color:${col.txt}">${f.name}</span>`
+      :`<span class="food-mgmt-name">${f.name}</span>`;
+    return `
     <div id="fmr-${f.id}">
       <div class="food-mgmt-row">
-        <span class="food-mgmt-name">${f.name}</span>
+        ${pill}
         <div class="food-mgmt-btns">
           <button class="food-mgmt-btn edit" onclick="startEditFood('${f.id}')" title="Přejmenovat">✏️</button>
           <button class="food-mgmt-btn del" onclick="askDeleteFood('${f.id}','${f.name}')" title="Smazat">🗑</button>
@@ -815,18 +832,39 @@ function renderFoodsMgmt(){
         <button class="food-edit-ok" onclick="saveEditFood('${f.id}')">Uložit</button>
         <button class="food-edit-cancel" onclick="cancelEditFood('${f.id}')">✕</button>
       </div>
-    </div>`).join('');
+      <div class="food-color-row" id="fcr-${f.id}" style="display:none">${swatches}</div>
+    </div>`;
+  }).join('');
+}
+
+async function setFoodColor(id,colorId){
+  // Toggle: klik na stejnou barvu = odstraní barvu
+  const food=cache.foods.find(f=>f.id===id);
+  const newColor=food&&food.color===colorId?null:colorId;
+  try{
+    await sbPatch(`foods?id=eq.${id}`,{color:newColor});
+    const idx=cache.foods.findIndex(f=>f.id===id);
+    if(idx>-1)cache.foods[idx]={...cache.foods[idx],color:newColor};
+    renderFoodsMgmt();renderChips();renderFeedHistory();
+  }catch(e){showErr('Nepodařilo se uložit barvu');}
 }
 
 function startEditFood(id){
-  // Close any open edit rows first
   document.querySelectorAll('.food-edit-row.open').forEach(el=>el.classList.remove('open'));
+  // Toggle color row
+  const colorRow=document.getElementById('fcr-'+id);
+  const isColorOpen=colorRow&&colorRow.style.display!=='none';
+  document.querySelectorAll('[id^="fcr-"]').forEach(el=>el.style.display='none');
   const row=document.getElementById('fer-'+id);
-  if(row){row.classList.add('open');const inp=document.getElementById('fei-'+id);if(inp){inp.focus();inp.select();}}
+  if(row){
+    row.classList.add('open');
+    const inp=document.getElementById('fei-'+id);if(inp){inp.focus();inp.select();}
+  }
+  if(colorRow&&!isColorOpen)colorRow.style.display='flex';
 }
 function cancelEditFood(id){
   const row=document.getElementById('fer-'+id);if(row)row.classList.remove('open');
-  // Reset input to original value
+  const colorRow=document.getElementById('fcr-'+id);if(colorRow)colorRow.style.display='none';
   const food=cache.foods.find(f=>f.id===id);
   const inp=document.getElementById('fei-'+id);
   if(food&&inp)inp.value=food.name;
@@ -836,7 +874,6 @@ async function saveEditFood(id){
   if(!inp)return;
   const name=inp.value.trim().toLowerCase();
   if(!name){showErr('Název nesmí být prázdný');return;}
-  // Check duplicate (skip self)
   const dup=cache.foods.find(f=>f.name.toLowerCase()===name&&f.id!==id);
   if(dup){showErr('Pokrm s tímto názvem již existuje');return;}
   try{
@@ -845,7 +882,8 @@ async function saveEditFood(id){
     if(idx>-1)cache.foods[idx]={...cache.foods[idx],name};
     cache.foods.sort((a,b)=>a.name.localeCompare(b.name,'cs'));
     showToast('Pokrm upraven');
-    renderFoodsMgmt();renderChips();
+    cancelEditFood(id);
+    renderFoodsMgmt();renderChips();renderFeedHistory();
   }catch(e){showErr('Nepodařilo se uložit');}
 }
 
@@ -901,13 +939,24 @@ function renderFeedHistory(){
   if(!cache.feed.length){el.innerHTML='<p class="history-empty">Zatím žádné záznamy</p>';return;}
   el.innerHTML=cache.feed.map(log=>{
     const selIds=(log.feeding_log_foods||[]).map(fl=>fl.food_id);
-    const names=selIds.map(id=>fm[id]||'?').sort((a,b)=>a.localeCompare(b,'cs')).join('+');
+    // Barevné pilulky v historii
+    const pillsHtml=selIds
+      .map(id=>cache.foods.find(f=>f.id===id))
+      .filter(Boolean)
+      .sort((a,b)=>a.name.localeCompare(b.name,'cs'))
+      .map(f=>{
+        const col=foodColorById(f.color);
+        return col
+          ?`<span class="food-pill" style="background:${col.bg};color:${col.txt}">${f.name}</span>`
+          :`<span class="food-pill food-pill-plain">${f.name}</span>`;
+      }).join(' ');
     const chipsHtml=cache.foods.map(f=>{const sel=selIds.includes(f.id);return `<button class="edit-chip${sel?' selected':''}" onclick="event.stopPropagation();feedEditChip('${log.id}','${f.id}')">${sel?'✓ ':''}${f.name}</button>`;}).join('');
     return `<div class="history-item" id="fdi-${log.id}">
       <div class="history-row" onclick="initFeedEdit('${log.id}');toggleEdit('fdep-${log.id}','fdi-${log.id}')">
-        <span class="history-text"><strong>${fmtDateShort(log.event_time)}</strong> · ${fmtTime(log.event_time)} · <span style="color:var(--text-muted)">${names||'—'}</span></span>
+        <span class="history-text"><strong>${fmtDateShort(log.event_time)}</strong> · ${fmtTime(log.event_time)}</span>
         <span class="edit-hint">upravit</span>
       </div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;padding:0 12px 8px">${pillsHtml||'<span class="food-pill food-pill-plain">—</span>'}</div>
       <div class="edit-panel" id="fdep-${log.id}">
         <input type="datetime-local" class="edit-time" id="fdet-${log.id}" value="${toInputDT(log.event_time)}">
         <div class="edit-chips" id="fdec-${log.id}">${chipsHtml}</div>
