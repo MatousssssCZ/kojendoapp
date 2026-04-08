@@ -532,7 +532,7 @@ const cache={bf:[],feed:[],foods:[],stool:[],sleep:[]};
 const p2=n=>String(n).padStart(2,'0');
 function fmtTime(iso){return new Date(iso).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'});}
 function fmtDate(iso){const d=new Date(iso);return `${p2(d.getDate())}.${p2(d.getMonth()+1)}.`;}
-function fmtDateShort(iso){const d=new Date(iso);return `${p2(d.getMonth()+1)}.${p2(d.getDate())}`;}
+function fmtDateShort(iso){const d=new Date(iso);return `${p2(d.getDate())}.${p2(d.getMonth()+1)}.`;}
 function nowISO(){return new Date().toISOString();}
 function toInputDT(iso){const d=new Date(iso);return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}T${p2(d.getHours())}:${p2(d.getMinutes())}`;}
 function localDT(){return toInputDT(new Date().toISOString());}
