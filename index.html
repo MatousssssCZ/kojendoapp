@@ -744,24 +744,31 @@ function refreshDashboard(){
 
 // ── Load all ───────────────────────────────────────────
 async function loadAll(){
-  const [bf,feed,feedFoods,foods,stool,sleep,meds,medLogs]=await Promise.all([
+  const [bf,feed,feedFoods,foods,stool,sleep]=await Promise.all([
     sbGet('breastfeeding_logs?select=id,side,event_time&order=event_time.desc&limit=400'),
     sbGet('feeding_logs?select=id,event_time&order=event_time.desc&limit=100'),
     sbGet('feeding_log_foods?select=*&limit=500'),
     sbGet('foods?select=id,name,color&order=name.asc'),
     sbGet('stool_logs?select=id,event_time&order=event_time.desc&limit=100'),
     sbGet('sleep_logs?select=id,type,event_time&order=event_time.desc&limit=200'),
-    sbGet('medicines?select=id,name&order=name.asc'),
-    sbGet('medicine_logs?select=id,med_id,event_time,dose,temperature&order=event_time.desc&limit=200'),
   ]);
   const flMap={};
   (feedFoods||[]).forEach(fl=>{if(!flMap[fl.feeding_log_id])flMap[fl.feeding_log_id]=[];flMap[fl.feeding_log_id].push(fl);});
   cache.bf=bf||[];cache.foods=foods||[];cache.stool=stool||[];
   cache.feed=(feed||[]).map(log=>({...log,feeding_log_foods:flMap[log.id]||[]}));
   cache.sleep=sleep||[];
-  cache.meds=meds||[];
-  cache.medLogs=medLogs||[];
   pairSleepLogs();
+  // Léky — tiché selhání pokud tabulky ještě neexistují
+  try{
+    const [meds,medLogs]=await Promise.all([
+      sbGet('medicines?select=id,name&order=name.asc'),
+      sbGet('medicine_logs?select=id,med_id,event_time,dose,temperature&order=event_time.desc&limit=200'),
+    ]);
+    cache.meds=meds||[];
+    cache.medLogs=medLogs||[];
+  }catch(e){
+    cache.meds=[];cache.medLogs=[];
+  }
 }
 
 // ══════════════════════════════════════════════════════
@@ -1386,6 +1393,60 @@ async function init(){
   });
 }
 // ══════════════════════════════════════════════════════
+//  TEPLOTA helpers
+// ══════════════════════════════════════════════════════
+let tempInactive=true;
+
+function tempColor(val){
+  if(val==null)return'var(--text-faint)';
+  if(val<37.5)return'#4a9e4a';
+  if(val<38.5)return'#d4820a';
+  return'#d04040';
+}
+
+function onTempSlider(raw){
+  const val=parseInt(raw)/10;
+  const col=tempColor(val);
+  tempInactive=false;
+  const wrap=document.getElementById('tempWrap');
+  wrap.classList.remove('temp-inactive');
+  const disp=document.getElementById('tempDisplay');
+  disp.textContent=val.toFixed(1).replace('.',',');
+  disp.style.color=col;
+  const slider=document.getElementById('medTemp');
+  slider.style.color=col;
+  document.getElementById('tempClearBtn').style.display='inline';
+}
+
+function clearTemp(silent){
+  tempInactive=true;
+  const wrap=document.getElementById('tempWrap');
+  if(wrap)wrap.classList.add('temp-inactive');
+  const disp=document.getElementById('tempDisplay');
+  if(disp){disp.textContent='—';disp.style.color='';}
+  const slider=document.getElementById('medTemp');
+  if(slider){slider.value='370';slider.style.color='';}
+  const btn=document.getElementById('tempClearBtn');
+  if(btn)btn.style.display='none';
+}
+
+function onMiniTempSlider(id,raw){
+  const val=parseInt(raw)/10;
+  const col=tempColor(val);
+  const disp=document.getElementById('mlte-disp-'+id);
+  const slider=document.getElementById('mlte-'+id);
+  if(disp){disp.textContent=val.toFixed(1)+' °C';disp.style.color=col;}
+  if(slider){slider.style.color=col;slider.dataset.active='1';}
+}
+
+function clearMiniTemp(id){
+  const disp=document.getElementById('mlte-disp-'+id);
+  const slider=document.getElementById('mlte-'+id);
+  if(disp){disp.textContent='— °C';disp.style.color='var(--text-faint)';}
+  if(slider){slider.value='370';slider.style.color='';slider.dataset.active='0';}
+}
+
+// ══════════════════════════════════════════════════════
 //  LÉKY
 // ══════════════════════════════════════════════════════
 let selectedMedId=null;
@@ -1414,7 +1475,9 @@ function renderMedModal(){
   const hint=document.getElementById('medLastHint');
   if(hint&&lastMedLog){
     const mn=Object.fromEntries(cache.meds.map(m=>[m.id,m.name]));
-    hint.textContent=`Naposledy: ${mn[lastMedLog.med_id]||'—'} · ${fmtTime(lastMedLog.event_time)} · ${fmtDate(lastMedLog.event_time)} · před ${fmtElapsed(lastMedLog.event_time)}`;
+    const dose=lastMedLog.dose?' · '+lastMedLog.dose:'';
+    const temp=lastMedLog.temperature!=null?' · 🌡️ '+lastMedLog.temperature+' °C':'';
+    hint.textContent=`Naposledy: ${mn[lastMedLog.med_id]||'—'} · ${fmtTime(lastMedLog.event_time)} · ${fmtDate(lastMedLog.event_time)} · před ${fmtElapsed(lastMedLog.event_time)}${dose}${temp}`;
   } else if(hint){hint.textContent='';}
 }
 
@@ -1501,6 +1564,7 @@ function renderMedHistory(){
             <input type="range" class="temp-mini-slider" id="mlte-${l.id}"
               min="350" max="400" step="1"
               value="${l.temperature!=null?Math.round(l.temperature*10):370}"
+              data-active="${l.temperature!=null?'1':'0'}"
               style="color:${tempColor(l.temperature)}"
               oninput="onMiniTempSlider('${l.id}',this.value)"
               onchange="onMiniTempSlider('${l.id}',this.value)">
