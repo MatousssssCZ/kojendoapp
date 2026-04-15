@@ -510,6 +510,10 @@ button { touch-action:manipulation; }
         <label class="form-label">Dávka (volitelně)</label>
         <input type="text" class="form-input" id="medDose" placeholder="např. 5 ml, 1 tableta…">
       </div>
+      <div class="form-section">
+        <label class="form-label">Teplota °C (volitelně)</label>
+        <input type="number" class="form-input" id="medTemp" placeholder="např. 37.2" step="0.1" min="34" max="42">
+      </div>
       <button class="save-btn" id="medSaveBtn" onclick="saveMedLog()" disabled>Uložit podání</button>
     </div>
     <p class="last-hint" id="medLastHint"></p>
@@ -704,7 +708,7 @@ async function loadAll(){
     sbGet('stool_logs?select=id,event_time&order=event_time.desc&limit=100'),
     sbGet('sleep_logs?select=id,type,event_time&order=event_time.desc&limit=200'),
     sbGet('medicines?select=id,name&order=name.asc'),
-    sbGet('medicine_logs?select=id,med_id,event_time,dose&order=event_time.desc&limit=200'),
+    sbGet('medicine_logs?select=id,med_id,event_time,dose,temperature&order=event_time.desc&limit=200'),
   ]);
   const flMap={};
   (feedFoods||[]).forEach(fl=>{if(!flMap[fl.feeding_log_id])flMap[fl.feeding_log_id]=[];flMap[fl.feeding_log_id].push(fl);});
@@ -1350,6 +1354,7 @@ function toggleMedForm(){
   if(medFormOpen){
     document.getElementById('medTime').value=localDT();
     document.getElementById('medDose').value='';
+    document.getElementById('medTemp').value='';
     selectedMedId=null;
     renderMedChips();
     updateMedSaveBtn();
@@ -1414,11 +1419,13 @@ async function saveMedLog(){
   if(!selectedMedId)return;
   const tv=document.getElementById('medTime')?.value;
   const dose=document.getElementById('medDose')?.value.trim()||null;
+  const tempVal=document.getElementById('medTemp')?.value.trim();
+  const temperature=tempVal?parseFloat(tempVal):null;
   const event_time=tv?new Date(tv).toISOString():nowISO();
   const btn=document.getElementById('medSaveBtn');
   if(btn){btn.disabled=true;btn.textContent='Ukládám…';}
   try{
-    const[rec]=await sbPost('medicine_logs?select=id,med_id,event_time,dose',{med_id:selectedMedId,event_time,dose});
+    const[rec]=await sbPost('medicine_logs?select=id,med_id,event_time,dose,temperature',{med_id:selectedMedId,event_time,dose,temperature});
     cache.medLogs.unshift(rec);
     cache.medLogs.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));
     selectedMedId=null;medFormOpen=false;
@@ -1437,12 +1444,13 @@ function renderMedHistory(){
   list.innerHTML=cache.medLogs.map(l=>`
     <div class="history-item" id="mli-${l.id}">
       <div class="history-row" onclick="toggleEdit('mlp-${l.id}','mli-${l.id}')">
-        <div class="history-text"><strong>${mn[l.med_id]||'?'}</strong> · ${fmtTime(l.event_time)} · ${fmtDate(l.event_time)}${l.dose?' · <em>'+l.dose+'</em>':''}</div>
+        <div class="history-text"><strong>${mn[l.med_id]||'?'}</strong> · ${fmtTime(l.event_time)} · ${fmtDate(l.event_time)}${l.dose?' · <em>'+l.dose+'</em>':''}${l.temperature!=null?' · 🌡️ '+l.temperature+' °C':''}</div>
         <span class="edit-hint">upravit</span>
       </div>
       <div class="edit-panel" id="mlp-${l.id}">
         <input type="datetime-local" class="edit-time" id="mlet-${l.id}" value="${toInputDT(l.event_time)}">
         <input type="text" class="edit-time" id="mlde-${l.id}" value="${l.dose||''}" placeholder="Dávka…" style="margin-top:6px;width:100%">
+        <input type="number" class="edit-time" id="mlte-${l.id}" value="${l.temperature!=null?l.temperature:''}" placeholder="Teplota °C…" step="0.1" min="34" max="42" style="margin-top:6px;width:100%">
         <div class="edit-actions">
           <button class="edit-save" onclick="saveEditMedLog('${l.id}')">Uložit</button>
           <button class="edit-cancel" onclick="toggleEdit('mlp-${l.id}','mli-${l.id}')">Zrušit</button>
@@ -1455,11 +1463,13 @@ function renderMedHistory(){
 async function saveEditMedLog(id){
   const tv=document.getElementById('mlet-'+id)?.value;
   const dose=document.getElementById('mlde-'+id)?.value.trim()||null;
+  const tempVal=document.getElementById('mlte-'+id)?.value.trim();
+  const temperature=tempVal?parseFloat(tempVal):null;
   const event_time=tv?new Date(tv).toISOString():nowISO();
   try{
-    await sbPatch(`medicine_logs?id=eq.${id}`,{event_time,dose});
+    await sbPatch(`medicine_logs?id=eq.${id}`,{event_time,dose,temperature});
     const idx=cache.medLogs.findIndex(l=>l.id===id);
-    if(idx>-1)cache.medLogs[idx]={...cache.medLogs[idx],event_time,dose};
+    if(idx>-1)cache.medLogs[idx]={...cache.medLogs[idx],event_time,dose,temperature};
     cache.medLogs.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));
     showToast('Podání upraveno');renderMedHistory();refreshDashboard();
   }catch(e){showErr('Nepodařilo se uložit');}
