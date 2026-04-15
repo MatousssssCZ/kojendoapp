@@ -34,6 +34,8 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   --tile-feed-grad:linear-gradient(135deg,#fef3dc,transparent 60%);
   --tile-stool-grad:linear-gradient(135deg,#fdf5e6,transparent 60%);
   --tile-sleep-grad:linear-gradient(135deg,#f0edfb,transparent 60%);
+  --med-border:#e07070; --med-text:#a03030; --med-bg:#fdf0f0;
+  --tile-med-grad:linear-gradient(135deg,#fdf0f0,transparent 60%);
   --breast-badge-bg:#fff; --modal-close-bg:#f5f5f4; --modal-close-h:#e7e5e4; --input-bg:#fdfcf9;
   --bar-color:#7a9e6e; --bar-bg:#e8f0e4;
 }
@@ -52,6 +54,8 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   --tile-feed-grad:linear-gradient(135deg,#261e0a,transparent 60%);
   --tile-stool-grad:linear-gradient(135deg,#1e1608,transparent 60%);
   --tile-sleep-grad:linear-gradient(135deg,#18132a,transparent 60%);
+  --med-border:#a05050; --med-text:#e09090; --med-bg:#2a1010;
+  --tile-med-grad:linear-gradient(135deg,#2a1010,transparent 60%);
   --breast-badge-bg:#0f0e0c; --modal-close-bg:#2e2c28; --modal-close-h:#3a3830; --input-bg:#222018;
   --bar-color:#7aad6c; --bar-bg:#1a2e17;
 }
@@ -89,6 +93,7 @@ button { touch-action:manipulation; }
 .tile-feed::before  { background:var(--tile-feed-grad); }
 .tile-stool::before { background:var(--tile-stool-grad); }
 .tile-sleep::before { background:var(--tile-sleep-grad); }
+.tile-med::before   { background:var(--tile-med-grad); }
 .tile:hover::before { opacity:1; }
 .tile-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
 .tile-left { display:flex; align-items:center; gap:10px; }
@@ -174,6 +179,7 @@ button { touch-action:manipulation; }
 .action-btn:active { transform:scale(.98); }
 .action-btn.amber { border-color:var(--amber); color:var(--amber); background:var(--amber-bg); }
 .action-btn.stool { border-color:var(--stool-border); color:var(--stool-text); background:var(--stool-bg); }
+.action-btn.med   { border-color:var(--med-border);   color:var(--med-text);   background:var(--med-bg); }
 .action-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
 .sleep-btns { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
 .sleep-btn { width:100%; display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-radius:18px; border:2px solid var(--border); background:var(--surface); cursor:pointer; transition:all .15s; font-family:inherit; touch-action:manipulation; }
@@ -321,6 +327,13 @@ button { touch-action:manipulation; }
         <span class="tile-arrow">›</span>
       </div>
       <p class="tile-sub" id="tileSleepSub">Načítám…</p>
+    </button>
+    <button class="tile tile-med" onclick="openModal('med')">
+      <div class="tile-top">
+        <div class="tile-left"><span class="tile-emoji">💊</span><span class="tile-title">Léky</span></div>
+        <span class="tile-arrow">›</span>
+      </div>
+      <p class="tile-sub" id="tileMedSub">Načítám…</p>
     </button>
   <p class="footer" style="margin-top:20px">Kojendo app · <em>s láskou táta</em></p>
 </main>
@@ -471,6 +484,50 @@ button { touch-action:manipulation; }
   </div>
 </div>
 
+<!-- LÉKY -->
+<div class="modal" id="modalMed">
+  <div class="modal-header">
+    <span class="modal-title">Léky</span>
+    <button class="modal-close" onclick="closeAllModals()">✕</button>
+  </div>
+  <div class="modal-body">
+    <button class="action-btn med" onclick="toggleMedForm()"><span>💊</span> Zaznamenat podání léku</button>
+    <div class="collapsible" id="medForm">
+      <div class="form-section">
+        <label class="form-label">Čas</label>
+        <input type="datetime-local" class="form-input" id="medTime">
+      </div>
+      <div class="form-section">
+        <label class="form-label">Lék</label>
+        <div class="chips-wrap" id="medChipsWrap"></div>
+        <div class="add-food-row" id="addMedRow">
+          <input type="text" class="add-food-input" id="addMedInput" placeholder="Název léku…"
+            onkeydown="if(event.key==='Enter')confirmAddMed();if(event.key==='Escape')cancelAddMed();">
+          <button class="add-food-ok" onclick="confirmAddMed()">OK</button>
+        </div>
+      </div>
+      <div class="form-section">
+        <label class="form-label">Dávka (volitelně)</label>
+        <input type="text" class="form-input" id="medDose" placeholder="např. 5 ml, 1 tableta…">
+      </div>
+      <button class="save-btn" id="medSaveBtn" onclick="saveMedLog()" disabled>Uložit podání</button>
+    </div>
+    <p class="last-hint" id="medLastHint"></p>
+    <button class="section-toggle" id="toggleMedsEdit" onclick="toggleSection('medsEdit',this)" style="margin-top:8px">
+      <span>Správa léků</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="medsEdit">
+      <div id="medsMgmtList" style="margin-top:6px;margin-bottom:4px"></div>
+    </div>
+    <button class="section-toggle" id="toggleMedHistory" onclick="toggleSection('medHistory',this)">
+      <span>Historie</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="medHistory">
+      <div class="history-list" id="medHistoryList"></div>
+    </div>
+  </div>
+</div>
+
 <!-- Confirm delete -->
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
@@ -526,7 +583,7 @@ const sbPatch=(p,b)=>sbReq('PATCH',p,b);
 const sbDelete=(p)=>sbReq('DELETE',p);
 
 // ── Cache ──────────────────────────────────────────────
-const cache={bf:[],feed:[],foods:[],stool:[],sleep:[]};
+const cache={bf:[],feed:[],foods:[],stool:[],sleep:[],meds:[],medLogs:[]};
 
 // ── Date helpers ───────────────────────────────────────
 const p2=n=>String(n).padStart(2,'0');
@@ -574,9 +631,10 @@ function openModal(type){
   if(type==='feed') {renderFeedModal(); document.getElementById('modalFeed').classList.add('open');}
   if(type==='stool'){renderStoolModal();document.getElementById('modalStool').classList.add('open');}
   if(type==='sleep'){renderSleepModal();document.getElementById('modalSleep').classList.add('open');}
+  if(type==='med')  {renderMedModal();  document.getElementById('modalMed').classList.add('open');}
 }
 function closeAllModals(scroll=true){
-  ['modalBf','modalFeed','modalStool','modalSleep'].forEach(id=>document.getElementById(id).classList.remove('open'));
+  ['modalBf','modalFeed','modalStool','modalSleep','modalMed'].forEach(id=>document.getElementById(id).classList.remove('open'));
   document.getElementById('backdrop').classList.remove('open');
   if(scroll)document.body.style.overflow='';
 }
@@ -624,23 +682,37 @@ function refreshDashboard(){
 
   const lastStool=cache.stool[0];
   const stoolSubEl=document.getElementById('tileStoolSub');if(stoolSubEl)stoolSubEl.textContent=lastStool?`Naposledy: ${fmtTime(lastStool.event_time)} · ${fmtDate(lastStool.event_time)}`:'Žádný záznam';
+
+  const lastMedLog=cache.medLogs[0];
+  const medSubEl=document.getElementById('tileMedSub');
+  if(medSubEl){
+    if(lastMedLog){
+      const mn=Object.fromEntries(cache.meds.map(m=>[m.id,m.name]));
+      const mname=mn[lastMedLog.med_id]||'—';
+      medSubEl.textContent=`Naposledy: ${fmtTime(lastMedLog.event_time)} · ${mname}${lastMedLog.dose?' · '+lastMedLog.dose:''}`;
+    } else {medSubEl.textContent='Žádný záznam';}
+  }
 }
 
 // ── Load all ───────────────────────────────────────────
 async function loadAll(){
-  const [bf,feed,feedFoods,foods,stool,sleep]=await Promise.all([
+  const [bf,feed,feedFoods,foods,stool,sleep,meds,medLogs]=await Promise.all([
     sbGet('breastfeeding_logs?select=id,side,event_time&order=event_time.desc&limit=400'),
     sbGet('feeding_logs?select=id,event_time&order=event_time.desc&limit=100'),
     sbGet('feeding_log_foods?select=*&limit=500'),
     sbGet('foods?select=id,name,color&order=name.asc'),
     sbGet('stool_logs?select=id,event_time&order=event_time.desc&limit=100'),
     sbGet('sleep_logs?select=id,type,event_time&order=event_time.desc&limit=200'),
+    sbGet('medicines?select=id,name&order=name.asc'),
+    sbGet('medicine_logs?select=id,med_id,event_time,dose&order=event_time.desc&limit=200'),
   ]);
   const flMap={};
   (feedFoods||[]).forEach(fl=>{if(!flMap[fl.feeding_log_id])flMap[fl.feeding_log_id]=[];flMap[fl.feeding_log_id].push(fl);});
   cache.bf=bf||[];cache.foods=foods||[];cache.stool=stool||[];
   cache.feed=(feed||[]).map(log=>({...log,feeding_log_foods:flMap[log.id]||[]}));
   cache.sleep=sleep||[];
+  cache.meds=meds||[];
+  cache.medLogs=medLogs||[];
   pairSleepLogs();
 }
 
@@ -1197,8 +1269,8 @@ function cancelDelete(){
 async function confirmDelete(){
   if(!pending)return;
   const{type,id}=pending;cancelDelete();
-  const tbl={bf:'breastfeeding_logs',feed:'feeding_logs',stool:'stool_logs',sleep:'sleep_logs'};
-  const key={bf:'bf',feed:'feed',stool:'stool',sleep:'sleep'};
+  const tbl={bf:'breastfeeding_logs',feed:'feeding_logs',stool:'stool_logs',sleep:'sleep_logs',med:'medicine_logs',medicine:'medicines'};
+  const key={bf:'bf',feed:'feed',stool:'stool',sleep:'sleep',med:'medLogs',medicine:'meds'};
   try{
     await sbDelete(`${tbl[type]}?id=eq.${id}`);
     cache[key[type]]=cache[key[type]].filter(l=>l.id!==id);
@@ -1208,6 +1280,8 @@ async function confirmDelete(){
     if(type==='feed')renderFeedHistory();
     if(type==='stool')renderStoolHistory();
     if(type==='sleep')renderSleepHistory();
+    if(type==='med')renderMedHistory();
+    if(type==='medicine'){renderMedsMgmtList();renderMedChips();}
   }catch(e){showErr('Nepodařilo se smazat');}
 }
 
@@ -1248,6 +1322,7 @@ async function init(){
           if(document.getElementById('modalFeed').classList.contains('open'))  renderFeedModal();
           if(document.getElementById('modalSleep').classList.contains('open')) renderSleepModal();
           if(document.getElementById('modalStool').classList.contains('open')) renderStoolModal();
+          if(document.getElementById('modalMed').classList.contains('open'))   renderMedModal();
         } catch(e) { /* tiché selhání, data jsou stále v cache */ }
       }
     } else {
@@ -1262,6 +1337,183 @@ async function init(){
     }
   });
 }
+// ══════════════════════════════════════════════════════
+//  LÉKY
+// ══════════════════════════════════════════════════════
+let selectedMedId=null;
+let medFormOpen=false;
+
+function toggleMedForm(){
+  medFormOpen=!medFormOpen;
+  const form=document.getElementById('medForm');
+  form.classList.toggle('open',medFormOpen);
+  if(medFormOpen){
+    document.getElementById('medTime').value=localDT();
+    document.getElementById('medDose').value='';
+    selectedMedId=null;
+    renderMedChips();
+    updateMedSaveBtn();
+  }
+}
+
+function renderMedModal(){
+  renderMedChips();
+  renderMedsMgmtList();
+  renderMedHistory();
+  const lastMedLog=cache.medLogs[0];
+  const hint=document.getElementById('medLastHint');
+  if(hint&&lastMedLog){
+    const mn=Object.fromEntries(cache.meds.map(m=>[m.id,m.name]));
+    hint.textContent=`Naposledy: ${mn[lastMedLog.med_id]||'—'} · ${fmtTime(lastMedLog.event_time)} · ${fmtDate(lastMedLog.event_time)} · před ${fmtElapsed(lastMedLog.event_time)}`;
+  } else if(hint){hint.textContent='';}
+}
+
+function renderMedChips(){
+  const wrap=document.getElementById('medChipsWrap');
+  if(!wrap)return;
+  wrap.innerHTML=cache.meds.map(m=>`
+    <button class="chip${selectedMedId===m.id?' selected':''}" onclick="selectMed('${m.id}')">${m.name}</button>
+  `).join('')+`<button class="chip chip-add" onclick="openAddMedInput()">＋ Přidat lék</button>`;
+}
+
+function selectMed(id){
+  selectedMedId=id;
+  renderMedChips();
+  updateMedSaveBtn();
+}
+
+function updateMedSaveBtn(){
+  const btn=document.getElementById('medSaveBtn');
+  if(btn)btn.disabled=!selectedMedId;
+}
+
+function openAddMedInput(){
+  const row=document.getElementById('addMedRow');
+  row.classList.add('open');
+  document.getElementById('addMedInput').focus();
+}
+function cancelAddMed(){
+  document.getElementById('addMedRow').classList.remove('open');
+  document.getElementById('addMedInput').value='';
+}
+async function confirmAddMed(){
+  const name=document.getElementById('addMedInput').value.trim();
+  if(!name)return;
+  try{
+    const[rec]=await sbPost('medicines?select=id,name',{name});
+    cache.meds.push(rec);
+    cache.meds.sort((a,b)=>a.name.localeCompare(b.name,'cs'));
+    cancelAddMed();
+    renderMedChips();
+    renderMedsMgmtList();
+    showToast('Lék přidán');
+  }catch(e){showErr('Nepodařilo se přidat lék');}
+}
+
+async function saveMedLog(){
+  if(!selectedMedId)return;
+  const tv=document.getElementById('medTime')?.value;
+  const dose=document.getElementById('medDose')?.value.trim()||null;
+  const event_time=tv?new Date(tv).toISOString():nowISO();
+  const btn=document.getElementById('medSaveBtn');
+  if(btn){btn.disabled=true;btn.textContent='Ukládám…';}
+  try{
+    const[rec]=await sbPost('medicine_logs?select=id,med_id,event_time,dose',{med_id:selectedMedId,event_time,dose});
+    cache.medLogs.unshift(rec);
+    cache.medLogs.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));
+    selectedMedId=null;medFormOpen=false;
+    document.getElementById('medForm').classList.remove('open');
+    refreshDashboard();renderMedHistory();renderMedChips();
+    showToast('Podání zaznamenáno');
+  }catch(e){showErr('Nepodařilo se uložit');}
+  finally{if(btn){btn.disabled=false;btn.textContent='Uložit podání';}}
+}
+
+function renderMedHistory(){
+  const list=document.getElementById('medHistoryList');
+  if(!list)return;
+  if(!cache.medLogs.length){list.innerHTML='<div class="history-empty">Žádné záznamy</div>';return;}
+  const mn=Object.fromEntries(cache.meds.map(m=>[m.id,m.name]));
+  list.innerHTML=cache.medLogs.map(l=>`
+    <div class="history-item" id="mli-${l.id}">
+      <div class="history-row" onclick="toggleEdit('mlp-${l.id}','mli-${l.id}')">
+        <div class="history-text"><strong>${mn[l.med_id]||'?'}</strong> · ${fmtTime(l.event_time)} · ${fmtDate(l.event_time)}${l.dose?' · <em>'+l.dose+'</em>':''}</div>
+        <span class="edit-hint">upravit</span>
+      </div>
+      <div class="edit-panel" id="mlp-${l.id}">
+        <input type="datetime-local" class="edit-time" id="mlet-${l.id}" value="${toInputDT(l.event_time)}">
+        <input type="text" class="edit-time" id="mlde-${l.id}" value="${l.dose||''}" placeholder="Dávka…" style="margin-top:6px;width:100%">
+        <div class="edit-actions">
+          <button class="edit-save" onclick="saveEditMedLog('${l.id}')">Uložit</button>
+          <button class="edit-cancel" onclick="toggleEdit('mlp-${l.id}','mli-${l.id}')">Zrušit</button>
+          <button class="edit-delete" onclick="event.stopPropagation();askDelete('med','${l.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+async function saveEditMedLog(id){
+  const tv=document.getElementById('mlet-'+id)?.value;
+  const dose=document.getElementById('mlde-'+id)?.value.trim()||null;
+  const event_time=tv?new Date(tv).toISOString():nowISO();
+  try{
+    await sbPatch(`medicine_logs?id=eq.${id}`,{event_time,dose});
+    const idx=cache.medLogs.findIndex(l=>l.id===id);
+    if(idx>-1)cache.medLogs[idx]={...cache.medLogs[idx],event_time,dose};
+    cache.medLogs.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));
+    showToast('Podání upraveno');renderMedHistory();refreshDashboard();
+  }catch(e){showErr('Nepodařilo se uložit');}
+}
+
+function renderMedsMgmtList(){
+  const list=document.getElementById('medsMgmtList');
+  if(!list)return;
+  if(!cache.meds.length){list.innerHTML='<div class="history-empty">Žádné léky</div>';return;}
+  list.innerHTML=cache.meds.map(m=>`
+    <div>
+      <div class="food-mgmt-row" id="mmr-${m.id}">
+        <span class="food-mgmt-name">💊 ${m.name}</span>
+        <div class="food-mgmt-btns">
+          <button class="food-mgmt-btn edit" title="Přejmenovat" onclick="toggleMedEdit('${m.id}')">✏️</button>
+          <button class="food-mgmt-btn del" title="Smazat" onclick="askDeleteMedicine('${m.id}')">🗑</button>
+        </div>
+      </div>
+      <div class="food-edit-row" id="mer-${m.id}">
+        <input type="text" class="food-edit-input" id="mei-${m.id}" value="${m.name}"
+          onkeydown="if(event.key==='Enter')saveEditMed('${m.id}');if(event.key==='Escape')toggleMedEdit('${m.id}')">
+        <button class="food-edit-ok" onclick="saveEditMed('${m.id}')">OK</button>
+        <button class="food-edit-cancel" onclick="toggleMedEdit('${m.id}')">Zrušit</button>
+      </div>
+    </div>`).join('');
+}
+
+function toggleMedEdit(id){
+  const row=document.getElementById('mer-'+id);
+  const wasOpen=row.classList.contains('open');
+  document.querySelectorAll('.food-edit-row.open').forEach(el=>el.classList.remove('open'));
+  if(!wasOpen){row.classList.add('open');document.getElementById('mei-'+id)?.focus();}
+}
+
+async function saveEditMed(id){
+  const name=document.getElementById('mei-'+id)?.value.trim();
+  if(!name)return;
+  try{
+    await sbPatch(`medicines?id=eq.${id}`,{name});
+    const idx=cache.meds.findIndex(m=>m.id===id);
+    if(idx>-1)cache.meds[idx]={...cache.meds[idx],name};
+    cache.meds.sort((a,b)=>a.name.localeCompare(b.name,'cs'));
+    renderMedsMgmtList();renderMedChips();renderMedHistory();refreshDashboard();
+    showToast('Lék přejmenován');
+  }catch(e){showErr('Nepodařilo se uložit');}
+}
+
+function askDeleteMedicine(id){
+  pending={type:'medicine',id};
+  document.querySelector('.confirm-msg').textContent='Opravdu smazat tento lék? Smažou se i všechny záznamy podání.';
+  document.querySelector('.confirm-delete-ok').onclick=confirmDelete;
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+
 init();
 </script>
 </body>
