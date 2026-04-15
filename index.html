@@ -264,6 +264,31 @@ button { touch-action:manipulation; }
 @keyframes spin    { to{transform:rotate(360deg)} }
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:4px}
+
+/* ── Teplota slider ── */
+.temp-wrap { margin-top:4px; }
+.temp-display { display:flex; align-items:baseline; justify-content:center; gap:4px; margin-bottom:10px; }
+.temp-value { font-size:36px; font-weight:700; font-variant-numeric:tabular-nums; transition:color .2s; }
+.temp-unit  { font-size:16px; font-weight:500; color:var(--text-muted); }
+.temp-clear { font-size:11px; color:var(--text-faint); cursor:pointer; border:none; background:none; font-family:inherit; padding:2px 6px; border-radius:6px; transition:color .15s; margin-left:6px; }
+.temp-clear:hover { color:var(--text-muted); }
+.temp-slider-track { position:relative; height:36px; display:flex; align-items:center; margin:0 2px; }
+.temp-slider { -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:100px; outline:none; cursor:pointer; background:linear-gradient(to right,#6aaa6a,#f0c040,#e05050); }
+.temp-slider::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:26px; height:26px; border-radius:50%; background:var(--surface); border:3px solid currentColor; box-shadow:0 2px 8px rgba(0,0,0,.18); cursor:pointer; transition:transform .12s; }
+.temp-slider::-moz-range-thumb { width:26px; height:26px; border-radius:50%; background:var(--surface); border:3px solid currentColor; box-shadow:0 2px 8px rgba(0,0,0,.18); cursor:pointer; }
+.temp-slider:active::-webkit-slider-thumb { transform:scale(1.15); }
+.temp-ticks { display:flex; justify-content:space-between; padding:0 4px; margin-top:2px; }
+.temp-tick  { font-size:10px; color:var(--text-faint); font-variant-numeric:tabular-nums; }
+.temp-inactive .temp-value { color:var(--text-faint); }
+/* edit panel mini temp */
+.temp-mini-wrap { margin-top:8px; padding:8px 10px; border-radius:10px; border:1.5px solid var(--border); background:var(--input-bg); }
+.temp-mini-row  { display:flex; align-items:center; gap:8px; }
+.temp-mini-val  { font-size:15px; font-weight:700; font-variant-numeric:tabular-nums; min-width:42px; transition:color .2s; }
+.temp-mini-slider { flex:1; -webkit-appearance:none; appearance:none; height:5px; border-radius:100px; outline:none; cursor:pointer; background:linear-gradient(to right,#6aaa6a,#f0c040,#e05050); }
+.temp-mini-slider::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:20px; height:20px; border-radius:50%; background:var(--surface); border:2.5px solid currentColor; box-shadow:0 1px 6px rgba(0,0,0,.15); cursor:pointer; }
+.temp-mini-slider::-moz-range-thumb { width:20px; height:20px; border-radius:50%; background:var(--surface); border:2.5px solid currentColor; }
+.temp-mini-clear { font-size:12px; color:var(--text-faint); cursor:pointer; border:none; background:none; font-family:inherit; padding:2px 4px; }
+.temp-mini-clear:hover { color:var(--text-muted); }
 </style>
 </head>
 <body>
@@ -512,7 +537,26 @@ button { touch-action:manipulation; }
       </div>
       <div class="form-section">
         <label class="form-label">Teplota °C (volitelně)</label>
-        <input type="number" class="form-input" id="medTemp" placeholder="např. 37.2" step="0.1" min="34" max="42">
+        <div class="temp-wrap temp-inactive" id="tempWrap">
+          <div class="temp-display">
+            <span class="temp-value" id="tempDisplay">—</span>
+            <span class="temp-unit">°C</span>
+            <button class="temp-clear" id="tempClearBtn" onclick="clearTemp()" style="display:none">✕ vymazat</button>
+          </div>
+          <div class="temp-slider-track">
+            <input type="range" class="temp-slider" id="medTemp"
+              min="350" max="400" step="1" value="370"
+              oninput="onTempSlider(this.value)" onchange="onTempSlider(this.value)">
+          </div>
+          <div class="temp-ticks">
+            <span class="temp-tick">35,0</span>
+            <span class="temp-tick">36,0</span>
+            <span class="temp-tick">37,0</span>
+            <span class="temp-tick">38,0</span>
+            <span class="temp-tick">39,0</span>
+            <span class="temp-tick">40,0</span>
+          </div>
+        </div>
       </div>
       <button class="save-btn" id="medSaveBtn" onclick="saveMedLog()" disabled>Uložit podání</button>
     </div>
@@ -1354,7 +1398,8 @@ function toggleMedForm(){
   if(medFormOpen){
     document.getElementById('medTime').value=localDT();
     document.getElementById('medDose').value='';
-    document.getElementById('medTemp').value='';
+    document.getElementById('medTemp').value='370';
+    clearTemp(true);
     selectedMedId=null;
     renderMedChips();
     updateMedSaveBtn();
@@ -1419,8 +1464,8 @@ async function saveMedLog(){
   if(!selectedMedId)return;
   const tv=document.getElementById('medTime')?.value;
   const dose=document.getElementById('medDose')?.value.trim()||null;
-  const tempVal=document.getElementById('medTemp')?.value.trim();
-  const temperature=tempVal?parseFloat(tempVal):null;
+  const tempVal=document.getElementById('medTemp')?.value;
+  const temperature=(!tempInactive&&tempVal)?parseFloat(tempVal)/10:null;
   const event_time=tv?new Date(tv).toISOString():nowISO();
   const btn=document.getElementById('medSaveBtn');
   if(btn){btn.disabled=true;btn.textContent='Ukládám…';}
@@ -1450,7 +1495,18 @@ function renderMedHistory(){
       <div class="edit-panel" id="mlp-${l.id}">
         <input type="datetime-local" class="edit-time" id="mlet-${l.id}" value="${toInputDT(l.event_time)}">
         <input type="text" class="edit-time" id="mlde-${l.id}" value="${l.dose||''}" placeholder="Dávka…" style="margin-top:6px;width:100%">
-        <input type="number" class="edit-time" id="mlte-${l.id}" value="${l.temperature!=null?l.temperature:''}" placeholder="Teplota °C…" step="0.1" min="34" max="42" style="margin-top:6px;width:100%">
+        <div class="temp-mini-wrap">
+          <div class="temp-mini-row">
+            <span class="temp-mini-val" id="mlte-disp-${l.id}" style="color:${tempColor(l.temperature)}">${l.temperature!=null?l.temperature.toFixed(1)+' °C':'— °C'}</span>
+            <input type="range" class="temp-mini-slider" id="mlte-${l.id}"
+              min="350" max="400" step="1"
+              value="${l.temperature!=null?Math.round(l.temperature*10):370}"
+              style="color:${tempColor(l.temperature)}"
+              oninput="onMiniTempSlider('${l.id}',this.value)"
+              onchange="onMiniTempSlider('${l.id}',this.value)">
+            <button class="temp-mini-clear" onclick="clearMiniTemp('${l.id}')">✕</button>
+          </div>
+        </div>
         <div class="edit-actions">
           <button class="edit-save" onclick="saveEditMedLog('${l.id}')">Uložit</button>
           <button class="edit-cancel" onclick="toggleEdit('mlp-${l.id}','mli-${l.id}')">Zrušit</button>
@@ -1463,8 +1519,8 @@ function renderMedHistory(){
 async function saveEditMedLog(id){
   const tv=document.getElementById('mlet-'+id)?.value;
   const dose=document.getElementById('mlde-'+id)?.value.trim()||null;
-  const tempVal=document.getElementById('mlte-'+id)?.value.trim();
-  const temperature=tempVal?parseFloat(tempVal):null;
+  const miniSlider=document.getElementById('mlte-'+id);
+  const temperature=miniSlider&&miniSlider.dataset.active==='1'?parseFloat(miniSlider.value)/10:null;
   const event_time=tv?new Date(tv).toISOString():nowISO();
   try{
     await sbPatch(`medicine_logs?id=eq.${id}`,{event_time,dose,temperature});
