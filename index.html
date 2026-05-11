@@ -685,6 +685,13 @@ function closeAllModals(scroll=true){
   ['modalBf','modalFeed','modalStool','modalSleep','modalMed'].forEach(id=>document.getElementById(id).classList.remove('open'));
   document.getElementById('backdrop').classList.remove('open');
   if(scroll)document.body.style.overflow='';
+  // Reset history sections — při příštím otevření budou sbalené
+  ['bfHistory','feedHistory','sleepHistory','stoolHistory','medHistory'].forEach(id=>{
+    document.getElementById(id)?.classList.remove('open');
+  });
+  ['toggleBfHistory','toggleFeedHistory','toggleSleepHistory','toggleStoolHistory','toggleMedHistory'].forEach(id=>{
+    document.getElementById(id)?.classList.remove('open');
+  });
 }
 function toggleSection(id,btn){document.getElementById(id).classList.toggle('open');btn.classList.toggle('open');}
 
