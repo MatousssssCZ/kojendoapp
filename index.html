@@ -943,7 +943,13 @@ function toggleFeedForm(){
   feedOpen=!feedOpen;document.getElementById('feedForm').classList.toggle('open',feedOpen);
   if(feedOpen){document.getElementById('feedTime').value=localDT();selFoods.clear();renderChips();}
 }
-function renderFeedModal(){selFoods.clear();feedOpen=false;document.getElementById('feedForm').classList.remove('open');renderChips();renderFoodsMgmt();renderFeedHistory();}
+function renderFeedModal(){
+  selFoods.clear();feedOpen=false;
+  document.getElementById('feedForm').classList.remove('open');
+  ['foodsEdit','feedHistory','notHadSection'].forEach(id=>document.getElementById(id)?.classList.remove('open'));
+  ['toggleFoodsEdit','toggleFeedHistory','toggleNotHad'].forEach(id=>document.getElementById(id)?.classList.remove('open'));
+  renderChips();renderFoodsMgmt();
+}
 function renderChips(){
   const wrap=document.getElementById('chipsWrap');
   wrap.innerHTML=cache.foods.map(f=>{const sel=selFoods.has(f.id);return `<button class="chip${sel?' selected':''}" onclick="toggleChip('${f.id}')">${sel?'✓ ':''}${f.name}</button>`;}).join('')+`<button class="chip chip-add" onclick="startAddFood()">+ Přidat pokrm</button>`;
