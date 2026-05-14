@@ -948,7 +948,7 @@ function renderFeedModal(){
   document.getElementById('feedForm').classList.remove('open');
   ['foodsEdit','feedHistory','notHadSection'].forEach(id=>document.getElementById(id)?.classList.remove('open'));
   ['toggleFoodsEdit','toggleFeedHistory','toggleNotHad'].forEach(id=>document.getElementById(id)?.classList.remove('open'));
-  renderChips();renderFoodsMgmt();
+  renderChips();renderFoodsMgmt();renderFeedHistory();
 }
 function renderChips(){
   const wrap=document.getElementById('chipsWrap');
