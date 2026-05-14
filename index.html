@@ -289,6 +289,17 @@ button { touch-action:manipulation; }
 .temp-mini-slider::-moz-range-thumb { width:20px; height:20px; border-radius:50%; background:var(--surface); border:2.5px solid currentColor; }
 .temp-mini-clear { font-size:12px; color:var(--text-faint); cursor:pointer; border:none; background:none; font-family:inherit; padding:2px 4px; }
 .temp-mini-clear:hover { color:var(--text-muted); }
+
+/* ── Co dlouho neměl ── */
+.not-had-item { display:flex; align-items:stretch; border-radius:10px; border:1px solid var(--border); overflow:hidden; margin-bottom:8px; cursor:pointer; transition:opacity .2s, border-color .15s; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+.not-had-item:last-child { margin-bottom:0; }
+.not-had-item:active { transform:scale(.985); }
+.not-had-stripe { width:5px; flex-shrink:0; transition:background .2s; }
+.not-had-body { display:flex; align-items:center; gap:12px; padding:11px 14px; flex:1; background:var(--surface); }
+.not-had-name { font-size:15px; font-weight:500; color:var(--text); flex:1; transition:color .2s; }
+.not-had-badge { font-size:12px; font-weight:600; padding:3px 11px; border-radius:20px; white-space:nowrap; transition:background .2s, color .2s; }
+.not-had-item.seen { opacity:0.32; }
+.not-had-item.seen .not-had-name { text-decoration:line-through; color:var(--text-muted); }
 </style>
 </head>
 <body>
@@ -428,6 +439,12 @@ button { touch-action:manipulation; }
         </div>
       </div>
       <button class="save-btn" id="feedSaveBtn" onclick="saveFeed()" disabled>Uložit krmení</button>
+    </div>
+    <button class="section-toggle" id="toggleNotHad" onclick="toggleNotHad(this)" style="margin-top:8px">
+      <span>Co dlouho neměl?</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="notHadSection">
+      <div id="notHadList" style="margin-top:6px;margin-bottom:4px"></div>
     </div>
     <button class="section-toggle" id="toggleFoodsEdit" onclick="toggleSection('foodsEdit',this)" style="margin-top:8px">
       <span>Správa pokrmů</span><span class="chevron">⌄</span>
@@ -1193,6 +1210,98 @@ async function saveEditFeed(id){
     cache.feed.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));
     showToast('Krmení upraveno');renderFeedHistory();refreshDashboard();
   }catch(e){showErr('Nepodařilo se uložit');}
+}
+
+// ── Co dlouho neměl? ──────────────────────────────────
+const notHadSeen = new Set();
+
+function toggleNotHad(btn) {
+  const section = document.getElementById('notHadSection');
+  section.classList.toggle('open');
+  btn.classList.toggle('open');
+  if (section.classList.contains('open')) renderNotHad();
+}
+
+function renderNotHad() {
+  const el = document.getElementById('notHadList');
+  if (!el) return;
+  if (!cache.foods.length) { el.innerHTML = '<p class="history-empty">Žádné pokrmy</p>'; return; }
+
+  const now = Date.now();
+  const foodLastSeen = {};
+
+  // For each food, find the most recent feeding log that contains it
+  cache.foods.forEach(f => { foodLastSeen[f.id] = null; });
+  cache.feed.forEach(log => {
+    (log.feeding_log_foods || []).forEach(fl => {
+      const t = new Date(log.event_time).getTime();
+      if (foodLastSeen[fl.food_id] === null || t > foodLastSeen[fl.food_id]) {
+        foodLastSeen[fl.food_id] = t;
+      }
+    });
+  });
+
+  // Build sorted list: descending by days, then alphabetically
+  const items = cache.foods.map(f => {
+    const last = foodLastSeen[f.id];
+    const days = last === null ? null : Math.floor((now - last) / 86400000);
+    return { food: f, days };
+  });
+
+  items.sort((a, b) => {
+    const da = a.days === null ? Infinity : a.days;
+    const db = b.days === null ? Infinity : b.days;
+    if (da !== db) return db - da;
+    return a.food.name.localeCompare(b.food.name, 'cs');
+  });
+
+  el.innerHTML = items.map(({ food, days }) => {
+    const col = foodColorById(food.color);
+    const stripeColor = col
+      ? (days === null || days > 14 ? col.txt : days > 7 ? col.bg : col.bg)
+      : (days === null || days > 14 ? 'var(--amber)' : days > 7 ? 'var(--amber-bg)' : 'var(--border-2)');
+
+    // Stripe intensity: stronger = longer absence
+    let stripe;
+    if (col) {
+      if (days === null || days > 14) stripe = col.txt;
+      else if (days > 7) stripe = col.bg;
+      else stripe = col.bg;
+    } else {
+      if (days === null || days > 14) stripe = 'var(--amber)';
+      else if (days > 7) stripe = 'var(--border-2)';
+      else stripe = 'var(--border)';
+    }
+
+    const badgeText = days === null ? 'nikdy' : days === 0 ? 'dnes' : `${days} dní`;
+    let badgeBg, badgeColor;
+    if (days === null || days > 14) {
+      badgeBg = 'var(--amber-bg)'; badgeColor = 'var(--amber)';
+    } else if (days > 7) {
+      badgeBg = col ? col.bg : 'var(--border)'; badgeColor = col ? col.txt : 'var(--text-muted)';
+    } else {
+      badgeBg = 'var(--bg)'; badgeColor = 'var(--text-faint)';
+    }
+
+    const seen = notHadSeen.has(food.id) ? ' seen' : '';
+    return `<div class="not-had-item${seen}" onclick="toggleNotHadSeen('${food.id}',this)" data-food-id="${food.id}">
+      <div class="not-had-stripe" style="background:${stripe}"></div>
+      <div class="not-had-body">
+        <span class="not-had-name">${food.name}</span>
+        <span class="not-had-badge" style="background:${badgeBg};color:${badgeColor}">${badgeText}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleNotHadSeen(foodId, el) {
+  if (notHadSeen.has(foodId)) {
+    notHadSeen.delete(foodId);
+    el.classList.remove('seen');
+  } else {
+    notHadSeen.add(foodId);
+    el.classList.add('seen');
+  }
 }
 
 // ══════════════════════════════════════════════════════
