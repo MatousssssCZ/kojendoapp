@@ -770,8 +770,8 @@ function refreshDashboard(){
 async function loadAll(){
   const [bf,feed,feedFoods,foods,stool,sleep]=await Promise.all([
     sbGet('breastfeeding_logs?select=id,side,event_time&order=event_time.desc&limit=400'),
-    sbGet('feeding_logs?select=id,event_time&order=event_time.desc&limit=100'),
-    sbGet('feeding_log_foods?select=*&limit=500'),
+    sbGet('feeding_logs?select=id,event_time&order=event_time.desc&limit=2000'),
+    sbGet('feeding_log_foods?select=*&limit=5000'),
     sbGet('foods?select=id,name,color&order=name.asc'),
     sbGet('stool_logs?select=id,event_time&order=event_time.desc&limit=100'),
     sbGet('sleep_logs?select=id,type,event_time&order=event_time.desc&limit=200'),
@@ -1279,7 +1279,15 @@ function renderNotHad() {
       else stripe = 'var(--border)';
     }
 
-    const badgeText = days === null ? 'nikdy' : days === 0 ? 'dnes' : `${days} dní`;
+    let badgeText;
+    if (days === null) badgeText = 'nikdy';
+    else if (days === 0) badgeText = 'dnes';
+    else if (days === 1) badgeText = 'včera';
+    else if (days < 30) badgeText = `${days} dní`;
+    else if (days < 60) badgeText = '1 měsíc';
+    else if (days < 90) badgeText = '2 měsíce';
+    else if (days < 120) badgeText = '3 měsíce';
+    else badgeText = `${Math.floor(days / 30)} měsíců`;
     let badgeBg, badgeColor;
     if (days === null || days > 14) {
       badgeBg = 'var(--amber-bg)'; badgeColor = 'var(--amber)';
