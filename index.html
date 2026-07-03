@@ -768,18 +768,15 @@ function refreshDashboard(){
 
 // ── Load all ───────────────────────────────────────────
 async function loadAll(){
-  const [bf,feed,feedFoods,foods,stool,sleep]=await Promise.all([
+  const [bf,feed,foods,stool,sleep]=await Promise.all([
     sbGet('breastfeeding_logs?select=id,side,event_time&order=event_time.desc&limit=400'),
-    sbGet('feeding_logs?select=id,event_time&order=event_time.desc&limit=2000'),
-    sbGet('feeding_log_foods?select=*&limit=5000'),
+    sbGet('feeding_logs?select=id,event_time,feeding_log_foods(id,food_id)&order=event_time.desc&limit=2000'),
     sbGet('foods?select=id,name,color&order=name.asc'),
     sbGet('stool_logs?select=id,event_time&order=event_time.desc&limit=100'),
     sbGet('sleep_logs?select=id,type,event_time&order=event_time.desc&limit=200'),
   ]);
-  const flMap={};
-  (feedFoods||[]).forEach(fl=>{if(!flMap[fl.feeding_log_id])flMap[fl.feeding_log_id]=[];flMap[fl.feeding_log_id].push(fl);});
   cache.bf=bf||[];cache.foods=foods||[];cache.stool=stool||[];
-  cache.feed=(feed||[]).map(log=>({...log,feeding_log_foods:flMap[log.id]||[]}));
+  cache.feed=(feed||[]).map(log=>({...log,feeding_log_foods:log.feeding_log_foods||[]}));
   cache.sleep=sleep||[];
   pairSleepLogs();
   // Léky — tiché selhání pokud tabulky ještě neexistují
