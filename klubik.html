@@ -74,6 +74,15 @@ body{font-family:'Helvetica Neue',system-ui,sans-serif;background:#1a1025;color:
 
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#f0eaf8;color:#1a1025;font-size:13px;font-weight:600;padding:10px 20px;border-radius:100px;opacity:0;transition:opacity .2s,transform .25s;pointer-events:none;z-index:200;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.thumb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:14px}
+.thumb-overlay.open{display:flex}
+.thumb-video{width:100%;max-width:560px;border-radius:10px;background:#000;display:block}
+.thumb-label{color:#c8b4f0;font-size:13px;font-weight:600;align-self:flex-start;max-width:560px;width:100%}
+.thumb-slider{width:100%;max-width:560px;accent-color:#c084fc}
+.thumb-btns{display:flex;gap:10px;width:100%;max-width:560px}
+.thumb-ok{flex:1;background:#c084fc;color:#1a1025;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.thumb-cancel{flex:1;background:rgba(255,255,255,.08);color:#c8b4f0;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
 </style>
 </head>
 <body>
@@ -115,6 +124,16 @@ body{font-family:'Helvetica Neue',system-ui,sans-serif;background:#1a1025;color:
 <div class="progress-overlay" id="progressOverlay">
   <div class="progress-text" id="progressText">Nahrávám…</div>
   <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+</div>
+
+<div class="thumb-overlay" id="thumbOverlay">
+  <div class="thumb-label" id="thumbLabel">Vyber snímek pro náhled</div>
+  <video class="thumb-video" id="thumbVideo" muted playsinline preload="metadata"></video>
+  <input class="thumb-slider" type="range" id="thumbSlider" min="0" max="100" value="0" step="0.1">
+  <div class="thumb-btns">
+    <button class="thumb-cancel" onclick="closeThumbPicker()">Zrušit</button>
+    <button class="thumb-ok" onclick="confirmThumb()">Použít tento snímek</button>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -253,6 +272,7 @@ function renderGrid(){
           <button class="order-btn" onclick="event.stopPropagation();moveVideo('${v.id}',1)" ${i===videos.length-1?'disabled':''}>▶</button>
         </div>
         <button class="rename-btn" onclick="event.stopPropagation();openRename('${v.id}')">Přejmenovat</button>
+        <button class="rename-btn" onclick="event.stopPropagation();openThumbPicker('${v.id}')">Náhled</button>
         <button class="delete-btn" onclick="event.stopPropagation();deleteVideo('${v.id}')">Smazat</button>
       </div>
     </div>
@@ -313,6 +333,50 @@ function openRename(id){
   setTimeout(() => document.getElementById('renameInput').focus(), 50);
 }
 function closeRename(){ document.getElementById('renameOverlay').classList.remove('open'); renameId = null; }
+let thumbPickerId = null;
+
+function openThumbPicker(id){
+  thumbPickerId = id;
+  const overlay = document.getElementById('thumbOverlay');
+  const video = document.getElementById('thumbVideo');
+  const slider = document.getElementById('thumbSlider');
+  const item = videos.find(v => v.id === id);
+  if(!item) return;
+  const url = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${item.path}`;
+  video.src = url;
+  video.load();
+  video.addEventListener('loadedmetadata', function onMeta(){
+    slider.max = video.duration;
+    slider.value = video.currentTime;
+    video.removeEventListener('loadedmetadata', onMeta);
+  }, {once: true});
+  slider.oninput = () => { video.currentTime = parseFloat(slider.value); };
+  overlay.style.display = 'flex';
+}
+
+function closeThumbPicker(){
+  const overlay = document.getElementById('thumbOverlay');
+  const video = document.getElementById('thumbVideo');
+  overlay.style.display = 'none';
+  video.pause();
+  video.src = '';
+  thumbPickerId = null;
+}
+
+async function confirmThumb(){
+  const video = document.getElementById('thumbVideo');
+  const canvas = document.createElement('canvas');
+  canvas.width = 320; canvas.height = 180;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, 320, 180);
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+  await dbPatch(`video_items?id=eq.${thumbPickerId}`, {thumbnail: dataUrl});
+  const item = videos.find(v => v.id === thumbPickerId);
+  if(item){ item.thumbnail = dataUrl; renderList(); }
+  toast('Náhled uložen');
+  closeThumbPicker();
+}
+
 async function confirmRename(){
   if(!renameId) return;
   const name = document.getElementById('renameInput').value.trim();
