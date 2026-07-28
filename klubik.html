@@ -49,12 +49,12 @@ body{font-family:'Helvetica Neue',system-ui,sans-serif;background:#1a1025;color:
 .empty-text{font-size:15px;font-weight:500}
 .empty-sub{font-size:13px;margin-top:6px;opacity:.7}
 
-.player-overlay{display:none;position:fixed;inset:0;background:#000;z-index:100;flex-direction:column}
+.player-overlay{display:none;position:fixed;inset:0;background:#000;z-index:9999;flex-direction:column;-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0);-webkit-backface-visibility:hidden;isolation:isolate}
 .player-overlay.open{display:flex}
 .player-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(0,0,0,.6);position:absolute;top:0;left:0;right:0;z-index:1}
 .player-title{font-size:14px;font-weight:600;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .player-close{background:rgba(255,255,255,.15);border:none;color:#fff;font-size:16px;width:36px;height:36px;border-radius:50%;cursor:pointer;flex-shrink:0}
-#playerVideo{width:100%;height:100%;object-fit:contain}
+#playerVideo{width:100%;flex:1;min-height:0;object-fit:contain}
 
 .rename-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;align-items:center;justify-content:center;padding:24px}
 .rename-overlay.open{display:flex}
@@ -107,7 +107,7 @@ body{font-family:'Helvetica Neue',system-ui,sans-serif;background:#1a1025;color:
     <div class="player-title" id="playerTitle"></div>
     <button class="player-close" onclick="closePlayer()">✕</button>
   </div>
-  <video id="playerVideo" controls playsinline></video>
+  <video id="playerVideo" controls playsinline webkit-playsinline></video>
 </div>
 
 <div class="rename-overlay" id="renameOverlay">
