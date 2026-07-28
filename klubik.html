@@ -54,7 +54,7 @@ body{font-family:'Helvetica Neue',system-ui,sans-serif;background:#1a1025;color:
 .player-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(0,0,0,.6);position:absolute;top:0;left:0;right:0;z-index:1}
 .player-title{font-size:14px;font-weight:600;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .player-close{background:rgba(255,255,255,.15);border:none;color:#fff;font-size:16px;width:36px;height:36px;border-radius:50%;cursor:pointer;flex-shrink:0}
-#playerVideo{width:100%;flex:1;min-height:0;object-fit:contain}
+#playerVideo{width:100%;flex:1;min-height:0;object-fit:contain;-webkit-transform:translateZ(0);transform:translateZ(0);will-change:transform;opacity:.999}
 
 .rename-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:150;align-items:center;justify-content:center;padding:24px}
 .rename-overlay.open{display:flex}
