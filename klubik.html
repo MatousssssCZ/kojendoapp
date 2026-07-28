@@ -128,7 +128,7 @@ body{font-family:'Helvetica Neue',system-ui,sans-serif;background:#1a1025;color:
 
 <div class="thumb-overlay" id="thumbOverlay">
   <div class="thumb-label" id="thumbLabel">Vyber snímek pro náhled</div>
-  <video class="thumb-video" id="thumbVideo" muted playsinline preload="metadata"></video>
+  <video class="thumb-video" id="thumbVideo" muted playsinline preload="auto" crossorigin="anonymous"></video>
   <input class="thumb-slider" type="range" id="thumbSlider" min="0" max="100" value="0" step="0.1">
   <div class="thumb-btns">
     <button class="thumb-cancel" onclick="closeThumbPicker()">Zrušit</button>
@@ -342,15 +342,16 @@ function openThumbPicker(id){
   const slider = document.getElementById('thumbSlider');
   const item = videos.find(v => v.id === id);
   if(!item) return;
-  const url = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${item.path}`;
+  const url = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${item.storage_path}`;
   video.src = url;
   video.load();
   video.addEventListener('loadedmetadata', function onMeta(){
-    slider.max = video.duration;
-    slider.value = video.currentTime;
-    video.removeEventListener('loadedmetadata', onMeta);
+    slider.max = Math.floor(video.duration);
+    slider.value = 0;
   }, {once: true});
-  slider.oninput = () => { video.currentTime = parseFloat(slider.value); };
+  slider.oninput = () => {
+    video.currentTime = parseFloat(slider.value);
+  };
   overlay.style.display = 'flex';
 }
 
@@ -365,6 +366,12 @@ function closeThumbPicker(){
 
 async function confirmThumb(){
   const video = document.getElementById('thumbVideo');
+  // wait for current seek to finish before capturing
+  await new Promise(res => {
+    if(video.seeking){ video.addEventListener('seeked', res, {once:true}); }
+    else { res(); }
+  });
+  await new Promise(res => setTimeout(res, 100));
   const canvas = document.createElement('canvas');
   canvas.width = 320; canvas.height = 180;
   const ctx = canvas.getContext('2d');
