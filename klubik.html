@@ -366,22 +366,32 @@ function closeThumbPicker(){
 
 async function confirmThumb(){
   const video = document.getElementById('thumbVideo');
-  // wait for current seek to finish before capturing
-  await new Promise(res => {
-    if(video.seeking){ video.addEventListener('seeked', res, {once:true}); }
-    else { res(); }
-  });
-  await new Promise(res => setTimeout(res, 100));
-  const canvas = document.createElement('canvas');
-  canvas.width = 320; canvas.height = 180;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(video, 0, 0, 320, 180);
-  const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-  await dbPatch(`video_items?id=eq.${thumbPickerId}`, {thumbnail: dataUrl});
-  const item = videos.find(v => v.id === thumbPickerId);
-  if(item){ item.thumbnail = dataUrl; renderList(); }
-  toast('Náhled uložen');
-  closeThumbPicker();
+  try{
+    // wait for current seek to finish before capturing
+    await new Promise(res => {
+      if(video.seeking){ video.addEventListener('seeked', res, {once:true}); }
+      else { res(); }
+    });
+    await new Promise(res => setTimeout(res, 100));
+    if(!video.videoWidth || !video.videoHeight){
+      toast('Video ještě není načtené, zkus to znovu');
+      return;
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = 320; canvas.height = 180;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, 320, 180);
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+    const savedId = thumbPickerId;
+    await dbPatch(`video_items?id=eq.${savedId}`, {thumbnail: dataUrl});
+    const item = videos.find(v => v.id === savedId);
+    if(item){ item.thumbnail = dataUrl; renderList(); }
+    toast('Náhled uložen');
+    closeThumbPicker();
+  }catch(err){
+    console.error('confirmThumb error', err);
+    toast('Chyba při uložení náhledu: ' + (err.message || err));
+  }
 }
 
 async function confirmRename(){
