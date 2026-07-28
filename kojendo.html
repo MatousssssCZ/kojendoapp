@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Baby Tracker</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAGH0lEQVR42u3doXIbSRSF4Z4uo4GmhqZ+izyCa+HCYC/LkpTLFZJlMV4YmPIj5C1CF4YGmmZJXKUk0oxmpOm+59z/ICcpx6PuT0d3RpY0lI759vXL90Isc3l1M/T4uQN4iRPyAcTECfcAZOIEewAycYI9AJk4wa5gJpFyqqcKZuKEegAycRpBKpiJU1tXMBMn1BXMxAl1BTNxQl3BTJxQV5aIOKXSzsSppSuYiRPqCmbihJoZmnjP0LQzUW5pGpr4NjTtTNRbmoYmng1NOxOHlqahiVUuWILz5f3nD6u/9+9Xf7GAZ8jAuNEWLtABnQowwAEdBvE4jqt/3vPzM7gB3QfxKXC3gg5uQB8NuSXgU4Fnhz1kxjwFORLiNbizwk4JWh0ysAE9CVkR8VLcWWCnAJ0Bciml3N8+vnv5+s3H128zwq4ZMY/jaI25lFL++fPfd/tuY6Rr6lvkIhNkx1aeyziOv40hL2vj2NY1C2bHVl6COktb1yyY3fPwdPd26s+H1sENtc1JYVbIa7PvaojDCGIBGsxHnzj+t9Pg146o5UGDeRnkX/Pm4+trJ9TVCXPmE79znjAqz9XVCTNZ1s67/+6CuoKZHFpHRdQVzMQJdQWzdx6e7q6X/rsy6gpm4tTUEpftwHz+E8S55n7Jr9eqo1/Sk/vlJDBvN34cWu81L+Bl5DiynQn7IQuaUYN52gY0mLvP25/ubx8/qaGuig1Btse872uFfQgJmrk5Buapv4u6TzU6ZtqZedpm5ABz+zw83f0x93eR9yUUaEaNeKj3AY+8b2GfWGndAve3j3Ob3Hu2bXp8c5CjPuES5qnv3Xt5K8xzSHrjjn58pfz81HiEp8XTfSTFWiT7/o+t4Jx6jLvf3/uRJWVDt2jnc0DeuhEVjjF6S/MpWMFan4g39Nbt3BrK0iaMfnxqLW3d0D1ab8nPjH58iukKesvrlzyE91ubntelwzT0OceN3piP+fkKx9hr/xg5Ajbz1HEoHCMjR7CTwahgnEeh3X3sNXZUd0Ak15pVNqbdcSkcI6AZN0igseOCLaABGTkAw50O0IQYgmZ+Zo6moQkBNAE0IYAmBNCE6IPmCkee9LrSQUMTGpoQQG+YbO89wRrS0ISGJgTQPGSydoAmBNC0NGtGQxMamsahnQHNRrFGgCYE0LQ0a5OmoUGdb02agt59I+xWn6AE6j5r0esN0CsbCWYamhBA01DcdkCzsdxmQLPBee/AzUH3uNKRcaN73saeH/GW9qTQGXXm84XU7w/9svEubyXL5Uku29lAAHNH0BHmaCcQkY6990ck09DiqGlmQNsAAXMg0BHHDiUoEY+x97hRCp+CNQsm2hUQWllk5IjW0hEBRcYcZf+6gu71sKQISamZe+4rJ4UCoBgzhEBHPjmMAEsBc4STQRpaABjNLApaqaVbQVPBHKmdaeig4GhmA9BqLb0VPCXM0do5dENnRK2KmYY+oqWzjR/KY0akfau0QH/Uapgj70uNfm93R62OOdqjasiGVh09lgJVv5oRcZ+qYisQ9kEOtPvowaiRsKFdUYM58cihPE87Jvp+yD31rd7SXKIDtM3owagBaAvUilHELDdygBrMdjM0qME8leHb1y/fFRf+/ecPP/15HEc0Jscs2dA0NZgtQR9CDezlkF0wy4M+tPigXtfK6pgtQIMazBYnhceeLHLCmAOyVUPT1mC2BT2FOivsQ7fd8Re/7EYORpB8rWzf0LR1rlZO1dBzbe3W2IfuqFl+rzwV6DnYqrinHm2yvUAiJWgX2EAG9GLY0XDPzf7ZX7IG6AWwewA/9uSV114C+iy4zwV9zVUXEAO6Ge6tAuIZ0KWUAuq4wAEMaEnowAU0Ib+Fz1ghgCYkNOjLq5uBpSDquby6GWhowshBSHjQjB1EfdygoYn3yEFLE+V2pqGJ/0khLU1U25mGJv4NTUsT1XaebGhQEzXMsyMHqIkSZmZokmOGpqWJYjsf3dCgJgqYF40coCbRMS+eoUFNImNedVIIahIVcyk/XiS7Nry4lkSBvLqhaWsSFfPJoEFNImE+eeRgBCFRIG8CGtik9yP8puMCsEnrUbXZ/Atu0uJ863+cvNOfO7O/DAAAAABJRU5ErkJggg==">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Baby Tracker">
+<meta name="theme-color" content="#f2ebdc">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { overflow-x: hidden; max-width: 100vw; }
+:root {
+  --bg:#f7f3ec; --surface:#fdfcf9; --border:#e7e5e4; --border-2:#d6d3d1;
+  --text:#1c1917; --text-2:#292524; --text-muted:#78716c; --text-faint:#a8a29e;
+  --sage:#7a9e6e; --sage-bg:#e8f0e4; --sage-dark:#5a7a50;
+  --amber:#c8922a; --amber-bg:#fef3dc;
+  --stool-border:#d4a26a; --stool-text:#8a5c28; --stool-bg:#fdf5e6;
+  --sleep-border:#8b78c8; --sleep-text:#5c4a99; --sleep-bg:#f0edfb;
+  --chip-text:#57534e; --save-bg:#1c1917; --save-bg-h:#292524;
+  --confirm-bg:#fff; --hover-row:#f5f5f4;
+  --shadow-soft:0 2px 16px rgba(0,0,0,.07); --shadow-card:0 4px 28px rgba(0,0,0,.10); --shadow-modal:0 12px 56px rgba(0,0,0,.18);
+  --backdrop:rgba(28,25,23,.35);
+  --tile-bf-grad:linear-gradient(135deg,#e8f0e4,transparent 60%);
+  --tile-feed-grad:linear-gradient(135deg,#fef3dc,transparent 60%);
+  --tile-stool-grad:linear-gradient(135deg,#fdf5e6,transparent 60%);
+  --tile-sleep-grad:linear-gradient(135deg,#f0edfb,transparent 60%);
+  --med-border:#e07070; --med-text:#a03030; --med-bg:#fdf0f0;
+  --tile-med-grad:linear-gradient(135deg,#fdf0f0,transparent 60%);
+  --breast-badge-bg:#fff; --modal-close-bg:#f5f5f4; --modal-close-h:#e7e5e4; --input-bg:#fdfcf9;
+  --bar-color:#7a9e6e; --bar-bg:#e8f0e4;
+}
+.dark {
+  --bg:#0f0e0c; --surface:#1a1916; --border:#2e2c28; --border-2:#3a3830;
+  --text:#e8e4dd; --text-2:#ccc8c0; --text-muted:#7a756c; --text-faint:#52504a;
+  --sage:#7aad6c; --sage-bg:#1a2e17; --sage-dark:#9dcc8e;
+  --amber:#d9a340; --amber-bg:#261e0a;
+  --stool-border:#a07040; --stool-text:#c49050; --stool-bg:#1e1608;
+  --sleep-border:#9b8cd4; --sleep-text:#c0b0f0; --sleep-bg:#18132a;
+  --chip-text:#a09a92; --save-bg:#e8e4dd; --save-bg-h:#fff;
+  --confirm-bg:#1a1916; --hover-row:#222018;
+  --shadow-soft:0 2px 16px rgba(0,0,0,.35); --shadow-card:0 4px 28px rgba(0,0,0,.45); --shadow-modal:0 12px 56px rgba(0,0,0,.65);
+  --backdrop:rgba(0,0,0,.65);
+  --tile-bf-grad:linear-gradient(135deg,#1a2e17,transparent 60%);
+  --tile-feed-grad:linear-gradient(135deg,#261e0a,transparent 60%);
+  --tile-stool-grad:linear-gradient(135deg,#1e1608,transparent 60%);
+  --tile-sleep-grad:linear-gradient(135deg,#18132a,transparent 60%);
+  --med-border:#a05050; --med-text:#e09090; --med-bg:#2a1010;
+  --tile-med-grad:linear-gradient(135deg,#2a1010,transparent 60%);
+  --breast-badge-bg:#0f0e0c; --modal-close-bg:#2e2c28; --modal-close-h:#3a3830; --input-bg:#222018;
+  --bar-color:#7aad6c; --bar-bg:#1a2e17;
+}
+.dark .save-btn { color:#0f0e0c; }
+.dark .edit-save { color:#0f0e0c; }
+.dark .history-text strong { color:var(--text); }
+body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100dvh; -webkit-tap-highlight-color:transparent; transition:background .25s,color .25s; touch-action:pan-y; }
+button { touch-action:manipulation; }
+.app { max-width:440px; margin:0 auto; padding:24px 20px 80px; }
+.loading-overlay { position:fixed; inset:0; z-index:200; background:var(--bg); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px; transition:opacity .3s; }
+.loading-overlay.hidden { opacity:0; pointer-events:none; }
+.loading-spinner { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--sage); border-radius:50%; animation:spin .8s linear infinite; }
+.loading-text { font-size:13px; color:var(--text-faint); }
+.config-banner { display:none; background:#261e0a; border:1.5px solid var(--amber); border-radius:14px; padding:16px 18px; margin-bottom:24px; font-size:13px; color:var(--amber); line-height:1.7; }
+.config-banner.show { display:block; }
+.config-banner code { background:rgba(255,255,255,.08); border-radius:4px; padding:1px 5px; font-family:monospace; font-size:12px; }
+.header { margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; }
+.header-date { font-size:12px; font-weight:500; letter-spacing:.10em; text-transform:uppercase; color:var(--text-faint); }
+.theme-toggle { width:40px; height:22px; background:var(--border); border-radius:100px; border:none; cursor:pointer; position:relative; transition:background .2s; flex-shrink:0; }
+.theme-toggle::after { content:''; position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%; background:var(--text-faint); transition:transform .22s cubic-bezier(.34,1.56,.64,1),background .2s; }
+.dark .theme-toggle { background:var(--sage-bg); }
+.dark .theme-toggle::after { transform:translateX(18px); background:var(--sage); }
+.summary { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-bottom:16px; }
+.summary-item { background:var(--surface); border-radius:14px; padding:9px 6px 8px; text-align:center; box-shadow:var(--shadow-soft); border:1px solid var(--border); }
+.summary-emoji { font-size:14px; margin-bottom:2px; }
+.summary-count { font-size:17px; font-weight:700; color:var(--text); line-height:1; }
+.summary-label { font-size:8px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--text-faint); margin-top:2px; }
+.summary-sub { font-size:8px; color:var(--text-faint); margin-top:1px; }
+.tiles { display:flex; flex-direction:column; gap:10px; }
+.tile { background:var(--surface); border-radius:20px; padding:16px 18px 14px; box-shadow:var(--shadow-soft); cursor:pointer; text-align:left; width:100%; transition:box-shadow .15s,transform .12s; position:relative; overflow:hidden; border:1px solid var(--border); contain:layout style; }
+.tile::before { content:''; position:absolute; inset:0; opacity:0; transition:opacity .15s; pointer-events:none; }
+.tile:hover { box-shadow:var(--shadow-card); }
+.tile:active { transform:scale(.985); }
+.tile-bf::before    { background:var(--tile-bf-grad); }
+.tile-feed::before  { background:var(--tile-feed-grad); }
+.tile-stool::before { background:var(--tile-stool-grad); }
+.tile-sleep::before { background:var(--tile-sleep-grad); }
+.tile-med::before   { background:var(--tile-med-grad); }
+.tile:hover::before { opacity:1; }
+.tile-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.tile-left { display:flex; align-items:center; gap:10px; }
+.tile-emoji { font-size:20px; }
+.tile-title { font-size:16px; font-weight:600; color:var(--text); }
+.tile-arrow { font-size:20px; color:var(--border-2); transition:color .15s; }
+.tile:hover .tile-arrow { color:var(--text-faint); }
+.tile-sub { font-size:12px; color:var(--text-muted); line-height:1.4; }
+.tile-hint { display:none; align-items:center; gap:5px; font-size:11px; font-weight:600; color:var(--sage-dark); margin-top:7px; }
+.tile-hint.show { display:inline-flex; }
+.tile-hint::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--sage); }
+.footer { font-size:12px; color:var(--text-faint); text-align:center; margin-top:20px; }
+.footer em { font-family:'DM Serif Display',serif; font-style:italic; }
+.theme-bar { position:fixed; bottom:0; left:0; right:0; display:flex; align-items:center; justify-content:center; gap:10px; padding:14px 24px 20px; background:var(--bg); border-top:1px solid var(--border); z-index:10; }
+.theme-bar-label { font-size:12px; color:var(--text-faint); }
+.theme-bar-icon { font-size:15px; line-height:1; }
+.backdrop { display:none; position:fixed; inset:0; background:var(--backdrop); z-index:40; }
+@media(min-width:520px){ .backdrop { backdrop-filter:blur(4px); } }
+.backdrop.open { display:block; animation:fadeIn .2s ease; }
+.modal { display:none; position:fixed; bottom:0; left:0; right:0; z-index:50; background:var(--bg); border-radius:28px 28px 0 0; box-shadow:var(--shadow-modal); max-height:88dvh; flex-direction:column; overflow:hidden; border-top:1px solid var(--border); }
+@media(min-width:520px){ .modal { top:50%; left:50%; right:auto; bottom:auto; transform:translate(-50%,-50%); width:440px; border-radius:28px; max-height:85dvh; border:1px solid var(--border); } }
+.modal.open { display:flex; animation:slideUp .32s cubic-bezier(.32,.72,0,1); }
+@media(min-width:520px){ .modal.open { animation:fadeIn .22s ease; } }
+.modal-header { display:flex; align-items:center; justify-content:space-between; padding:24px 24px 16px; flex-shrink:0; }
+.modal-title { font-size:20px; font-weight:600; color:var(--text); letter-spacing:-.02em; }
+.modal-close { width:32px; height:32px; border-radius:50%; background:var(--modal-close-bg); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--text-muted); transition:background .15s; }
+.modal-close:hover { background:var(--modal-close-h); }
+.modal-body { overflow-y:auto; padding:0 24px 32px; flex:1; -webkit-overflow-scrolling:touch; }
+.breast-btns { display:flex; flex-direction:column; gap:12px; margin-bottom:16px; }
+.breast-btn { width:100%; display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-radius:20px; border:2px solid var(--border); background:var(--surface); cursor:pointer; transition:all .15s; font-family:inherit; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+.breast-btn:active { transform:scale(.98); }
+.breast-btn.primary { border-color:var(--sage); background:var(--sage-bg); }
+.breast-btn.secondary { opacity:.45; }
+.breast-btn.secondary:hover { opacity:.7; }
+.breast-btn:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+.breast-btn-left { display:flex; align-items:center; gap:12px; }
+.breast-icon { font-size:18px; }
+.breast-label { font-size:15px; font-weight:600; color:var(--text); }
+.breast-badge { font-size:11px; font-weight:600; color:var(--sage-dark); background:var(--breast-badge-bg); padding:4px 10px; border-radius:100px; border:1px solid var(--sage); display:none; }
+.breast-badge.show { display:inline-block; }
+.last-hint { text-align:center; font-size:12px; color:var(--text-faint); margin-bottom:14px; min-height:18px; }
+.bf-chart-wrap { margin-bottom:4px; }
+.bf-chart-title { font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--text-faint); margin-bottom:10px; }
+.bf-chart { display:flex; align-items:flex-end; gap:5px; }
+.bf-bar-col { display:flex; flex-direction:column; align-items:center; gap:3px; flex:1; }
+.bf-bar-val { font-size:10px; font-weight:600; color:var(--text-muted); min-height:13px; line-height:1; }
+.bf-bar-outer { width:100%; border-radius:6px; overflow:hidden; position:relative; height:52px; background:var(--bar-bg); }
+.bf-bar-inner { background:var(--bar-color); border-radius:6px; transition:height .5s cubic-bezier(.34,1.2,.64,1); width:100%; position:absolute; bottom:0; }
+.bf-bar-day { font-size:9px; color:var(--text-faint); font-weight:500; }
+.bf-seg { display:flex; gap:3px; margin-bottom:10px; background:var(--border); border-radius:10px; padding:3px; }
+.bf-seg-btn { flex:1; padding:5px 0; border:none; background:transparent; border-radius:8px; font-size:11px; font-weight:600; font-family:inherit; color:var(--text-faint); cursor:pointer; transition:background .15s,color .15s; touch-action:manipulation; }
+.bf-seg-btn.active { background:var(--surface); color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,.12); }
+.section-toggle { width:100%; display:flex; align-items:center; justify-content:space-between; padding:12px 0; border:none; background:none; cursor:pointer; color:var(--text-muted); font-size:13px; font-weight:500; font-family:inherit; border-top:1px solid var(--border); transition:color .15s; }
+.section-toggle:hover { color:var(--text); }
+.section-toggle .chevron { font-size:14px; transition:transform .2s; }
+.section-toggle.open .chevron { transform:rotate(180deg); }
+.history-list { margin-top:8px; }
+.history-empty { text-align:center; padding:20px 0; font-size:13px; color:var(--text-faint); }
+.history-item { border-radius:12px; }
+.history-item.editing { background:var(--hover-row); }
+.history-row { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:12px; cursor:pointer; transition:background .12s; }
+.history-row:hover { background:var(--hover-row); }
+.history-text { font-size:13px; color:var(--text-muted); font-variant-numeric:tabular-nums; flex:1; }
+.history-text strong { color:var(--text); font-weight:600; }
+.edit-hint { font-size:10px; color:var(--text-faint); flex-shrink:0; margin-left:8px; opacity:0; transition:opacity .15s; }
+.history-row:hover .edit-hint, .history-item.editing .edit-hint { opacity:1; }
+.bf-gap-row { display:flex; align-items:center; gap:8px; padding:3px 12px; }
+.bf-gap-line { flex:1; height:1px; background:var(--border); }
+.bf-gap-label { font-size:11px; color:var(--text-faint); white-space:nowrap; }
+.edit-panel { display:none; padding:2px 12px 12px; animation:fadeIn .15s ease; }
+.edit-panel.open { display:block; }
+.edit-time { padding:7px 10px; border-radius:10px; border:1.5px solid var(--border); background:var(--input-bg); font-size:12px; color:var(--text); font-family:inherit; outline:none; transition:border-color .15s; color-scheme:light dark; }
+.edit-time:focus { border-color:var(--sage); }
+.edit-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.edit-chip { display:inline-flex; align-items:center; gap:4px; padding:5px 11px; border-radius:100px; border:1.5px solid var(--border); background:var(--surface); font-size:12px; font-weight:500; color:var(--chip-text); cursor:pointer; transition:all .13s; font-family:inherit; touch-action:manipulation; }
+.edit-chip.selected { background:var(--sage); border-color:var(--sage); color:white; }
+.edit-actions { display:flex; gap:8px; margin-top:10px; align-items:center; }
+.edit-save { flex:1; padding:8px; border-radius:10px; border:none; background:var(--save-bg); color:white; font-size:12px; font-weight:600; font-family:inherit; cursor:pointer; touch-action:manipulation; }
+.edit-cancel { padding:8px 14px; border-radius:10px; border:1.5px solid var(--border); background:transparent; font-size:12px; font-weight:500; color:var(--text-muted); font-family:inherit; cursor:pointer; touch-action:manipulation; }
+.edit-delete { margin-left:auto; padding:6px 8px; border-radius:8px; border:none; background:transparent; font-size:15px; color:var(--text-faint); cursor:pointer; touch-action:manipulation; }
+.edit-delete:hover { color:#ef4444; }
+.action-btn { width:100%; padding:16px 18px; border-radius:20px; border:2px solid; background:transparent; cursor:pointer; font-size:15px; font-weight:600; font-family:inherit; transition:all .15s; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px; }
+.action-btn:active { transform:scale(.98); }
+.action-btn.amber { border-color:var(--amber); color:var(--amber); background:var(--amber-bg); }
+.action-btn.stool { border-color:var(--stool-border); color:var(--stool-text); background:var(--stool-bg); }
+.action-btn.med   { border-color:var(--med-border);   color:var(--med-text);   background:var(--med-bg); }
+.action-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.sleep-btns { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+.sleep-btn { width:100%; display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-radius:18px; border:2px solid var(--border); background:var(--surface); cursor:pointer; transition:all .15s; font-family:inherit; touch-action:manipulation; }
+.sleep-btn:active { transform:scale(.98); }
+.sleep-btn.sleep-on { border-color:var(--sleep-border); background:var(--sleep-bg); }
+.sleep-btn:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+.sleep-btn-left { display:flex; align-items:center; gap:12px; }
+.sleep-btn-icon { font-size:20px; }
+.sleep-btn-label { font-size:15px; font-weight:600; color:var(--text); }
+.sleep-btn-sub { font-size:11px; color:var(--text-faint); margin-top:1px; }
+.sleep-badge { font-size:10px; font-weight:600; color:var(--sleep-text); background:var(--sleep-bg); padding:3px 9px; border-radius:100px; border:1px solid var(--sleep-border); }
+.save-btn { width:100%; padding:16px; border-radius:20px; border:none; background:var(--save-bg); color:white; font-size:14px; font-weight:600; font-family:inherit; cursor:pointer; transition:background .15s,opacity .15s; margin-top:16px; }
+.save-btn:hover { background:var(--save-bg-h); }
+.save-btn:active { transform:scale(.98); }
+.save-btn:disabled { opacity:.35; cursor:not-allowed; }
+.form-section { margin-bottom:16px; }
+.form-label { display:block; font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--text-faint); margin-bottom:8px; }
+.form-input { width:100%; padding:12px 14px; border-radius:12px; border:1.5px solid var(--border); background:var(--input-bg); font-size:14px; color:var(--text); font-family:inherit; outline:none; transition:border-color .15s; color-scheme:light dark; }
+.form-input:focus { border-color:var(--sage); }
+.chips-wrap { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:4px; }
+.chip { display:inline-flex; align-items:center; gap:5px; padding:8px 14px; border-radius:100px; border:1.5px solid var(--border); background:var(--surface); font-size:13px; font-weight:500; color:var(--chip-text); cursor:pointer; transition:all .13s; font-family:inherit; }
+.chip:active { transform:scale(.95); }
+.chip.selected { background:var(--sage); border-color:var(--sage); color:white; }
+.chip-add { border-style:dashed; color:var(--text-faint); }
+.chip-add:hover { border-color:var(--sage); color:var(--sage-dark); }
+.add-food-row { display:none; gap:8px; align-items:center; margin-top:10px; }
+.add-food-row.open { display:flex; }
+.add-food-input { flex:1; padding:9px 13px; border-radius:100px; border:1.5px solid var(--sage); font-size:13px; font-family:inherit; outline:none; background:var(--input-bg); color:var(--text); }
+.add-food-ok { padding:9px 16px; border-radius:100px; border:none; background:var(--sage); color:white; font-size:13px; font-weight:600; font-family:inherit; cursor:pointer; }
+.add-food-ok:hover { background:var(--sage-dark); }
+.collapsible { display:none; }
+.collapsible.open { display:block; animation:fadeIn .18s ease; }
+
+/* Food management */
+.food-mgmt-row { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; transition:background .12s; }
+.food-mgmt-row:hover { background:var(--hover-row); }
+.food-mgmt-name { flex:1; font-size:13px; color:var(--text); font-weight:500; }
+.food-mgmt-btns { display:flex; gap:6px; flex-shrink:0; }
+.food-mgmt-btn { width:32px; height:32px; border-radius:8px; border:1.5px solid var(--border); background:var(--surface); font-size:14px; cursor:pointer; color:var(--text-muted); touch-action:manipulation; display:flex; align-items:center; justify-content:center; transition:background .13s,border-color .13s; }
+.food-mgmt-btn:active { transform:scale(.93); }
+.food-mgmt-btn.edit:hover { border-color:var(--sage); background:var(--sage-bg); }
+.food-mgmt-btn.del:hover { border-color:#ef4444; color:#ef4444; background:#fff0f0; }
+.food-edit-row { display:none; align-items:center; gap:8px; padding:2px 12px 10px; }
+.food-edit-row.open { display:flex; animation:fadeIn .15s ease; }
+.food-edit-input { flex:1; padding:8px 12px; border-radius:10px; border:1.5px solid var(--sage); font-size:13px; font-family:inherit; outline:none; background:var(--input-bg); color:var(--text); }
+.food-edit-ok { padding:8px 14px; border-radius:10px; border:none; background:var(--sage); color:white; font-size:13px; font-weight:600; font-family:inherit; cursor:pointer; touch-action:manipulation; }
+.food-edit-cancel { padding:8px 12px; border-radius:10px; border:1.5px solid var(--border); background:transparent; font-size:12px; color:var(--text-muted); font-family:inherit; cursor:pointer; touch-action:manipulation; }
+
+/* ── Barvy pokrmů ── */
+.food-color-row { display:flex; gap:6px; flex-wrap:wrap; padding:4px 12px 10px; }
+.food-color-swatch { width:24px; height:24px; border-radius:50%; border:2.5px solid transparent; cursor:pointer; touch-action:manipulation; transition:transform .12s,border-color .12s; flex-shrink:0; }
+.food-color-swatch:active { transform:scale(.88); }
+.food-color-swatch.selected { border-color:var(--text); }
+.food-pill { display:inline-flex; align-items:center; padding:3px 9px; border-radius:100px; font-size:11px; font-weight:600; white-space:nowrap; }
+.food-pill-plain { color:var(--text-muted); }
+.feed-filter-wrap { display:flex; gap:6px; padding:10px 14px; overflow-x:auto; border-bottom:1px solid var(--border); -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.feed-filter-wrap::-webkit-scrollbar { display:none; }
+.feed-filter-chip { display:inline-flex; align-items:center; padding:5px 13px; border-radius:100px; border:2px solid transparent; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; touch-action:manipulation; white-space:nowrap; flex-shrink:0; transition:opacity .15s,border-color .13s; }
+.feed-filter-chip:active { transform:scale(.95); }
+.feed-filter-chip.inactive { background:var(--surface) !important; color:var(--text-faint) !important; border-color:transparent !important; opacity:.35; }
+.feed-filter-chip.active { opacity:1; }
+.feed-filter-clear { display:inline-flex; align-items:center; padding:5px 10px; border-radius:100px; border:1.5px solid var(--border); background:transparent; font-size:12px; color:var(--text-faint); cursor:pointer; font-family:inherit; touch-action:manipulation; white-space:nowrap; flex-shrink:0; opacity:.7; }
+.feed-filter-info { font-size:11px; color:var(--text-faint); padding:4px 14px 2px; }
+.food-color-dot { width:8px; height:8px; border-radius:50%; display:inline-block; flex-shrink:0; }
+.dev-notice { display:flex; align-items:flex-start; gap:14px; background:var(--surface); border:1.5px dashed var(--border-2); border-radius:16px; padding:16px 18px; margin-top:4px; }
+.dev-notice-art { font-size:36px; line-height:1; flex-shrink:0; filter:drop-shadow(0 2px 4px rgba(0,0,0,.08)); }
+.dev-notice-text { font-size:12px; color:var(--text-muted); line-height:1.65; }
+.dev-notice-text strong { display:block; font-size:13px; color:var(--text); font-weight:600; margin-bottom:3px; }
+.confirm-overlay { display:none; position:fixed; inset:0; z-index:70; background:var(--backdrop); align-items:center; justify-content:center; padding:24px; }
+.confirm-overlay.open { display:flex; animation:fadeIn .15s ease; }
+.confirm-box { background:var(--confirm-bg); border-radius:24px; padding:24px; max-width:320px; width:100%; box-shadow:var(--shadow-modal); border:1px solid var(--border); }
+.confirm-msg { font-size:14px; color:var(--text); margin-bottom:20px; line-height:1.5; }
+.confirm-btns { display:flex; gap:10px; }
+.confirm-cancel { flex:1; padding:12px; border-radius:14px; border:1.5px solid var(--border); background:transparent; font-size:13px; font-weight:500; font-family:inherit; cursor:pointer; color:var(--text-muted); }
+.confirm-cancel:hover { background:var(--hover-row); }
+.confirm-delete-ok { flex:1; padding:12px; border-radius:14px; border:none; background:#ef4444; color:white; font-size:13px; font-weight:600; font-family:inherit; cursor:pointer; }
+.confirm-delete-ok:hover { background:#dc2626; }
+.toast { position:fixed; bottom:64px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--text); color:var(--bg); font-size:13px; font-weight:500; padding:12px 22px; border-radius:100px; box-shadow:var(--shadow-modal); white-space:nowrap; z-index:99; pointer-events:none; opacity:0; transition:opacity .25s,transform .3s cubic-bezier(.32,.72,0,1); }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+@keyframes slideUp { from{transform:translateY(100%);opacity:.5}to{transform:translateY(0);opacity:1} }
+@keyframes fadeIn  { from{opacity:0}to{opacity:1} }
+@keyframes spin    { to{transform:rotate(360deg)} }
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:4px}
+
+/* ── Teplota slider ── */
+.temp-wrap { margin-top:4px; }
+.temp-display { display:flex; align-items:baseline; justify-content:center; gap:4px; margin-bottom:10px; }
+.temp-value { font-size:36px; font-weight:700; font-variant-numeric:tabular-nums; transition:color .2s; }
+.temp-unit  { font-size:16px; font-weight:500; color:var(--text-muted); }
+.temp-clear { font-size:11px; color:var(--text-faint); cursor:pointer; border:none; background:none; font-family:inherit; padding:2px 6px; border-radius:6px; transition:color .15s; margin-left:6px; }
+.temp-clear:hover { color:var(--text-muted); }
+.temp-slider-track { position:relative; height:36px; display:flex; align-items:center; margin:0 2px; }
+.temp-slider { -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:100px; outline:none; cursor:pointer; background:linear-gradient(to right,#6aaa6a,#f0c040,#e05050); }
+.temp-slider::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:26px; height:26px; border-radius:50%; background:var(--surface); border:3px solid currentColor; box-shadow:0 2px 8px rgba(0,0,0,.18); cursor:pointer; transition:transform .12s; }
+.temp-slider::-moz-range-thumb { width:26px; height:26px; border-radius:50%; background:var(--surface); border:3px solid currentColor; box-shadow:0 2px 8px rgba(0,0,0,.18); cursor:pointer; }
+.temp-slider:active::-webkit-slider-thumb { transform:scale(1.15); }
+.temp-ticks { display:flex; justify-content:space-between; padding:0 4px; margin-top:2px; }
+.temp-tick  { font-size:10px; color:var(--text-faint); font-variant-numeric:tabular-nums; }
+.temp-inactive .temp-value { color:var(--text-faint); }
+/* edit panel mini temp */
+.temp-mini-wrap { margin-top:8px; padding:8px 10px; border-radius:10px; border:1.5px solid var(--border); background:var(--input-bg); }
+.temp-mini-row  { display:flex; align-items:center; gap:8px; }
+.temp-mini-val  { font-size:15px; font-weight:700; font-variant-numeric:tabular-nums; min-width:42px; transition:color .2s; }
+.temp-mini-slider { flex:1; -webkit-appearance:none; appearance:none; height:5px; border-radius:100px; outline:none; cursor:pointer; background:linear-gradient(to right,#6aaa6a,#f0c040,#e05050); }
+.temp-mini-slider::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:20px; height:20px; border-radius:50%; background:var(--surface); border:2.5px solid currentColor; box-shadow:0 1px 6px rgba(0,0,0,.15); cursor:pointer; }
+.temp-mini-slider::-moz-range-thumb { width:20px; height:20px; border-radius:50%; background:var(--surface); border:2.5px solid currentColor; }
+.temp-mini-clear { font-size:12px; color:var(--text-faint); cursor:pointer; border:none; background:none; font-family:inherit; padding:2px 4px; }
+.temp-mini-clear:hover { color:var(--text-muted); }
+
+/* ── Co dlouho neměl ── */
+.not-had-item { display:flex; align-items:stretch; border-radius:10px; border:1px solid var(--border); overflow:hidden; margin-bottom:8px; cursor:pointer; transition:opacity .2s, border-color .15s; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+.not-had-item:last-child { margin-bottom:0; }
+.not-had-item:active { transform:scale(.985); }
+.not-had-stripe { width:5px; flex-shrink:0; transition:background .2s; }
+.not-had-body { display:flex; align-items:center; gap:12px; padding:11px 14px; flex:1; background:var(--surface); }
+.not-had-name { font-size:15px; font-weight:500; color:var(--text); flex:1; transition:color .2s; }
+.not-had-badge { font-size:12px; font-weight:600; padding:3px 11px; border-radius:20px; white-space:nowrap; transition:background .2s, color .2s; }
+.not-had-item.seen { opacity:0.32; }
+.not-had-item.seen .not-had-name { text-decoration:line-through; color:var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Načítám data…</div>
+</div>
+
+<main class="app">
+  <div class="config-banner" id="configBanner">
+    ⚠️ <strong>Chybí konfigurace Supabase.</strong><br>
+    Otevři soubor v textovém editoru a nahraď <code>ZDE_VLOZ_SUPABASE_URL</code> a <code>ZDE_VLOZ_SUPABASE_ANON_KEY</code> svými hodnotami ze Supabase → Settings → API.
+  </div>
+
+  <header class="header">
+    <p class="header-date" id="headerDate"></p>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Přepnout tmavý režim"></button>
+  </header>
+
+  <div class="summary">
+    <div class="summary-item">
+      <div class="summary-emoji">🤱</div>
+      <div class="summary-count" id="countBf">—</div>
+      <div class="summary-label">Kojení</div>
+      <div class="summary-sub">dnes</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-emoji">🥕</div>
+      <div class="summary-count" id="countFeed">—</div>
+      <div class="summary-label">Krmení</div>
+      <div class="summary-sub">dnes</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-emoji">😴</div>
+      <div class="summary-count" id="countSleep">—</div>
+      <div class="summary-label">Spánek</div>
+      <div class="summary-sub">dnes</div>
+    </div>
+  </div>
+
+  <div class="tiles">
+    <button class="tile tile-bf" onclick="openModal('bf')">
+      <div class="tile-top">
+        <div class="tile-left"><span class="tile-emoji">🤱</span><span class="tile-title">Kojení</span></div>
+        <span class="tile-arrow">›</span>
+      </div>
+      <p class="tile-sub" id="tileBfSub">Načítám…</p>
+      <p class="tile-hint" id="tileBfHint"></p>
+    </button>
+    <button class="tile tile-feed" onclick="openModal('feed')">
+      <div class="tile-top">
+        <div class="tile-left"><span class="tile-emoji">🥕</span><span class="tile-title">Krmení</span></div>
+        <span class="tile-arrow">›</span>
+      </div>
+      <p class="tile-sub" id="tileFeedSub">Načítám…</p>
+    </button>
+    <button class="tile tile-sleep" onclick="openModal('sleep')">
+      <div class="tile-top">
+        <div class="tile-left"><span class="tile-emoji">😴</span><span class="tile-title">Spánek</span></div>
+        <span class="tile-arrow">›</span>
+      </div>
+      <p class="tile-sub" id="tileSleepSub">Načítám…</p>
+    </button>
+    <button class="tile tile-med" onclick="openModal('med')">
+      <div class="tile-top">
+        <div class="tile-left"><span class="tile-emoji">💊</span><span class="tile-title">Léky</span></div>
+        <span class="tile-arrow">›</span>
+      </div>
+      <p class="tile-sub" id="tileMedSub">Načítám…</p>
+    </button>
+  <p class="footer" style="margin-top:20px">Kojendo app · <em>s láskou táta</em></p>
+</main>
+
+<div class="theme-bar">
+  <span class="theme-bar-icon" id="themeIcon">☀️</span>
+  <span class="theme-bar-label" id="themeLabel">Světlý režim</span>
+</div>
+
+<div class="backdrop" id="backdrop" onclick="closeAllModals()"></div>
+
+<!-- KOJENÍ -->
+<div class="modal" id="modalBf">
+  <div class="modal-header">
+    <span class="modal-title">Kojení</span>
+    <button class="modal-close" onclick="closeAllModals()">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="breast-btns">
+      <button class="breast-btn" id="btnL" onclick="saveBf('L')">
+        <div class="breast-btn-left"><span class="breast-icon">◀</span><span class="breast-label">Levé prso</span></div>
+        <span class="breast-badge" id="badgeL">Doporučeno</span>
+      </button>
+      <button class="breast-btn" id="btnP" onclick="saveBf('P')">
+        <div class="breast-btn-left"><span class="breast-icon">▶</span><span class="breast-label">Pravé prso</span></div>
+        <span class="breast-badge" id="badgeP">Doporučeno</span>
+      </button>
+    </div>
+    <p class="last-hint" id="bfLastHint"></p>
+    <div class="bf-chart-wrap">
+      <div class="bf-seg" id="bfSeg">
+        <button class="bf-seg-btn active" onclick="setBfPeriod('week',this)">Týden</button>
+        <button class="bf-seg-btn" onclick="setBfPeriod('month',this)">Měsíc</button>
+        <button class="bf-seg-btn" onclick="setBfPeriod('year',this)">Rok</button>
+      </div>
+      <div class="bf-chart" id="bfChart"></div>
+    </div>
+    <button class="section-toggle" id="toggleBfHistory" onclick="toggleSection('bfHistory',this)" style="margin-top:4px">
+      <span>Historie</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="bfHistory">
+      <div class="history-list" id="bfHistoryList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- KRMENÍ -->
+<div class="modal" id="modalFeed">
+  <div class="modal-header">
+    <span class="modal-title">Krmení</span>
+    <button class="modal-close" onclick="closeAllModals()">✕</button>
+  </div>
+  <div class="modal-body">
+    <button class="action-btn amber" onclick="toggleFeedForm()"><span>🥕</span> Zaznamenat krmení</button>
+    <div class="collapsible" id="feedForm">
+      <div class="form-section">
+        <label class="form-label">Čas</label>
+        <input type="datetime-local" class="form-input" id="feedTime">
+      </div>
+      <div class="form-section">
+        <label class="form-label">Co bylo k jídlu</label>
+        <div class="chips-wrap" id="chipsWrap"></div>
+        <div class="add-food-row" id="addFoodRow">
+          <input type="text" class="add-food-input" id="addFoodInput" placeholder="Název pokrmu…"
+            onkeydown="if(event.key==='Enter')confirmAddFood();if(event.key==='Escape')cancelAddFood();">
+          <button class="add-food-ok" onclick="confirmAddFood()">OK</button>
+        </div>
+      </div>
+      <button class="save-btn" id="feedSaveBtn" onclick="saveFeed()" disabled>Uložit krmení</button>
+    </div>
+    <button class="section-toggle" id="toggleNotHad" onclick="toggleNotHad(this)" style="margin-top:8px">
+      <span>Co dlouho neměl?</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="notHadSection">
+      <div id="notHadList" style="margin-top:6px;margin-bottom:4px"></div>
+    </div>
+    <button class="section-toggle" id="toggleFoodsEdit" onclick="toggleSection('foodsEdit',this)" style="margin-top:8px">
+      <span>Správa pokrmů</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="foodsEdit">
+      <div id="foodsMgmtList" style="margin-top:6px;margin-bottom:4px"></div>
+    </div>
+    <button class="section-toggle" id="toggleFeedHistory" onclick="toggleSection('feedHistory',this)">
+      <span>Historie</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="feedHistory">
+      <div class="feed-filter-wrap" id="feedFilterWrap"></div>
+      <div class="feed-filter-info" id="feedFilterInfo"></div>
+      <div class="history-list" id="feedHistoryList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SPÁNEK -->
+<div class="modal" id="modalSleep">
+  <div class="modal-header">
+    <span class="modal-title">Spánek</span>
+    <button class="modal-close" onclick="closeAllModals()">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="sleep-btns">
+      <button class="sleep-btn sleep-on" id="sleepStartBtn" onclick="saveSleep('start')">
+        <div class="sleep-btn-left">
+          <span class="sleep-btn-icon">🌙</span>
+          <div>
+            <div class="sleep-btn-label">Spí</div>
+            <div class="sleep-btn-sub" id="sleepStartSub">Zaznamená čas usnutí</div>
+          </div>
+        </div>
+        <span class="sleep-badge" id="sleepActiveBadge" style="display:none">Probíhá</span>
+      </button>
+      <button class="sleep-btn" id="sleepEndBtn" onclick="saveSleep('end')">
+        <div class="sleep-btn-left">
+          <span class="sleep-btn-icon">☀️</span>
+          <div>
+            <div class="sleep-btn-label">Vzbudil se</div>
+            <div class="sleep-btn-sub" id="sleepEndSub">Zaznamená čas probuzení</div>
+          </div>
+        </div>
+      </button>
+    </div>
+    <p class="last-hint" id="sleepLastHint"></p>
+    <button class="section-toggle" id="toggleSleepHistory" onclick="toggleSection('sleepHistory',this)">
+      <span>Historie</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="sleepHistory">
+      <div class="history-list" id="sleepHistoryList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- STOLICE -->
+<div class="modal" id="modalStool">
+  <div class="modal-header">
+    <span class="modal-title">Stolice</span>
+    <button class="modal-close" onclick="closeAllModals()">✕</button>
+  </div>
+  <div class="modal-body">
+    <button class="action-btn stool" id="stoolBtn" onclick="saveStool()"><span>💩</span> Zaznamenat nyní</button>
+    <p class="last-hint" id="stoolLastHint"></p>
+    <div class="dev-notice">
+      <div class="dev-notice-art">🔬</div>
+      <div class="dev-notice-text">
+        <strong>Ve vývoji</strong>
+        Brzy zde přibude podrobnější evidence — konzistence, barva a další parametry stolice. Zatím se zaznamenává jen čas a datum.
+      </div>
+    </div>
+    <button class="section-toggle" id="toggleStoolHistory" onclick="toggleSection('stoolHistory',this)" style="margin-top:12px">
+      <span>Historie</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="stoolHistory">
+      <div class="history-list" id="stoolHistoryList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LÉKY -->
+<div class="modal" id="modalMed">
+  <div class="modal-header">
+    <span class="modal-title">Léky</span>
+    <button class="modal-close" onclick="closeAllModals()">✕</button>
+  </div>
+  <div class="modal-body">
+    <button class="action-btn med" onclick="toggleMedForm()"><span>💊</span> Zaznamenat podání léku</button>
+    <div class="collapsible" id="medForm">
+      <div class="form-section">
+        <label class="form-label">Čas</label>
+        <input type="datetime-local" class="form-input" id="medTime">
+      </div>
+      <div class="form-section">
+        <label class="form-label">Lék</label>
+        <div class="chips-wrap" id="medChipsWrap"></div>
+        <div class="add-food-row" id="addMedRow">
+          <input type="text" class="add-food-input" id="addMedInput" placeholder="Název léku…"
+            onkeydown="if(event.key==='Enter')confirmAddMed();if(event.key==='Escape')cancelAddMed();">
+          <button class="add-food-ok" onclick="confirmAddMed()">OK</button>
+        </div>
+      </div>
+      <div class="form-section">
+        <label class="form-label">Dávka (volitelně)</label>
+        <input type="text" class="form-input" id="medDose" placeholder="např. 5 ml, 1 tableta…">
+      </div>
+      <div class="form-section">
+        <label class="form-label">Teplota °C (volitelně)</label>
+        <div class="temp-wrap temp-inactive" id="tempWrap">
+          <div class="temp-display">
+            <span class="temp-value" id="tempDisplay">—</span>
+            <span class="temp-unit">°C</span>
+            <button class="temp-clear" id="tempClearBtn" onclick="clearTemp()" style="display:none">✕ vymazat</button>
+          </div>
+          <div class="temp-slider-track">
+            <input type="range" class="temp-slider" id="medTemp"
+              min="350" max="400" step="1" value="370"
+              oninput="onTempSlider(this.value)" onchange="onTempSlider(this.value)">
+          </div>
+          <div class="temp-ticks">
+            <span class="temp-tick">35,0</span>
+            <span class="temp-tick">36,0</span>
+            <span class="temp-tick">37,0</span>
+            <span class="temp-tick">38,0</span>
+            <span class="temp-tick">39,0</span>
+            <span class="temp-tick">40,0</span>
+          </div>
+        </div>
+      </div>
+      <button class="save-btn" id="medSaveBtn" onclick="saveMedLog()" disabled>Uložit podání</button>
+    </div>
+    <p class="last-hint" id="medLastHint"></p>
+    <button class="section-toggle" id="toggleMedsEdit" onclick="toggleSection('medsEdit',this)" style="margin-top:8px">
+      <span>Správa léků</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="medsEdit">
+      <div id="medsMgmtList" style="margin-top:6px;margin-bottom:4px"></div>
+    </div>
+    <button class="section-toggle" id="toggleMedHistory" onclick="toggleSection('medHistory',this)">
+      <span>Historie</span><span class="chevron">⌄</span>
+    </button>
+    <div class="collapsible" id="medHistory">
+      <div class="history-list" id="medHistoryList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm delete -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <p class="confirm-msg">Opravdu smazat tento záznam?</p>
+    <div class="confirm-btns">
+      <button class="confirm-cancel" onclick="cancelDelete()">Zrušit</button>
+      <button class="confirm-delete-ok" onclick="confirmDelete()">Smazat</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ╔══════════════════════════════════════════════════════════╗
+// ║  ⚙️  KONFIGURACE                                        ║
+// ╚══════════════════════════════════════════════════════════╝
+const SUPABASE_URL      = 'https://kwwbltwrkfaqvntoqskt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt3d2JsdHdya2ZhcXZudG9xc2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTU5NjUsImV4cCI6MjA4OTg3MTk2NX0.DaKoPRUB1_WUhwdqumb5OPtDDwJ8wi6HEJYQCYdEA1M';
+// ══════════════════════════════════════════════════════════
+
+// ── Theme ──────────────────────────────────────────────
+function initTheme(){
+  const saved=localStorage.getItem('bt_theme');
+  const dark=saved?saved==='dark':window.matchMedia('(prefers-color-scheme:dark)').matches;
+  setTheme(dark,false);
+}
+function setTheme(dark,save=true){
+  document.documentElement.classList.toggle('dark',dark);
+  document.getElementById('themeIcon').textContent=dark?'🌙':'☀️';
+  document.getElementById('themeLabel').textContent=dark?'Tmavý režim':'Světlý režim';
+  if(save)localStorage.setItem('bt_theme',dark?'dark':'light');
+}
+function toggleTheme(){setTheme(!document.documentElement.classList.contains('dark'));}
+initTheme();
+
+// ── Supabase ───────────────────────────────────────────
+async function sbReq(method,path,body){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{
+    method,
+    headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Content-Type':'application/json',
+      'Prefer':['POST','PATCH'].includes(method)?'return=representation':''},
+    body:body?JSON.stringify(body):undefined,
+  });
+  if(!res.ok)throw new Error(await res.text());
+  const t=await res.text();return t?JSON.parse(t):null;
+}
+const sbGet=(p)=>sbReq('GET',p);
+const sbPost=(p,b)=>sbReq('POST',p,b);
+const sbPatch=(p,b)=>sbReq('PATCH',p,b);
+const sbDelete=(p)=>sbReq('DELETE',p);
+
+// ── Cache ──────────────────────────────────────────────
+const cache={bf:[],feed:[],foods:[],stool:[],sleep:[],meds:[],medLogs:[]};
+
+// ── Date helpers ───────────────────────────────────────
+const p2=n=>String(n).padStart(2,'0');
+function fmtTime(iso){return new Date(iso).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'});}
+function fmtDate(iso){const d=new Date(iso);return `${p2(d.getDate())}.${p2(d.getMonth()+1)}.`;}
+function fmtDateShort(iso){const d=new Date(iso);return `${p2(d.getDate())}.${p2(d.getMonth()+1)}.`;}
+function nowISO(){return new Date().toISOString();}
+function toInputDT(iso){const d=new Date(iso);return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}T${p2(d.getHours())}:${p2(d.getMinutes())}`;}
+function localDT(){return toInputDT(new Date().toISOString());}
+function isToday(iso){const d=new Date(iso),n=new Date();return d.getDate()===n.getDate()&&d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear();}
+function isSameDay(iso,ref){const d=new Date(iso);return d.getDate()===ref.getDate()&&d.getMonth()===ref.getMonth()&&d.getFullYear()===ref.getFullYear();}
+function czDay(){
+  const days=['neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota'];
+  const months=['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
+  const d=new Date();return `${days[d.getDay()]}, ${d.getDate()}. ${months[d.getMonth()]}`;
+}
+function fmtDuration(ms){
+  if(ms<=0)return '';
+  const m=Math.round(ms/60000),h=Math.floor(m/60),min=m%60;
+  return h===0?`${min} min`:min===0?`${h} h`:`${h} h ${min} min`;
+}
+function fmtElapsed(iso){
+  const ms=Date.now()-new Date(iso).getTime();
+  if(ms<0)return '';
+  const totalMin=Math.floor(ms/60000);
+  const h=Math.floor(totalMin/60),m=totalMin%60;
+  return `${p2(h)}:${p2(m)}`;
+}
+
+// ── Toast ──────────────────────────────────────────────
+let toastT;
+function showToast(msg,isErr){
+  const el=document.getElementById('toast');
+  el.textContent=(isErr?'❌ ':'')+msg;el.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),isErr?3500:2600);
+}
+const showErr=m=>showToast(m,true);
+
+// ── Modals ─────────────────────────────────────────────
+function openModal(type){
+  closeAllModals(false);
+  document.getElementById('backdrop').classList.add('open');
+  document.body.style.overflow='hidden';
+  if(type==='bf')   {renderBfModal();   document.getElementById('modalBf').classList.add('open');}
+  if(type==='feed') {renderFeedModal(); document.getElementById('modalFeed').classList.add('open');}
+  if(type==='stool'){renderStoolModal();document.getElementById('modalStool').classList.add('open');}
+  if(type==='sleep'){renderSleepModal();document.getElementById('modalSleep').classList.add('open');}
+  if(type==='med')  {renderMedModal();  document.getElementById('modalMed').classList.add('open');}
+}
+function closeAllModals(scroll=true){
+  ['modalBf','modalFeed','modalStool','modalSleep','modalMed'].forEach(id=>document.getElementById(id).classList.remove('open'));
+  document.getElementById('backdrop').classList.remove('open');
+  if(scroll)document.body.style.overflow='';
+  // Reset history sections — při příštím otevření budou sbalené
+  ['bfHistory','feedHistory','sleepHistory','stoolHistory','medHistory'].forEach(id=>{
+    document.getElementById(id)?.classList.remove('open');
+  });
+  ['toggleBfHistory','toggleFeedHistory','toggleSleepHistory','toggleStoolHistory','toggleMedHistory'].forEach(id=>{
+    document.getElementById(id)?.classList.remove('open');
+  });
+}
+function toggleSection(id,btn){document.getElementById(id).classList.toggle('open');btn.classList.toggle('open');}
+
+// ── Inline edit toggle ─────────────────────────────────
+function toggleEdit(panelId,itemId){
+  const panel=document.getElementById(panelId),item=document.getElementById(itemId);
+  const wasOpen=panel.classList.contains('open');
+  document.querySelectorAll('.edit-panel.open').forEach(el=>el.classList.remove('open'));
+  document.querySelectorAll('.history-item.editing').forEach(el=>el.classList.remove('editing'));
+  if(!wasOpen){panel.classList.add('open');item.classList.add('editing');}
+}
+
+// ── Dashboard ──────────────────────────────────────────
+function refreshDashboard(){
+  document.getElementById('headerDate').textContent=czDay();
+  document.getElementById('countBf').textContent=cache.bf.filter(l=>isToday(l.event_time)).length;
+  document.getElementById('countFeed').textContent=cache.feed.filter(l=>isToday(l.event_time)).length;
+  const stoolEl=document.getElementById('countStool');if(stoolEl)stoolEl.textContent=cache.stool.filter(l=>isToday(l.event_time)).length;
+
+  // Sleep: total hours today
+  const todaySleepEnds=cache.sleep.filter(l=>l.type==='end'&&isToday(l.event_time)&&l.pair_start_time);
+  const sleepMs=todaySleepEnds.reduce((a,l)=>a+(new Date(l.event_time)-new Date(l.pair_start_time)),0);
+  const sh=Math.floor(sleepMs/3600000),sm=Math.floor((sleepMs%3600000)/60000);
+  document.getElementById('countSleep').textContent=sleepMs>0?`${sh}h${p2(sm)}`:(cache.sleep.filter(l=>isToday(l.event_time)).length>0?'—':'0');
+
+  const lastBf=cache.bf[0];
+  if(lastBf){
+    document.getElementById('tileBfSub').textContent=`${lastBf.side==='L'?'Levé':'Pravé'} · ${fmtTime(lastBf.event_time)} · ${fmtDate(lastBf.event_time)} · před ${fmtElapsed(lastBf.event_time)}`;
+    const hint=document.getElementById('tileBfHint');hint.textContent=`Doporučeno: ${lastBf.side==='L'?'pravé ▶':'◀ levé'}`;hint.classList.add('show');
+  } else {document.getElementById('tileBfSub').textContent='Žádný záznam';document.getElementById('tileBfHint').classList.remove('show');}
+
+  const lastFeed=cache.feed[0];
+  if(lastFeed){
+    const fm=Object.fromEntries(cache.foods.map(f=>[f.id,f.name]));
+    const names=(lastFeed.feeding_log_foods||[]).map(f=>fm[f.food_id]||'?').sort((a,b)=>a.localeCompare(b,'cs')).join('+');
+    document.getElementById('tileFeedSub').textContent=`Naposledy: ${fmtTime(lastFeed.event_time)} · ${names||'—'}`;
+  } else {document.getElementById('tileFeedSub').textContent='Žádný záznam';}
+
+  const lastSleep=cache.sleep[0];
+  if(lastSleep){
+    document.getElementById('tileSleepSub').textContent=`${lastSleep.type==='start'?'Usnul':'Vzbudil se'}: ${fmtTime(lastSleep.event_time)} · ${fmtDate(lastSleep.event_time)}`;
+  } else {document.getElementById('tileSleepSub').textContent='Žádný záznam';}
+
+  const lastStool=cache.stool[0];
+  const stoolSubEl=document.getElementById('tileStoolSub');if(stoolSubEl)stoolSubEl.textContent=lastStool?`Naposledy: ${fmtTime(lastStool.event_time)} · ${fmtDate(lastStool.event_time)}`:'Žádný záznam';
+
+  const lastMedLog=cache.medLogs[0];
+  const medSubEl=document.getElementById('tileMedSub');
+  if(medSubEl){
+    if(lastMedLog){
+      const mn=Object.fromEntries(cache.meds.map(m=>[m.id,m.name]));
+      const mname=mn[lastMedLog.med_id]||'—';
+      medSubEl.textContent=`Naposledy: ${fmtTime(lastMedLog.event_time)} · ${mname}${lastMedLog.dose?' · '+lastMedLog.dose:''}`;
+    } else {medSubEl.textContent='Žádný záznam';}
+  }
+}
+
+// ── Load all ───────────────────────────────────────────
+async function loadAll(){
+  const [bf,feed,foods,stool,sleep]=await Promise.all([
+    sbGet('breastfeeding_logs?select=id,side,event_time&order=event_time.desc&limit=400'),
+    sbGet('feeding_logs?select=id,event_time,feeding_log_foods(id,food_id)&order=event_time.desc&limit=2000'),
+    sbGet('foods?select=id,name,color&order=name.asc'),
+    sbGet('stool_logs?select=id,event_time&order=event_time.desc&limit=100'),
+    sbGet('sleep_logs?select=id,type,event_time&order=event_time.desc&limit=200'),
+  ]);
+  cache.bf=bf||[];cache.foods=foods||[];cache.stool=stool||[];
+  cache.feed=(feed||[]).map(log=>({...log,feeding_log_foods:log.feeding_log_foods||[]}));
+  cache.sleep=sleep||[];
+  pairSleepLogs();
+  // Léky — tiché selhání pokud tabulky ještě neexistují
+  try{
+    const [meds,medLogs]=await Promise.all([
+      sbGet('medicines?select=id,name&order=name.asc'),
+      sbGet('medicine_logs?select=id,med_id,event_time,dose,temperature&order=event_time.desc&limit=200'),
+    ]);
+    cache.meds=meds||[];
+    cache.medLogs=medLogs||[];
+  }catch(e){
+    cache.meds=[];cache.medLogs=[];
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  KOJENÍ
+// ══════════════════════════════════════════════════════
+function renderBfModal(){
+  const last=cache.bf[0],rec=last?(last.side==='L'?'P':'L'):'L';
+  ['L','P'].forEach(s=>{
+    document.getElementById('btn'+s).className='breast-btn '+(s===rec?'primary':'secondary');
+    const b=document.getElementById('badge'+s);s===rec?b.classList.add('show'):b.classList.remove('show');
+  });
+  document.getElementById('bfLastHint').textContent=last?`Naposledy: ${last.side==='L'?'levé':'pravé'} · ${fmtTime(last.event_time)} · ${fmtDate(last.event_time)}`:'';
+  renderBfChart();renderBfHistory();
+}
+
+let bfPeriod='week';
+function setBfPeriod(period,btn){
+  bfPeriod=period;
+  document.querySelectorAll('.bf-seg-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBfChart();
+}
+function renderBfChart(){
+  const el=document.getElementById('bfChart');
+  const dayLabels=['Ne','Po','Út','St','Čt','Pá','So'];
+  const today=new Date();
+  let days=[];
+
+  if(bfPeriod==='week'){
+    for(let i=6;i>=0;i--){const d=new Date();d.setDate(today.getDate()-i);days.push(d);}
+  } else if(bfPeriod==='month'){
+    for(let i=29;i>=0;i--){const d=new Date();d.setDate(today.getDate()-i);days.push(d);}
+  } else {
+    // year: last 12 months, each month aggregated — but we want per day
+    // Show last 365 days grouped by week (52 bars)
+    for(let i=51;i>=0;i--){const d=new Date();d.setDate(today.getDate()-i*7);days.push(d);}
+  }
+
+  // For year view, each "day" is actually a week anchor — count 7 days around it
+  // Pre-compute timestamps once to avoid repeated Date parsing in the loop
+  const bfTimes=cache.bf.map(l=>new Date(l.event_time).getTime());
+  const counts=days.map((d,i)=>{
+    if(bfPeriod==='year'){
+      const end=new Date(d);end.setHours(23,59,59,999);
+      const start=new Date(d);start.setDate(start.getDate()-6);start.setHours(0,0,0,0);
+      const es=end.getTime(),ss=start.getTime();
+      return bfTimes.filter(t=>t>=ss&&t<=es).length;
+    }
+    const dy=d.getDate(),dm=d.getMonth(),dyr=d.getFullYear();
+    return cache.bf.filter(l=>{const x=new Date(l.event_time);return x.getDate()===dy&&x.getMonth()===dm&&x.getFullYear()===dyr;}).length;
+  });
+
+  const maxC=Math.max(...counts,1);
+  const isToday=(d)=>isSameDay(d,today);
+
+  // Label logic per period
+  function barLabel(d,i){
+    if(bfPeriod==='week') return dayLabels[d.getDay()];
+    if(bfPeriod==='month'){
+      // show date every ~5 days
+      if(i===0||i===days.length-1||(days.length-1-i)%7===0) return `${d.getDate()}.`;
+      return '';
+    }
+    // year: show month name every ~4 weeks
+    const months=['Led','Úno','Bře','Dub','Kvě','Čvn','Čvc','Srp','Zář','Říj','Lis','Pro'];
+    if(i===0||d.getDate()<=7) return months[d.getMonth()];
+    return '';
+  }
+
+  // Gap between bars
+  const gap = bfPeriod==='week'?5:bfPeriod==='month'?3:2;
+  el.style.gap=gap+'px';
+
+  el.innerHTML=days.map((d,i)=>{
+    const c=counts[i],pct=Math.round((c/maxC)*100);
+    const highlight=bfPeriod==='week'?isToday(d):(i===days.length-1);
+    const label=barLabel(d,i);
+    const showVal=bfPeriod==='week'||(c>0&&bfPeriod!=='year');
+    return `<div class="bf-bar-col">
+      <div class="bf-bar-val">${showVal&&c?c:''}</div>
+      <div class="bf-bar-outer"><div class="bf-bar-inner" style="height:${pct}%;opacity:${highlight?1:.5}"></div></div>
+      <div class="bf-bar-day" style="${highlight?'font-weight:700;color:var(--text)':''}">${label}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderBfHistory(){
+  const el=document.getElementById('bfHistoryList');
+  if(!cache.bf.length){el.innerHTML='<p class="history-empty">Zatím žádné záznamy</p>';return;}
+  function fmtGap(msA,msB){
+    const ms=msB-msA;
+    if(ms<=0)return null;
+    const totalMin=Math.floor(ms/60000),h=Math.floor(totalMin/60),m=totalMin%60;
+    return h===0?`${m} min`:m===0?`${h} h`:`${h} h ${m} min`;
+  }
+  const html=cache.bf.map((l,i)=>{
+    const next=cache.bf[i+1];
+    const gap=next?fmtGap(new Date(next.event_time).getTime(),new Date(l.event_time).getTime()):null;
+    return `
+    <div class="history-item" id="bfi-${l.id}">
+      <div class="history-row" onclick="toggleEdit('bfep-${l.id}','bfi-${l.id}')">
+        <span class="history-text"><strong>${l.side}</strong> · ${fmtTime(l.event_time)} · ${fmtDate(l.event_time)}</span>
+        <span class="edit-hint">upravit</span>
+      </div>
+      <div class="edit-panel" id="bfep-${l.id}">
+        <input type="datetime-local" class="edit-time" id="bfet-${l.id}" value="${toInputDT(l.event_time)}">
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="edit-chip${l.side==='L'?' selected':''}" id="bfes-L-${l.id}" onclick="event.stopPropagation();bfEditSide('${l.id}','L')">◀ Levé</button>
+          <button class="edit-chip${l.side==='P'?' selected':''}" id="bfes-P-${l.id}" onclick="event.stopPropagation();bfEditSide('${l.id}','P')">Pravé ▶</button>
+        </div>
+        <div class="edit-actions">
+          <button class="edit-save" onclick="event.stopPropagation();saveEditBf('${l.id}')">Uložit</button>
+          <button class="edit-cancel" onclick="event.stopPropagation();toggleEdit('bfep-${l.id}','bfi-${l.id}')">Zrušit</button>
+          <button class="edit-delete" onclick="event.stopPropagation();askDelete('bf','${l.id}')">🗑</button>
+        </div>
+      </div>
+    </div>
+    ${gap?`<div class="bf-gap-row"><div class="bf-gap-line"></div><span class="bf-gap-label">↕ ${gap}</span><div class="bf-gap-line"></div></div>`:''}`;
+  }).join('');
+  el.innerHTML=html;
+}
+function bfEditSide(id,side){['L','P'].forEach(s=>{const b=document.getElementById('bfes-'+s+'-'+id);if(b)b.classList.toggle('selected',s===side);});}
+async function saveBf(side){
+  const bL=document.getElementById('btnL'),bP=document.getElementById('btnP');
+  bL.disabled=bP.disabled=true;
+  try{const row=await sbPost('breastfeeding_logs',{side,event_time:nowISO()});cache.bf.unshift(Array.isArray(row)?row[0]:row);showToast(`Kojení – ${side==='L'?'levé':'pravé'} prso uloženo`);renderBfModal();refreshDashboard();}
+  catch(e){showErr('Nepodařilo se uložit');}
+  finally{bL.disabled=bP.disabled=false;}
+}
+async function saveEditBf(id){
+  const tv=document.getElementById('bfet-'+id)?.value;
+  const side=document.getElementById('bfes-L-'+id)?.classList.contains('selected')?'L':'P';
+  const event_time=tv?new Date(tv).toISOString():nowISO();
+  try{
+    await sbPatch(`breastfeeding_logs?id=eq.${id}`,{side,event_time});
+    const idx=cache.bf.findIndex(l=>l.id===id);if(idx>-1)cache.bf[idx]={...cache.bf[idx],side,event_time};
+    cache.bf.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));
+    showToast('Kojení upraveno');renderBfModal();refreshDashboard();
+  }catch(e){showErr('Nepodařilo se uložit');}
+}
+
+// ══════════════════════════════════════════════════════
+//  KRMENÍ
+// ══════════════════════════════════════════════════════
+let selFoods=new Set(),feedOpen=false;
+const feedEditSels={};
+function toggleFeedForm(){
+  feedOpen=!feedOpen;document.getElementById('feedForm').classList.toggle('open',feedOpen);
+  if(feedOpen){document.getElementById('feedTime').value=localDT();selFoods.clear();renderChips();}
+}
+function renderFeedModal(){
+  selFoods.clear();feedOpen=false;
+  document.getElementById('feedForm').classList.remove('open');
+  ['foodsEdit','feedHistory','notHadSection'].forEach(id=>document.getElementById(id)?.classList.remove('open'));
+  ['toggleFoodsEdit','toggleFeedHistory','toggleNotHad'].forEach(id=>document.getElementById(id)?.classList.remove('open'));
+  renderChips();renderFoodsMgmt();renderFeedHistory();
+}
+function renderChips(){
+  const wrap=document.getElementById('chipsWrap');
+  wrap.innerHTML=cache.foods.map(f=>{const sel=selFoods.has(f.id);return `<button class="chip${sel?' selected':''}" onclick="toggleChip('${f.id}')">${sel?'✓ ':''}${f.name}</button>`;}).join('')+`<button class="chip chip-add" onclick="startAddFood()">+ Přidat pokrm</button>`;
+  const sb=document.getElementById('feedSaveBtn');if(sb)sb.disabled=selFoods.size===0;
+}
+function toggleChip(id){selFoods.has(id)?selFoods.delete(id):selFoods.add(id);renderChips();}
+
+// 12 barev pokrmů — bg a text pro světlý/tmavý kontrast
+const FOOD_COLORS=[
+  {id:'red',    bg:'#fecaca',txt:'#7f1d1d'},
+  {id:'orange', bg:'#fed7aa',txt:'#7c2d12'},
+  {id:'yellow', bg:'#fef08a',txt:'#713f12'},
+  {id:'lime',   bg:'#d9f99d',txt:'#365314'},
+  {id:'green',  bg:'#bbf7d0',txt:'#14532d'},
+  {id:'teal',   bg:'#99f6e4',txt:'#134e4a'},
+  {id:'sky',    bg:'#bae6fd',txt:'#0c4a6e'},
+  {id:'blue',   bg:'#bfdbfe',txt:'#1e3a8a'},
+  {id:'violet', bg:'#ddd6fe',txt:'#4c1d95'},
+  {id:'pink',   bg:'#fbcfe8',txt:'#831843'},
+  {id:'rose',   bg:'#fecdd3',txt:'#881337'},
+  {id:'stone',  bg:'#e7e5e4',txt:'#292524'},
+];
+function foodColorById(id){return FOOD_COLORS.find(c=>c.id===id)||null;}
+
+function renderFoodsMgmt(){
+  const el=document.getElementById('foodsMgmtList');
+  if(!el)return;
+  if(!cache.foods.length){el.innerHTML='<p class="history-empty">Žádné pokrmy</p>';return;}
+  el.innerHTML=cache.foods.map(f=>{
+    const col=foodColorById(f.color);
+    const swatches=FOOD_COLORS.map(c=>`<div class="food-color-swatch${f.color===c.id?' selected':''}" style="background:${c.bg};border-color:${f.color===c.id?'#000':'transparent'}" onclick="setFoodColor('${f.id}','${c.id}')" title="${c.id}"></div>`).join('');
+    const pill=col
+      ?`<span class="food-pill" style="background:${col.bg};color:${col.txt}">${f.name}</span>`
+      :`<span class="food-mgmt-name">${f.name}</span>`;
+    return `
+    <div id="fmr-${f.id}">
+      <div class="food-mgmt-row">
+        ${pill}
+        <div class="food-mgmt-btns">
+          <button class="food-mgmt-btn edit" onclick="startEditFood('${f.id}')" title="Přejmenovat">✏️</button>
+          <button class="food-mgmt-btn del" onclick="askDeleteFood('${f.id}','${f.name}')" title="Smazat">🗑</button>
+        </div>
+      </div>
+      <div class="food-edit-row" id="fer-${f.id}">
+        <input class="food-edit-input" id="fei-${f.id}" value="${f.name}"
+          onkeydown="if(event.key==='Enter')saveEditFood('${f.id}');if(event.key==='Escape')cancelEditFood('${f.id}');">
+        <button class="food-edit-ok" onclick="saveEditFood('${f.id}')">Uložit</button>
+        <button class="food-edit-cancel" onclick="cancelEditFood('${f.id}')">✕</button>
+      </div>
+      <div class="food-color-row" id="fcr-${f.id}" style="display:none">${swatches}</div>
+    </div>`;
+  }).join('');
+}
+
+async function setFoodColor(id,colorId){
+  // Toggle: klik na stejnou barvu = odstraní barvu
+  const food=cache.foods.find(f=>f.id===id);
+  const newColor=food&&food.color===colorId?null:colorId;
+  try{
+    await sbPatch(`foods?id=eq.${id}`,{color:newColor});
+    const idx=cache.foods.findIndex(f=>f.id===id);
+    if(idx>-1)cache.foods[idx]={...cache.foods[idx],color:newColor};
+    renderFoodsMgmt();renderChips();renderFeedHistory();
+  }catch(e){showErr('Nepodařilo se uložit barvu');}
+}
+
+function startEditFood(id){
+  document.querySelectorAll('.food-edit-row.open').forEach(el=>el.classList.remove('open'));
+  // Toggle color row
+  const colorRow=document.getElementById('fcr-'+id);
+  const isColorOpen=colorRow&&colorRow.style.display!=='none';
+  document.querySelectorAll('[id^="fcr-"]').forEach(el=>el.style.display='none');
+  const row=document.getElementById('fer-'+id);
+  if(row){
+    row.classList.add('open');
+    const inp=document.getElementById('fei-'+id);if(inp){inp.focus();inp.select();}
+  }
+  if(colorRow&&!isColorOpen)colorRow.style.display='flex';
+}
+function cancelEditFood(id){
+  const row=document.getElementById('fer-'+id);if(row)row.classList.remove('open');
+  const colorRow=document.getElementById('fcr-'+id);if(colorRow)colorRow.style.display='none';
+  const food=cache.foods.find(f=>f.id===id);
+  const inp=document.getElementById('fei-'+id);
+  if(food&&inp)inp.value=food.name;
+}
+async function saveEditFood(id){
+  const inp=document.getElementById('fei-'+id);
+  if(!inp)return;
+  const name=inp.value.trim().toLowerCase();
+  if(!name){showErr('Název nesmí být prázdný');return;}
+  const dup=cache.foods.find(f=>f.name.toLowerCase()===name&&f.id!==id);
+  if(dup){showErr('Pokrm s tímto názvem již existuje');return;}
+  try{
+    await sbPatch(`foods?id=eq.${id}`,{name});
+    const idx=cache.foods.findIndex(f=>f.id===id);
+    if(idx>-1)cache.foods[idx]={...cache.foods[idx],name};
+    cache.foods.sort((a,b)=>a.name.localeCompare(b.name,'cs'));
+    showToast('Pokrm upraven');
+    cancelEditFood(id);
+    renderFoodsMgmt();renderChips();renderFeedHistory();
+  }catch(e){showErr('Nepodařilo se uložit');}
+}
+
+let pendingFoodDelete=null;
+function askDeleteFood(id,name){
+  pendingFoodDelete={id,name};
+  // Reuse confirm overlay with custom message
+  document.querySelector('.confirm-msg').textContent=`Smazat pokrm „${name}"? Záznamy krmení s tímto pokrmem zůstanou zachovány.`;
+  document.getElementById('confirmOverlay').classList.add('open');
+  // Override confirm button temporarily
+  document.querySelector('.confirm-delete-ok').onclick=confirmDeleteFood;
+}
+async function confirmDeleteFood(){
+  document.querySelector('.confirm-delete-ok').onclick=confirmDelete;
+  document.querySelector('.confirm-msg').textContent='Opravdu smazat tento záznam?';
+  if(!pendingFoodDelete)return;
+  const{id}=pendingFoodDelete;pendingFoodDelete=null;
+  document.getElementById('confirmOverlay').classList.remove('open');
+  try{
+    await sbDelete(`foods?id=eq.${id}`);
+    cache.foods=cache.foods.filter(f=>f.id!==id);
+    selFoods.delete(id);
+    showToast('Pokrm smazán');
+    renderFoodsMgmt();renderChips();
+  }catch(e){showErr('Nepodařilo se smazat — pokrm je možná použit v záznamech');}
+}
+function startAddFood(){document.getElementById('addFoodRow').classList.add('open');document.getElementById('addFoodInput').value='';document.getElementById('addFoodInput').focus();}
+function cancelAddFood(){document.getElementById('addFoodRow').classList.remove('open');}
+async function confirmAddFood(){
+  const name=document.getElementById('addFoodInput').value.trim().toLowerCase();if(!name)return;
+  const ex=cache.foods.find(f=>f.name.toLowerCase()===name);
+  if(ex){selFoods.add(ex.id);cancelAddFood();renderChips();return;}
+  try{const row=await sbPost('foods',{name});const food=Array.isArray(row)?row[0]:row;cache.foods.push(food);cache.foods.sort((a,b)=>a.name.localeCompare(b.name,'cs'));selFoods.add(food.id);}
+  catch(e){showErr('Nepodařilo se přidat pokrm');}
+  cancelAddFood();renderChips();
+}
+async function saveFeed(){
+  if(!selFoods.size)return;
+  const tv=document.getElementById('feedTime').value,event_time=tv?new Date(tv).toISOString():nowISO();
+  const btn=document.getElementById('feedSaveBtn');btn.disabled=true;btn.textContent='Ukládám…';
+  try{
+    const logRow=await sbPost('feeding_logs',{event_time}),log=Array.isArray(logRow)?logRow[0]:logRow;
+    const links=[...selFoods].map(food_id=>({feeding_log_id:log.id,food_id}));
+    const lRows=await sbPost('feeding_log_foods',links),saved=Array.isArray(lRows)?lRows:(lRows?[lRows]:[]);
+    cache.feed.unshift({...log,feeding_log_foods:saved});cache.feed.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));
+    showToast('Krmení uloženo');selFoods.clear();toggleFeedForm();renderFeedHistory();refreshDashboard();
+  }catch(e){showErr('Nepodařilo se uložit krmení');}
+  finally{btn.disabled=false;btn.textContent='Uložit krmení';}
+}
+// Feed history filter state
+const feedFilter = new Set();
+
+function renderFeedFilterChips() {
+  const wrap = document.getElementById('feedFilterWrap');
+  if (!wrap) return;
+  if (!cache.foods.length) { wrap.innerHTML = ''; return; }
+  const anyActive = feedFilter.size > 0;
+  const chips = cache.foods.map(f => {
+    const col = foodColorById(f.color);
+    const isActive = feedFilter.has(f.id);
+    // Aktivní: plná barva + border; neaktivní při filtru: šedivé a průhledné
+    let style = '';
+    if (col && isActive)       style = `style="background:${col.bg};color:${col.txt};border-color:${col.txt}"`;
+    else if (col && !anyActive) style = `style="background:${col.bg};color:${col.txt}"`;
+    else if (col && anyActive)  style = `style="background:${col.bg};color:${col.txt}"`;
+    const cls = anyActive && !isActive ? 'inactive' : (isActive ? 'active' : '');
+    return `<button class="feed-filter-chip ${cls}" ${style} onclick="toggleFeedFilter('${f.id}')">${f.name}</button>`;
+  }).join('');
+  const clear = feedFilter.size > 0
+    ? `<button class="feed-filter-clear" onclick="clearFeedFilter()">✕</button>`
+    : '';
+  wrap.innerHTML = chips + clear;
+}
+
+function toggleFeedFilter(foodId) {
+  feedFilter.has(foodId) ? feedFilter.delete(foodId) : feedFilter.add(foodId);
+  renderFeedFilterChips();
+  renderFeedHistory();
+}
+
+function clearFeedFilter() {
+  feedFilter.clear();
+  renderFeedFilterChips();
+  renderFeedHistory();
+}
+
+function renderFeedHistory(){
+  const el = document.getElementById('feedHistoryList');
+  const info = document.getElementById('feedFilterInfo');
+  renderFeedFilterChips();
+  if (!cache.feed.length) { el.innerHTML = '<p class="history-empty">Zatím žádné záznamy</p>'; if(info) info.textContent = ''; return; }
+
+  const logs = feedFilter.size === 0 ? cache.feed : cache.feed.filter(log => {
+    const ids = (log.feeding_log_foods || []).map(fl => fl.food_id);
+    return [...feedFilter].every(fid => ids.includes(fid));
+  });
+
+  if (info) {
+    if (feedFilter.size > 0) {
+      const names = [...feedFilter].map(id => cache.foods.find(f => f.id === id)?.name || '?').sort((a,b) => a.localeCompare(b,'cs')).join(' + ');
+      info.textContent = logs.length > 0
+        ? `${logs.length} ${logs.length===1?'záznam':logs.length<5?'záznamy':'záznamů'} · ${names}`
+        : `Žádný záznam · ${names}`;
+    } else {
+      info.textContent = '';
+    }
+  }
+
+  if (!logs.length) { el.innerHTML = '<p class="history-empty">Žádný záznam neodpovídá filtru</p>'; return; }
+
+  el.innerHTML = logs.map(log => {
+    const selIds = (log.feeding_log_foods || []).map(fl => fl.food_id);
+    const pillsHtml = selIds
+      .map(id => cache.foods.find(f => f.id === id))
+      .filter(Boolean)
+      .sort((a,b) => a.name.localeCompare(b.name,'cs'))
+      .map(f => {
+        const col = foodColorById(f.color);
+        return col
+          ? `<span class="food-pill" style="background:${col.bg};color:${col.txt}">${f.name}</span>`
+          : `<span class="food-pill food-pill-plain">${f.name}</span>`;
+      }).join(' ');
+    const chipsHtml = cache.foods.map(f => {
+      const sel = selIds.includes(f.id);
+      return `<button class="edit-chip${sel?' selected':''}" onclick="event.stopPropagation();feedEditChip('${log.id}','${f.id}')">${sel?'✓ ':''}${f.name}</button>`;
+    }).join('');
+    return `<div class="history-item" id="fdi-${log.id}">
+      <div class="history-row" onclick="initFeedEdit('${log.id}');toggleEdit('fdep-${log.id}','fdi-${log.id}')">
+        <span class="history-text"><strong>${fmtDateShort(log.event_time)}</strong> · ${fmtTime(log.event_time)}</span>
+        <span class="edit-hint">upravit</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;padding:0 12px 8px">${pillsHtml||'<span class="food-pill food-pill-plain">—</span>'}</div>
+      <div class="edit-panel" id="fdep-${log.id}">
+        <input type="datetime-local" class="edit-time" id="fdet-${log.id}" value="${toInputDT(log.event_time)}">
+        <div class="edit-chips" id="fdec-${log.id}">${chipsHtml}</div>
+        <div class="edit-actions">
+          <button class="edit-save" onclick="event.stopPropagation();saveEditFeed('${log.id}')">Uložit</button>
+          <button class="edit-cancel" onclick="event.stopPropagation();toggleEdit('fdep-${log.id}','fdi-${log.id}')">Zrušit</button>
+          <button class="edit-delete" onclick="event.stopPropagation();askDelete('feed','${log.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function initFeedEdit(id){const log=cache.feed.find(l=>l.id===id);if(log)feedEditSels[id]=new Set((log.feeding_log_foods||[]).map(f=>f.food_id));}
+function feedEditChip(logId,foodId){
+  if(!feedEditSels[logId])feedEditSels[logId]=new Set();
+  const sel=feedEditSels[logId];sel.has(foodId)?sel.delete(foodId):sel.add(foodId);
+  const wrap=document.getElementById('fdec-'+logId);if(!wrap)return;
+  const fm=Object.fromEntries(cache.foods.map(f=>[f.id,f.name]));
+  wrap.innerHTML=cache.foods.map(f=>{const s=sel.has(f.id);return `<button class="edit-chip${s?' selected':''}" onclick="event.stopPropagation();feedEditChip('${logId}','${f.id}')">${s?'✓ ':''}${fm[f.id]||f.id}</button>`;}).join('');
+}
+async function saveEditFeed(id){
+  const tv=document.getElementById('fdet-'+id)?.value,event_time=tv?new Date(tv).toISOString():nowISO();
+  const foodIds=feedEditSels[id]?[...feedEditSels[id]]:[];
+  if(!foodIds.length){showErr('Vyber alespoň jeden pokrm');return;}
+  try{
+    await sbPatch(`feeding_logs?id=eq.${id}`,{event_time});
+    await sbDelete(`feeding_log_foods?feeding_log_id=eq.${id}`);
+    const newLinks=await sbPost('feeding_log_foods',foodIds.map(food_id=>({feeding_log_id:id,food_id})));
+    const saved=Array.isArray(newLinks)?newLinks:(newLinks?[newLinks]:[]);
+    const idx=cache.feed.findIndex(l=>l.id===id);if(idx>-1)cache.feed[idx]={...cache.feed[idx],event_time,feeding_log_foods:saved};
+    cache.feed.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));
+    showToast('Krmení upraveno');renderFeedHistory();refreshDashboard();
+  }catch(e){showErr('Nepodařilo se uložit');}
+}
+
+// ── Co dlouho neměl? ──────────────────────────────────
+const notHadSeen = new Set();
+
+function toggleNotHad(btn) {
+  const section = document.getElementById('notHadSection');
+  section.classList.toggle('open');
+  btn.classList.toggle('open');
+  if (section.classList.contains('open')) renderNotHad();
+}
+
+function renderNotHad() {
+  const el = document.getElementById('notHadList');
+  if (!el) return;
+  if (!cache.foods.length) { el.innerHTML = '<p class="history-empty">Žádné pokrmy</p>'; return; }
+
+  const now = Date.now();
+  const foodLastSeen = {};
+
+  // For each food, find the most recent feeding log that contains it
+  cache.foods.forEach(f => { foodLastSeen[f.id] = null; });
+  cache.feed.forEach(log => {
+    (log.feeding_log_foods || []).forEach(fl => {
+      const t = new Date(log.event_time).getTime();
+      if (foodLastSeen[fl.food_id] === null || t > foodLastSeen[fl.food_id]) {
+        foodLastSeen[fl.food_id] = t;
+      }
+    });
+  });
+
+  // Build sorted list: descending by days, then alphabetically
+  const items = cache.foods.map(f => {
+    const last = foodLastSeen[f.id];
+    const days = last === null ? null : Math.floor((now - last) / 86400000);
+    return { food: f, days };
+  });
+
+  items.sort((a, b) => {
+    const da = a.days === null ? Infinity : a.days;
+    const db = b.days === null ? Infinity : b.days;
+    if (da !== db) return db - da;
+    return a.food.name.localeCompare(b.food.name, 'cs');
+  });
+
+  el.innerHTML = items.map(({ food, days }) => {
+    const col = foodColorById(food.color);
+    const stripeColor = col
+      ? (days === null || days > 14 ? col.txt : days > 7 ? col.bg : col.bg)
+      : (days === null || days > 14 ? 'var(--amber)' : days > 7 ? 'var(--amber-bg)' : 'var(--border-2)');
+
+    // Stripe intensity: stronger = longer absence
+    let stripe;
+    if (col) {
+      if (days === null || days > 14) stripe = col.txt;
+      else if (days > 7) stripe = col.bg;
+      else stripe = col.bg;
+    } else {
+      if (days === null || days > 14) stripe = 'var(--amber)';
+      else if (days > 7) stripe = 'var(--border-2)';
+      else stripe = 'var(--border)';
+    }
+
+    let badgeText;
+    if (days === null) badgeText = 'nikdy';
+    else if (days === 0) badgeText = 'dnes';
+    else if (days === 1) badgeText = 'včera';
+    else if (days < 30) badgeText = `${days} dní`;
+    else if (days < 60) badgeText = '1 měsíc';
+    else if (days < 90) badgeText = '2 měsíce';
+    else if (days < 120) badgeText = '3 měsíce';
+    else badgeText = `${Math.floor(days / 30)} měsíců`;
+    let badgeBg, badgeColor;
+    if (days === null || days > 14) {
+      badgeBg = 'var(--amber-bg)'; badgeColor = 'var(--amber)';
+    } else if (days > 7) {
+      badgeBg = col ? col.bg : 'var(--border)'; badgeColor = col ? col.txt : 'var(--text-muted)';
+    } else {
+      badgeBg = 'var(--bg)'; badgeColor = 'var(--text-faint)';
+    }
+
+    const seen = notHadSeen.has(food.id) ? ' seen' : '';
+    return `<div class="not-had-item${seen}" onclick="toggleNotHadSeen('${food.id}',this)" data-food-id="${food.id}">
+      <div class="not-had-stripe" style="background:${stripe}"></div>
+      <div class="not-had-body">
+        <span class="not-had-name">${food.name}</span>
+        <span class="not-had-badge" style="background:${badgeBg};color:${badgeColor}">${badgeText}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleNotHadSeen(foodId, el) {
+  if (notHadSeen.has(foodId)) {
+    notHadSeen.delete(foodId);
+    el.classList.remove('seen');
+  } else {
+    notHadSeen.add(foodId);
+    el.classList.add('seen');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  SPÁNEK
+// ══════════════════════════════════════════════════════
+function pairSleepLogs(){
+  // Sort once, mutate in place for pairing
+  cache.sleep.sort((a,b)=>new Date(a.event_time)-new Date(b.event_time));
+  let lastStart=null;
+  cache.sleep.forEach(l=>{
+    l.pair_start_time=null;l.pair_end_time=null;
+    if(l.type==='start'){lastStart=l;}
+    else if(l.type==='end'){
+      if(lastStart){l.pair_start_time=lastStart.event_time;lastStart.pair_end_time=l.event_time;}
+      lastStart=null;
+    }
+  });
+  // Reverse so newest is first (cache always newest-first)
+  cache.sleep.reverse();
+}
+function hasOpenSleep(){
+  // Walk sorted ascending – cache is newest-first so iterate reversed
+  let open=false;
+  for(let i=cache.sleep.length-1;i>=0;i--){
+    const l=cache.sleep[i];
+    if(l.type==='start')open=true;
+    else if(l.type==='end')open=false;
+  }
+  return open;
+}
+function renderSleepModal(){
+  const open=hasOpenSleep();
+  document.getElementById('sleepStartBtn').disabled=open;
+  document.getElementById('sleepEndBtn').disabled=!open;
+  document.getElementById('sleepActiveBadge').style.display=open?'inline-block':'none';
+  document.getElementById('sleepStartBtn').classList.toggle('sleep-on',!open);
+  const last=cache.sleep[0];
+  document.getElementById('sleepLastHint').textContent=last?`${last.type==='start'?'Usnul':'Vzbudil se'}: ${fmtTime(last.event_time)} · ${fmtDate(last.event_time)}`:'';
+  renderSleepHistory();
+}
+async function saveSleep(type){
+  const btn=document.getElementById(type==='start'?'sleepStartBtn':'sleepEndBtn');btn.disabled=true;
+  try{
+    const row=await sbPost('sleep_logs',{type,event_time:nowISO()});
+    cache.sleep.unshift(Array.isArray(row)?row[0]:row);pairSleepLogs();
+    showToast(type==='start'?'Spí 🌙':'Vzbudil se ☀️');renderSleepModal();refreshDashboard();
+  }catch(e){showErr('Nepodařilo se uložit');}
+  finally{btn.disabled=false;}
+}
+function renderSleepHistory(){
+  const el=document.getElementById('sleepHistoryList');
+  if(!cache.sleep.length){el.innerHTML='<p class="history-empty">Zatím žádné záznamy</p>';return;}
+  el.innerHTML=cache.sleep.map(l=>{
+    const icon=l.type==='start'?'🌙':'☀️',label=l.type==='start'?'Usnul':'Vzbudil se';
+    let dur='';
+    if(l.type==='end'&&l.pair_start_time){const d=fmtDuration(new Date(l.event_time)-new Date(l.pair_start_time));if(d)dur=` <span style="color:var(--sage-dark);font-weight:600">· ${d}</span>`;}
+    return `<div class="history-item" id="sli-${l.id}">
+      <div class="history-row" onclick="toggleEdit('slep-${l.id}','sli-${l.id}')">
+        <span class="history-text">${icon} <strong>${label}</strong> · ${fmtTime(l.event_time)} · ${fmtDate(l.event_time)}${dur}</span>
+        <span class="edit-hint">upravit</span>
+      </div>
+      <div class="edit-panel" id="slep-${l.id}">
+        <input type="datetime-local" class="edit-time" id="slet-${l.id}" value="${toInputDT(l.event_time)}">
+        <div class="edit-actions">
+          <button class="edit-save" onclick="event.stopPropagation();saveEditSleep('${l.id}')">Uložit</button>
+          <button class="edit-cancel" onclick="event.stopPropagation();toggleEdit('slep-${l.id}','sli-${l.id}')">Zrušit</button>
+          <button class="edit-delete" onclick="event.stopPropagation();askDelete('sleep','${l.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function saveEditSleep(id){
+  const tv=document.getElementById('slet-'+id)?.value,event_time=tv?new Date(tv).toISOString():nowISO();
+  try{
+    await sbPatch(`sleep_logs?id=eq.${id}`,{event_time});
+    const idx=cache.sleep.findIndex(l=>l.id===id);if(idx>-1)cache.sleep[idx]={...cache.sleep[idx],event_time};
+    cache.sleep.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));pairSleepLogs();
+    showToast('Spánek upraven');renderSleepModal();refreshDashboard();
+  }catch(e){showErr('Nepodařilo se uložit');}
+}
+
+// ══════════════════════════════════════════════════════
+//  STOLICE
+// ══════════════════════════════════════════════════════
+function renderStoolModal(){
+  const last=cache.stool[0];
+  document.getElementById('stoolLastHint').textContent=last?`Naposledy: ${fmtTime(last.event_time)} · ${fmtDate(last.event_time)}`:'';
+  renderStoolHistory();
+}
+async function saveStool(){
+  const btn=document.getElementById('stoolBtn');btn.disabled=true;
+  try{const row=await sbPost('stool_logs',{event_time:nowISO()});cache.stool.unshift(Array.isArray(row)?row[0]:row);showToast('Stolice zaznamenána');renderStoolModal();refreshDashboard();}
+  catch(e){showErr('Nepodařilo se uložit');}finally{btn.disabled=false;}
+}
+function renderStoolHistory(){
+  const el=document.getElementById('stoolHistoryList');
+  if(!cache.stool.length){el.innerHTML='<p class="history-empty">Zatím žádné záznamy</p>';return;}
+  el.innerHTML=cache.stool.map(l=>`
+    <div class="history-item" id="sti-${l.id}">
+      <div class="history-row" onclick="toggleEdit('step-${l.id}','sti-${l.id}')">
+        <span class="history-text"><strong>${fmtTime(l.event_time)}</strong> · ${fmtDate(l.event_time)}</span>
+        <span class="edit-hint">upravit</span>
+      </div>
+      <div class="edit-panel" id="step-${l.id}">
+        <input type="datetime-local" class="edit-time" id="stet-${l.id}" value="${toInputDT(l.event_time)}">
+        <div class="edit-actions">
+          <button class="edit-save" onclick="event.stopPropagation();saveEditStool('${l.id}')">Uložit</button>
+          <button class="edit-cancel" onclick="event.stopPropagation();toggleEdit('step-${l.id}','sti-${l.id}')">Zrušit</button>
+          <button class="edit-delete" onclick="event.stopPropagation();askDelete('stool','${l.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+async function saveEditStool(id){
+  const tv=document.getElementById('stet-'+id)?.value,event_time=tv?new Date(tv).toISOString():nowISO();
+  try{
+    await sbPatch(`stool_logs?id=eq.${id}`,{event_time});
+    const idx=cache.stool.findIndex(l=>l.id===id);if(idx>-1)cache.stool[idx]={...cache.stool[idx],event_time};
+    cache.stool.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));
+    showToast('Stolice upravena');renderStoolModal();refreshDashboard();
+  }catch(e){showErr('Nepodařilo se uložit');}
+}
+
+// ══════════════════════════════════════════════════════
+//  DELETE
+// ══════════════════════════════════════════════════════
+let pending=null;
+function askDelete(type,id){pending={type,id};document.getElementById('confirmOverlay').classList.add('open');}
+function cancelDelete(){
+  pending=null;pendingFoodDelete=null;
+  document.getElementById('confirmOverlay').classList.remove('open');
+  document.querySelector('.confirm-msg').textContent='Opravdu smazat tento záznam?';
+  document.querySelector('.confirm-delete-ok').onclick=confirmDelete;
+}
+async function confirmDelete(){
+  if(!pending)return;
+  const{type,id}=pending;cancelDelete();
+  const tbl={bf:'breastfeeding_logs',feed:'feeding_logs',stool:'stool_logs',sleep:'sleep_logs',med:'medicine_logs',medicine:'medicines'};
+  const key={bf:'bf',feed:'feed',stool:'stool',sleep:'sleep',med:'medLogs',medicine:'meds'};
+  try{
+    await sbDelete(`${tbl[type]}?id=eq.${id}`);
+    cache[key[type]]=cache[key[type]].filter(l=>l.id!==id);
+    if(type==='sleep')pairSleepLogs();
+    refreshDashboard();
+    if(type==='bf')renderBfHistory();
+    if(type==='feed')renderFeedHistory();
+    if(type==='stool')renderStoolHistory();
+    if(type==='sleep')renderSleepHistory();
+    if(type==='med')renderMedHistory();
+    if(type==='medicine'){renderMedsMgmtList();renderMedChips();}
+  }catch(e){showErr('Nepodařilo se smazat');}
+}
+
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+async function init(){
+  document.getElementById('headerDate').textContent=czDay();
+  if(SUPABASE_URL.includes('ZDE_VLOZ')||SUPABASE_ANON_KEY.includes('ZDE_VLOZ')){
+    document.getElementById('configBanner').classList.add('show');
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    ['tileBfSub','tileFeedSub','tileSleepSub'].forEach(id=>document.getElementById(id).textContent='Chybí konfigurace');
+    ['countBf','countFeed','countSleep'].forEach(id=>document.getElementById(id).textContent='—');
+    return;
+  }
+  try{await loadAll();refreshDashboard();}
+  catch(e){showErr('Chyba připojení k Supabase');['tileBfSub','tileFeedSub','tileSleepSub'].forEach(id=>document.getElementById(id).textContent='Chyba načítání');}
+  finally{document.getElementById('loadingOverlay').classList.add('hidden');}
+  setInterval(()=>{
+    if(document.hidden) return;
+    document.getElementById('headerDate').textContent=czDay();
+    const lastBf=cache.bf[0];
+    if(lastBf){
+      document.getElementById('tileBfSub').textContent=`${lastBf.side==='L'?'Levé':'Pravé'} · ${fmtTime(lastBf.event_time)} · ${fmtDate(lastBf.event_time)} · před ${fmtElapsed(lastBf.event_time)}`;
+    }
+  },60000);
+
+  // Při návratu do popředí (z plochy, přepnutí apky, odemknutí telefonu)
+  // – pokud byla apka skryta déle než 30 s, načti čerstvá data
+  let lastHidden=0;
+  document.addEventListener('visibilitychange', async () => {
+    if (!document.hidden) {
+      if (Date.now() - lastHidden > 30000) {
+        try {
+          await loadAll();
+          refreshDashboard();
+          if(document.getElementById('modalBf').classList.contains('open'))    renderBfModal();
+          if(document.getElementById('modalFeed').classList.contains('open'))  renderFeedModal();
+          if(document.getElementById('modalSleep').classList.contains('open')) renderSleepModal();
+          if(document.getElementById('modalStool').classList.contains('open')) renderStoolModal();
+          if(document.getElementById('modalMed').classList.contains('open'))   renderMedModal();
+        } catch(e) { /* tiché selhání, data jsou stále v cache */ }
+      }
+    } else {
+      lastHidden = Date.now();
+    }
+  });
+
+  // iOS Safari bfcache — stránka obnovená z cache při otevření z plochy
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+      loadAll().then(() => refreshDashboard()).catch(() => {});
+    }
+  });
+}
+// ══════════════════════════════════════════════════════
+//  TEPLOTA helpers
+// ══════════════════════════════════════════════════════
+let tempInactive=true;
+
+function tempColor(val){
+  if(val==null)return'var(--text-faint)';
+  if(val<37.5)return'#4a9e4a';
+  if(val<38.5)return'#d4820a';
+  return'#d04040';
+}
+
+function onTempSlider(raw){
+  const val=parseInt(raw)/10;
+  const col=tempColor(val);
+  tempInactive=false;
+  const wrap=document.getElementById('tempWrap');
+  wrap.classList.remove('temp-inactive');
+  const disp=document.getElementById('tempDisplay');
+  disp.textContent=val.toFixed(1).replace('.',',');
+  disp.style.color=col;
+  const slider=document.getElementById('medTemp');
+  slider.style.color=col;
+  document.getElementById('tempClearBtn').style.display='inline';
+}
+
+function clearTemp(silent){
+  tempInactive=true;
+  const wrap=document.getElementById('tempWrap');
+  if(wrap)wrap.classList.add('temp-inactive');
+  const disp=document.getElementById('tempDisplay');
+  if(disp){disp.textContent='—';disp.style.color='';}
+  const slider=document.getElementById('medTemp');
+  if(slider){slider.value='370';slider.style.color='';}
+  const btn=document.getElementById('tempClearBtn');
+  if(btn)btn.style.display='none';
+}
+
+function onMiniTempSlider(id,raw){
+  const val=parseInt(raw)/10;
+  const col=tempColor(val);
+  const disp=document.getElementById('mlte-disp-'+id);
+  const slider=document.getElementById('mlte-'+id);
+  if(disp){disp.textContent=val.toFixed(1)+' °C';disp.style.color=col;}
+  if(slider){slider.style.color=col;slider.dataset.active='1';}
+}
+
+function clearMiniTemp(id){
+  const disp=document.getElementById('mlte-disp-'+id);
+  const slider=document.getElementById('mlte-'+id);
+  if(disp){disp.textContent='— °C';disp.style.color='var(--text-faint)';}
+  if(slider){slider.value='370';slider.style.color='';slider.dataset.active='0';}
+}
+
+// ══════════════════════════════════════════════════════
+//  LÉKY
+// ══════════════════════════════════════════════════════
+let selectedMedId=null;
+let medFormOpen=false;
+
+function toggleMedForm(){
+  medFormOpen=!medFormOpen;
+  const form=document.getElementById('medForm');
+  form.classList.toggle('open',medFormOpen);
+  if(medFormOpen){
+    document.getElementById('medTime').value=localDT();
+    document.getElementById('medDose').value='';
+    document.getElementById('medTemp').value='370';
+    clearTemp(true);
+    selectedMedId=null;
+    renderMedChips();
+    updateMedSaveBtn();
+  }
+}
+
+function renderMedModal(){
+  renderMedChips();
+  renderMedsMgmtList();
+  renderMedHistory();
+  const lastMedLog=cache.medLogs[0];
+  const hint=document.getElementById('medLastHint');
+  if(hint&&lastMedLog){
+    const mn=Object.fromEntries(cache.meds.map(m=>[m.id,m.name]));
+    const dose=lastMedLog.dose?' · '+lastMedLog.dose:'';
+    const temp=lastMedLog.temperature!=null?' · 🌡️ '+lastMedLog.temperature+' °C':'';
+    hint.textContent=`Naposledy: ${mn[lastMedLog.med_id]||'—'} · ${fmtTime(lastMedLog.event_time)} · ${fmtDate(lastMedLog.event_time)} · před ${fmtElapsed(lastMedLog.event_time)}${dose}${temp}`;
+  } else if(hint){hint.textContent='';}
+}
+
+function renderMedChips(){
+  const wrap=document.getElementById('medChipsWrap');
+  if(!wrap)return;
+  wrap.innerHTML=cache.meds.map(m=>`
+    <button class="chip${selectedMedId===m.id?' selected':''}" onclick="selectMed('${m.id}')">${m.name}</button>
+  `).join('')+`<button class="chip chip-add" onclick="openAddMedInput()">＋ Přidat lék</button>`;
+}
+
+function selectMed(id){
+  selectedMedId=id;
+  renderMedChips();
+  updateMedSaveBtn();
+}
+
+function updateMedSaveBtn(){
+  const btn=document.getElementById('medSaveBtn');
+  if(btn)btn.disabled=!selectedMedId;
+}
+
+function openAddMedInput(){
+  const row=document.getElementById('addMedRow');
+  row.classList.add('open');
+  document.getElementById('addMedInput').focus();
+}
+function cancelAddMed(){
+  document.getElementById('addMedRow').classList.remove('open');
+  document.getElementById('addMedInput').value='';
+}
+async function confirmAddMed(){
+  const name=document.getElementById('addMedInput').value.trim();
+  if(!name)return;
+  try{
+    const[rec]=await sbPost('medicines?select=id,name',{name});
+    cache.meds.push(rec);
+    cache.meds.sort((a,b)=>a.name.localeCompare(b.name,'cs'));
+    cancelAddMed();
+    renderMedChips();
+    renderMedsMgmtList();
+    showToast('Lék přidán');
+  }catch(e){showErr('Nepodařilo se přidat lék');}
+}
+
+async function saveMedLog(){
+  if(!selectedMedId)return;
+  const tv=document.getElementById('medTime')?.value;
+  const dose=document.getElementById('medDose')?.value.trim()||null;
+  const tempVal=document.getElementById('medTemp')?.value;
+  const temperature=(!tempInactive&&tempVal)?parseFloat(tempVal)/10:null;
+  const event_time=tv?new Date(tv).toISOString():nowISO();
+  const btn=document.getElementById('medSaveBtn');
+  if(btn){btn.disabled=true;btn.textContent='Ukládám…';}
+  try{
+    const[rec]=await sbPost('medicine_logs?select=id,med_id,event_time,dose,temperature',{med_id:selectedMedId,event_time,dose,temperature});
+    cache.medLogs.unshift(rec);
+    cache.medLogs.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));
+    selectedMedId=null;medFormOpen=false;
+    document.getElementById('medForm').classList.remove('open');
+    refreshDashboard();renderMedHistory();renderMedChips();
+    showToast('Podání zaznamenáno');
+  }catch(e){showErr('Nepodařilo se uložit');}
+  finally{if(btn){btn.disabled=false;btn.textContent='Uložit podání';}}
+}
+
+function renderMedHistory(){
+  const list=document.getElementById('medHistoryList');
+  if(!list)return;
+  if(!cache.medLogs.length){list.innerHTML='<div class="history-empty">Žádné záznamy</div>';return;}
+  const mn=Object.fromEntries(cache.meds.map(m=>[m.id,m.name]));
+  list.innerHTML=cache.medLogs.map(l=>`
+    <div class="history-item" id="mli-${l.id}">
+      <div class="history-row" onclick="toggleEdit('mlp-${l.id}','mli-${l.id}')">
+        <div class="history-text"><strong>${mn[l.med_id]||'?'}</strong> · ${fmtTime(l.event_time)} · ${fmtDate(l.event_time)}${l.dose?' · <em>'+l.dose+'</em>':''}${l.temperature!=null?' · 🌡️ '+l.temperature+' °C':''}</div>
+        <span class="edit-hint">upravit</span>
+      </div>
+      <div class="edit-panel" id="mlp-${l.id}">
+        <input type="datetime-local" class="edit-time" id="mlet-${l.id}" value="${toInputDT(l.event_time)}">
+        <input type="text" class="edit-time" id="mlde-${l.id}" value="${l.dose||''}" placeholder="Dávka…" style="margin-top:6px;width:100%">
+        <div class="temp-mini-wrap">
+          <div class="temp-mini-row">
+            <span class="temp-mini-val" id="mlte-disp-${l.id}" style="color:${tempColor(l.temperature)}">${l.temperature!=null?l.temperature.toFixed(1)+' °C':'— °C'}</span>
+            <input type="range" class="temp-mini-slider" id="mlte-${l.id}"
+              min="350" max="400" step="1"
+              value="${l.temperature!=null?Math.round(l.temperature*10):370}"
+              data-active="${l.temperature!=null?'1':'0'}"
+              style="color:${tempColor(l.temperature)}"
+              oninput="onMiniTempSlider('${l.id}',this.value)"
+              onchange="onMiniTempSlider('${l.id}',this.value)">
+            <button class="temp-mini-clear" onclick="clearMiniTemp('${l.id}')">✕</button>
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button class="edit-save" onclick="saveEditMedLog('${l.id}')">Uložit</button>
+          <button class="edit-cancel" onclick="toggleEdit('mlp-${l.id}','mli-${l.id}')">Zrušit</button>
+          <button class="edit-delete" onclick="event.stopPropagation();askDelete('med','${l.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+async function saveEditMedLog(id){
+  const tv=document.getElementById('mlet-'+id)?.value;
+  const dose=document.getElementById('mlde-'+id)?.value.trim()||null;
+  const miniSlider=document.getElementById('mlte-'+id);
+  const temperature=miniSlider&&miniSlider.dataset.active==='1'?parseFloat(miniSlider.value)/10:null;
+  const event_time=tv?new Date(tv).toISOString():nowISO();
+  try{
+    await sbPatch(`medicine_logs?id=eq.${id}`,{event_time,dose,temperature});
+    const idx=cache.medLogs.findIndex(l=>l.id===id);
+    if(idx>-1)cache.medLogs[idx]={...cache.medLogs[idx],event_time,dose,temperature};
+    cache.medLogs.sort((a,b)=>new Date(b.event_time)-new Date(a.event_time));
+    showToast('Podání upraveno');renderMedHistory();refreshDashboard();
+  }catch(e){showErr('Nepodařilo se uložit');}
+}
+
+function renderMedsMgmtList(){
+  const list=document.getElementById('medsMgmtList');
+  if(!list)return;
+  if(!cache.meds.length){list.innerHTML='<div class="history-empty">Žádné léky</div>';return;}
+  list.innerHTML=cache.meds.map(m=>`
+    <div>
+      <div class="food-mgmt-row" id="mmr-${m.id}">
+        <span class="food-mgmt-name">💊 ${m.name}</span>
+        <div class="food-mgmt-btns">
+          <button class="food-mgmt-btn edit" title="Přejmenovat" onclick="toggleMedEdit('${m.id}')">✏️</button>
+          <button class="food-mgmt-btn del" title="Smazat" onclick="askDeleteMedicine('${m.id}')">🗑</button>
+        </div>
+      </div>
+      <div class="food-edit-row" id="mer-${m.id}">
+        <input type="text" class="food-edit-input" id="mei-${m.id}" value="${m.name}"
+          onkeydown="if(event.key==='Enter')saveEditMed('${m.id}');if(event.key==='Escape')toggleMedEdit('${m.id}')">
+        <button class="food-edit-ok" onclick="saveEditMed('${m.id}')">OK</button>
+        <button class="food-edit-cancel" onclick="toggleMedEdit('${m.id}')">Zrušit</button>
+      </div>
+    </div>`).join('');
+}
+
+function toggleMedEdit(id){
+  const row=document.getElementById('mer-'+id);
+  const wasOpen=row.classList.contains('open');
+  document.querySelectorAll('.food-edit-row.open').forEach(el=>el.classList.remove('open'));
+  if(!wasOpen){row.classList.add('open');document.getElementById('mei-'+id)?.focus();}
+}
+
+async function saveEditMed(id){
+  const name=document.getElementById('mei-'+id)?.value.trim();
+  if(!name)return;
+  try{
+    await sbPatch(`medicines?id=eq.${id}`,{name});
+    const idx=cache.meds.findIndex(m=>m.id===id);
+    if(idx>-1)cache.meds[idx]={...cache.meds[idx],name};
+    cache.meds.sort((a,b)=>a.name.localeCompare(b.name,'cs'));
+    renderMedsMgmtList();renderMedChips();renderMedHistory();refreshDashboard();
+    showToast('Lék přejmenován');
+  }catch(e){showErr('Nepodařilo se uložit');}
+}
+
+function askDeleteMedicine(id){
+  pending={type:'medicine',id};
+  document.querySelector('.confirm-msg').textContent='Opravdu smazat tento lék? Smažou se i všechny záznamy podání.';
+  document.querySelector('.confirm-delete-ok').onclick=confirmDelete;
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+
+init();
+</script>
+</body>
+</html>

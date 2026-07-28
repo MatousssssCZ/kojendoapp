@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Mikiho klubík</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#1a1025">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100dvh;-webkit-tap-highlight-color:transparent}
+body{font-family:'Helvetica Neue',system-ui,sans-serif;background:#1a1025;color:#f0eaf8;min-height:100dvh}
+
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:20px 18px 12px;gap:10px}
+.header-left{display:flex;align-items:center;gap:10px}
+.back-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:#f0eaf8;font-size:18px;cursor:pointer;text-decoration:none;flex-shrink:0}
+.header-title{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.header-title span{color:#c084fc}
+.edit-btn{background:rgba(255,255,255,.08);border:none;color:#c8b4f0;font-size:13px;font-weight:600;padding:7px 14px;border-radius:20px;cursor:pointer;flex-shrink:0}
+.edit-btn.active{background:#c084fc;color:#1a1025}
+
+/* Upload */
+.upload-wrap{padding:0 18px 18px}
+.upload-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:16px;border:1.5px dashed rgba(192,132,252,.4);background:rgba(192,132,252,.06);color:#c084fc;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.upload-btn:active{opacity:.7}
+#fileInput{display:none}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 18px 100px}
+
+/* Video tile */
+.vtile{background:#251535;border-radius:16px;overflow:hidden;cursor:pointer;position:relative;border:1.5px solid rgba(255,255,255,.06)}
+.vtile:active{transform:scale(.97)}
+.vtile-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#0d0918}
+.vtile-thumb-placeholder{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:32px;background:#0d0918}
+.vtile-info{padding:10px 12px 12px}
+.vtile-title{font-size:13px;font-weight:600;color:#f0eaf8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vtile-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-size:18px;pointer-events:none}
+
+/* Edit mode controls on tile */
+.vtile-controls{display:none;position:absolute;inset:0;background:rgba(15,8,24,.75);flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.vtile.edit-mode .vtile-controls{display:flex}
+.vtile.edit-mode .vtile-play{display:none}
+.vtile-order-btns{display:flex;gap:8px}
+.order-btn{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.12);border:none;color:#f0eaf8;font-size:18px;cursor:pointer}
+.order-btn:disabled{opacity:.25}
+.delete-btn{background:rgba(239,68,68,.25);border:1px solid rgba(239,68,68,.4);color:#fca5a5;font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;cursor:pointer;font-family:inherit}
+.rename-btn{background:rgba(255,255,255,.1);border:none;color:#c8b4f0;font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;cursor:pointer;font-family:inherit}
+
+/* Empty state */
+.empty{text-align:center;padding:60px 24px;color:rgba(240,234,248,.35)}
+.empty-icon{font-size:52px;margin-bottom:14px}
+.empty-text{font-size:15px;font-weight:500}
+.empty-sub{font-size:13px;margin-top:6px;opacity:.7}
+
+/* Video player overlay */
+.player-overlay{display:none;position:fixed;inset:0;background:#000;z-index:100;flex-direction:column}
+.player-overlay.open{display:flex}
+.player-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(0,0,0,.6);position:absolute;top:0;left:0;right:0;z-index:1}
+.player-title{font-size:14px;font-weight:600;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-close{background:rgba(255,255,255,.15);border:none;color:#fff;font-size:16px;width:36px;height:36px;border-radius:50%;cursor:pointer;flex-shrink:0}
+#playerVideo{width:100%;height:100%;object-fit:contain}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#f0eaf8;color:#1a1025;font-size:13px;font-weight:600;padding:10px 20px;border-radius:100px;opacity:0;transition:opacity .2s,transform .25s;pointer-events:none;z-index:200;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Rename modal */
+.rename-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;align-items:center;justify-content:center;padding:24px}
+.rename-overlay.open{display:flex}
+.rename-box{background:#251535;border-radius:20px;padding:24px;width:100%;max-width:340px;border:1px solid rgba(255,255,255,.1)}
+.rename-label{font-size:13px;color:#c8b4f0;margin-bottom:10px;font-weight:600}
+.rename-input{width:100%;background:#1a1025;border:1.5px solid rgba(192,132,252,.4);border-radius:10px;color:#f0eaf8;font-size:15px;padding:10px 12px;font-family:inherit;outline:none}
+.rename-input:focus{border-color:#c084fc}
+.rename-btns{display:flex;gap:8px;margin-top:14px}
+.rename-ok{flex:1;background:#c084fc;color:#1a1025;border:none;border-radius:10px;padding:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.rename-cancel{flex:1;background:rgba(255,255,255,.08);color:#c8b4f0;border:none;border-radius:10px;padding:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+
+/* Progress */
+.progress-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.progress-overlay.open{display:flex}
+.progress-text{color:#f0eaf8;font-size:14px;font-weight:600}
+.progress-bar-wrap{width:220px;height:6px;background:rgba(255,255,255,.15);border-radius:6px;overflow:hidden}
+.progress-bar{height:100%;background:#c084fc;border-radius:6px;transition:width .15s}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <a class="back-btn" href="index.html">‹</a>
+    <div class="header-title">Mikiho <span>klubík</span></div>
+  </div>
+  <button class="edit-btn" id="editBtn" onclick="toggleEdit()">Upravit</button>
+</div>
+
+<div class="upload-wrap">
+  <label class="upload-btn" for="fileInput">＋ Přidat video</label>
+  <input type="file" id="fileInput" accept="video/*" multiple>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<!-- Player -->
+<div class="player-overlay" id="playerOverlay">
+  <div class="player-bar">
+    <div class="player-title" id="playerTitle"></div>
+    <button class="player-close" onclick="closePlayer()">✕</button>
+  </div>
+  <video id="playerVideo" controls playsinline></video>
+</div>
+
+<!-- Rename modal -->
+<div class="rename-overlay" id="renameOverlay">
+  <div class="rename-box">
+    <div class="rename-label">Přejmenovat video</div>
+    <input class="rename-input" id="renameInput" type="text">
+    <div class="rename-btns">
+      <button class="rename-cancel" onclick="closeRename()">Zrušit</button>
+      <button class="rename-ok" onclick="confirmRename()">Uložit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Progress -->
+<div class="progress-overlay" id="progressOverlay">
+  <div class="progress-text" id="progressText">Zpracovávám video…</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+const DB_NAME = 'mikis-klubik';
+const DB_VERSION = 1;
+const STORE = 'videos';
+
+let db, videos = [], editMode = false, renameId = null;
+
+// ── IndexedDB ──────────────────────────────────────────
+function openDB(){
+  return new Promise((res,rej)=>{
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if(!db.objectStoreNames.contains(STORE)){
+        const store = db.createObjectStore(STORE, {keyPath:'id'});
+        store.createIndex('order','order',{unique:false});
+      }
+    };
+    req.onsuccess = e => res(e.target.result);
+    req.onerror = e => rej(e.target.error);
+  });
+}
+
+function dbGetAll(){
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(STORE,'readonly');
+    const req = tx.objectStore(STORE).getAll();
+    req.onsuccess = e => res(e.target.result);
+    req.onerror = e => rej(e.target.error);
+  });
+}
+
+function dbPut(item){
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(STORE,'readwrite');
+    const req = tx.objectStore(STORE).put(item);
+    req.onsuccess = () => res();
+    req.onerror = e => rej(e.target.error);
+  });
+}
+
+function dbDelete(id){
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(STORE,'readwrite');
+    const req = tx.objectStore(STORE).delete(id);
+    req.onsuccess = () => res();
+    req.onerror = e => rej(e.target.error);
+  });
+}
+
+// ── Thumbnail ──────────────────────────────────────────
+function generateThumb(blob){
+  return new Promise(res=>{
+    const url = URL.createObjectURL(blob);
+    const video = document.createElement('video');
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = 'metadata';
+    video.src = url;
+    video.addEventListener('loadedmetadata', ()=>{
+      video.currentTime = Math.min(2, video.duration * 0.1);
+    });
+    video.addEventListener('seeked', ()=>{
+      const canvas = document.createElement('canvas');
+      canvas.width = 320; canvas.height = 180;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, 320, 180);
+      const thumb = canvas.toDataURL('image/jpeg', 0.6);
+      URL.revokeObjectURL(url);
+      res(thumb);
+    });
+    video.addEventListener('error', ()=>{ URL.revokeObjectURL(url); res(null); });
+    // Fallback if seeked never fires
+    setTimeout(()=>{ if(video.readyState >= 2){ video.currentTime=0; } }, 3000);
+  });
+}
+
+// ── File input ─────────────────────────────────────────
+document.getElementById('fileInput').addEventListener('change', async e=>{
+  const files = Array.from(e.target.files);
+  if(!files.length) return;
+  e.target.value = '';
+  showProgress('Přidávám video…', 0);
+  for(let i=0;i<files.length;i++){
+    const file = files[i];
+    setProgress(Math.round(i/files.length*60));
+    const thumb = await generateThumb(file);
+    setProgress(Math.round(60 + i/files.length*35));
+    const id = Date.now() + '_' + Math.random().toString(36).slice(2);
+    const name = file.name.replace(/\.[^.]+$/,'');
+    const item = {id, name, blob: file, thumb, order: videos.length + i};
+    await dbPut(item);
+    videos.push(item);
+  }
+  setProgress(100);
+  hideProgress();
+  renderGrid();
+  showToast(files.length > 1 ? `Přidáno ${files.length} videí` : 'Video přidáno');
+});
+
+// ── Render ─────────────────────────────────────────────
+function renderGrid(){
+  const grid = document.getElementById('grid');
+  videos.sort((a,b)=>a.order - b.order);
+  if(!videos.length){
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1">
+      <div class="empty-icon">🎬</div>
+      <div class="empty-text">Žádná videa</div>
+      <div class="empty-sub">Klikni na „Přidat video"</div>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = videos.map((v,i)=>`
+    <div class="vtile${editMode?' edit-mode':''}" id="tile-${v.id}" onclick="${editMode?'':'playVideo(\''+v.id+'\')'}">
+      ${v.thumb
+        ? `<img class="vtile-thumb" src="${v.thumb}" loading="lazy">`
+        : `<div class="vtile-thumb-placeholder">🎬</div>`}
+      ${!editMode ? `<div class="vtile-play">▶</div>` : ''}
+      <div class="vtile-info"><div class="vtile-title">${escHtml(v.name)}</div></div>
+      <div class="vtile-controls">
+        <div class="vtile-order-btns">
+          <button class="order-btn" onclick="event.stopPropagation();moveVideo('${v.id}',-1)" ${i===0?'disabled':''}>◀</button>
+          <button class="order-btn" onclick="event.stopPropagation();moveVideo('${v.id}',1)" ${i===videos.length-1?'disabled':''}>▶</button>
+        </div>
+        <button class="rename-btn" onclick="event.stopPropagation();openRename('${v.id}')">Přejmenovat</button>
+        <button class="delete-btn" onclick="event.stopPropagation();deleteVideo('${v.id}')">Smazat</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── Edit mode ──────────────────────────────────────────
+function toggleEdit(){
+  editMode = !editMode;
+  const btn = document.getElementById('editBtn');
+  btn.textContent = editMode ? 'Hotovo' : 'Upravit';
+  btn.classList.toggle('active', editMode);
+  renderGrid();
+}
+
+// ── Move ───────────────────────────────────────────────
+async function moveVideo(id, dir){
+  const idx = videos.findIndex(v=>v.id===id);
+  const swapIdx = idx + dir;
+  if(swapIdx < 0 || swapIdx >= videos.length) return;
+  const tmp = videos[idx].order;
+  videos[idx].order = videos[swapIdx].order;
+  videos[swapIdx].order = tmp;
+  await dbPut({...videos[idx]});
+  await dbPut({...videos[swapIdx]});
+  videos.sort((a,b)=>a.order-b.order);
+  renderGrid();
+}
+
+// ── Delete ─────────────────────────────────────────────
+async function deleteVideo(id){
+  if(!confirm('Smazat toto video?')) return;
+  await dbDelete(id);
+  videos = videos.filter(v=>v.id!==id);
+  videos.forEach((v,i)=>{ v.order=i; dbPut({...v}); });
+  renderGrid();
+  showToast('Video smazáno');
+}
+
+// ── Rename ─────────────────────────────────────────────
+function openRename(id){
+  renameId = id;
+  const v = videos.find(v=>v.id===id);
+  document.getElementById('renameInput').value = v ? v.name : '';
+  document.getElementById('renameOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('renameInput').focus(), 50);
+}
+function closeRename(){ document.getElementById('renameOverlay').classList.remove('open'); renameId=null; }
+async function confirmRename(){
+  if(!renameId) return;
+  const name = document.getElementById('renameInput').value.trim();
+  if(!name){ closeRename(); return; }
+  const v = videos.find(v=>v.id===renameId);
+  if(v){ v.name=name; await dbPut({...v}); }
+  closeRename();
+  renderGrid();
+}
+document.getElementById('renameInput').addEventListener('keydown', e=>{ if(e.key==='Enter') confirmRename(); if(e.key==='Escape') closeRename(); });
+
+// ── Player ─────────────────────────────────────────────
+function playVideo(id){
+  const v = videos.find(v=>v.id===id);
+  if(!v) return;
+  const url = URL.createObjectURL(v.blob);
+  const player = document.getElementById('playerVideo');
+  player.src = url;
+  document.getElementById('playerTitle').textContent = v.name;
+  document.getElementById('playerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  player.play().catch(()=>{});
+}
+function closePlayer(){
+  const player = document.getElementById('playerVideo');
+  player.pause();
+  URL.revokeObjectURL(player.src);
+  player.src = '';
+  document.getElementById('playerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── Toast ──────────────────────────────────────────────
+let toastT;
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(()=>el.classList.remove('show'), 2400);
+}
+
+// ── Progress ───────────────────────────────────────────
+function showProgress(msg, pct){
+  document.getElementById('progressText').textContent = msg;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressOverlay').classList.add('open');
+}
+function setProgress(pct){ document.getElementById('progressBar').style.width = pct + '%'; }
+function hideProgress(){ document.getElementById('progressOverlay').classList.remove('open'); }
+
+// ── Init ───────────────────────────────────────────────
+async function init(){
+  db = await openDB();
+  const all = await dbGetAll();
+  videos = all.sort((a,b)=>a.order-b.order);
+  renderGrid();
+}
+init();
+</script>
+</body>
+</html>
