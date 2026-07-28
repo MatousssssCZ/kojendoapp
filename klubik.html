@@ -180,11 +180,13 @@ function generateThumb(file){
     video.muted = true; video.playsInline = true; video.preload = 'metadata'; video.src = url;
     video.addEventListener('loadedmetadata', () => { video.currentTime = Math.min(2, video.duration * 0.1); });
     video.addEventListener('seeked', () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = 320; canvas.height = 180;
-      canvas.getContext('2d').drawImage(video, 0, 0, 320, 180);
-      URL.revokeObjectURL(url);
-      res(canvas.toDataURL('image/jpeg', 0.6));
+      setTimeout(() => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 320; canvas.height = 180;
+        canvas.getContext('2d').drawImage(video, 0, 0, 320, 180);
+        URL.revokeObjectURL(url);
+        res(canvas.toDataURL('image/jpeg', 0.6));
+      }, 200);
     });
     video.addEventListener('error', () => { URL.revokeObjectURL(url); res(null); });
   });
