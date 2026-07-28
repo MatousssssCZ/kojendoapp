@@ -203,7 +203,8 @@ document.getElementById('fileInput').addEventListener('change', async e => {
 
     try {
       const thumb = await generateThumb(file);
-      const path = `${Date.now()}_${Math.random().toString(36).slice(2)}_${file.name}`;
+      const safeName = file.name.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_');
+      const path = `${Date.now()}_${Math.random().toString(36).slice(2)}_${safeName}`;
       await storageUpload(path, file, p => setProgress(Math.round(p * 90)));
       const rows = await dbPost('video_items', {name, storage_path: path, thumbnail: thumb, order: videos.length});
       const row = Array.isArray(rows) ? rows[0] : rows;
